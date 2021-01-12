@@ -15,6 +15,8 @@ class BoardService {
         let projectsFromDb
         try {
             projectsFromDb = await this.store.Project.findAll()
+            console.log("projectsFromDb")
+            console.log(projectsFromDb)
         } catch (e) {
             console.error(e)
         }

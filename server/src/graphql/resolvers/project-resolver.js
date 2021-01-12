@@ -9,7 +9,7 @@ const schema = {
             return dataSources.boardService.getBoardsByProjectId(args.id)
         },
         allProjects() {
-            return dataSources.boardService.getProjects()
+            return dataSources.boardService.getProjects().catch(e => console.log(e))
         }
     },
     Mutation: {

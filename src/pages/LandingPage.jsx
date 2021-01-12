@@ -15,7 +15,14 @@ const LandingPage = () => {
         setOpen(true)
     }
 
-    if (queryResult.loading) return null
+    if (queryResult.loading) {
+        return <div>Loading</div>
+    }
+    if (queryResult.error) {
+        console.log(queryResult.error)
+        return <div>Error</div>
+    }
+
     const projectsInOrder = queryResult.data.allProjects.slice().sort((a, b) => a.orderNumber - b.orderNumber)
 
     return (
