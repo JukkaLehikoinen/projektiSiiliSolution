@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      UserStory.belongsTo(models.Story, { foreignKey: 'storyId', targetKey: 'id', onDelete: 'cascade' })
+        UserStory.belongsTo(models.User, { foreignKey: 'userId', targetKey: 'id', onDelete: 'cascade' })
     }
   };
   UserStory.init({

@@ -10,8 +10,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+       
+        Color.belongsToMany(models.Task, {
+            through: models.ColorTask,
+            foreignKey: 'colorId',
+        })
+        Color.belongsToMany(models.Subtask, {
+            through: models.ColorSubtask,
+            foreignKey: 'colorId',
+        })
     }
+    
   };
   Color.init({
     color: DataTypes.STRING

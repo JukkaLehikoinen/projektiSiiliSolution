@@ -10,7 +10,28 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Task.belongsTo(models.Column, {
+        foreignKey: 'columnId',
+    })
+    Task.hasMany(models.Subtask, {
+        foreignKey: 'taskId',
+    })
+    // Task has one creator user
+    Task.belongsTo(models.User, {
+        foreignKey: 'ownerId',
+    })
+    // Task may have multiple users working on it
+    Task.belongsToMany(models.User, {
+        through: models.UserTask,
+        foreignKey: 'taskId',
+    })
+    Task.belongsToMany(models.Color, {
+        through: models.ColorTask,
+        foreignKey: 'taskId',
+    })
+    Task.belongsTo(models.Board, {
+        foreignKey: 'boardId',
+    })
     }
   };
   Task.init({
