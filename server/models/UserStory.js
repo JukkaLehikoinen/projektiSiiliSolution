@@ -1,29 +1,24 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    const UserStory = sequelize.define('UserStory', {
-        userId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: 'User',
-                key: 'id',
-            },
-            primaryKey: true,
-        },
-        storyId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: 'Story',
-                key: 'id',
-            },
-            primaryKey: true,
-        },
-    })
-
-    UserStory.associate = (models) => {
-        UserStory.belongsTo(models.Story, { foreignKey: 'storyId', targetKey: 'id', onDelete: 'cascade' })
-        UserStory.belongsTo(models.User, { foreignKey: 'userId', targetKey: 'id', onDelete: 'cascade' })
+  class UserStory extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-
-    return UserStory
-}
+  };
+  UserStory.init({
+    userId: DataTypes.UUID,
+    storyId: DataTypes.UUID
+  }, {
+    sequelize,
+    modelName: 'UserStory',
+  });
+  return UserStory;
+};

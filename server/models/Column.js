@@ -1,32 +1,24 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    const Column = sequelize.define('Column', {
-        id: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            primaryKey: true,
-        },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        orderNumber: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-    })
-    Column.associate = (models) => {
-        Column.belongsTo(models.Board, {
-            foreignKey: 'boardId',
-        })
-        Column.hasMany(models.Story, {
-            foreignKey: 'columnId',
-        })
-        Column.hasMany(models.Task, {
-            foreignKey: 'columnId',
-        })
-        Column.hasMany(models.Subtask, {
-            foreignKey: 'columnId',
-        })
+  class Column extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-    return Column
-}
+  };
+  Column.init({
+    name: DataTypes.STRING,
+    orderNumber: DataTypes.INTEGER
+  }, {
+    sequelize,
+    modelName: 'Column',
+  });
+  return Column;
+};

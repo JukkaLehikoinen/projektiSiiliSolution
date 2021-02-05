@@ -1,41 +1,26 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    const Board = sequelize.define('Board', {
-        id: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            primaryKey: true,
-        },
-        prettyId: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        ticketCount: DataTypes.INTEGER,
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        orderNumber: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-        },
-    })
-    Board.associate = (models) => {
-        Board.hasMany(models.Column, {
-            foreignKey: 'boardId',
-        })
-        // Board has one creator user
-        Board.belongsTo(models.User, {
-            foreignKey: 'creatorId',
-        })
-        Board.hasMany(models.Story, {
-            foreignKey: 'boardId',
-        })
-        Board.hasMany(models.Task, {
-            foreignKey: 'boardId',
-        })
-        Board.belongsTo(models.Project, {
-            foreignKey: 'projectId'
-        })
+  class Board extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-    return Board
-}
+  };
+  Board.init({
+    prettyId: DataTypes.STRING,
+    ticketCount: DataTypes.INTEGER,
+    name: DataTypes.STRING,
+    orderNumber: DataTypes.INTEGER
+  }, {
+    sequelize,
+    modelName: 'Board',
+  });
+  return Board;
+};

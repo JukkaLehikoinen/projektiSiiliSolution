@@ -1,29 +1,24 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    const UserSubtask = sequelize.define('UserSubtask', {
-        userId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: 'User',
-                key: 'id',
-            },
-            primaryKey: true,
-        },
-        subtaskId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: 'Subtask',
-                key: 'id',
-            },
-            primaryKey: true,
-        },
-    })
-
-    UserSubtask.associate = (models) => {
-        UserSubtask.belongsTo(models.Subtask, { foreignKey: 'subtaskId', targetKey: 'id', onDelete: 'cascade' })
-        UserSubtask.belongsTo(models.User, { foreignKey: 'userId', targetKey: 'id', onDelete: 'cascade' })
+  class UserSubtask extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-
-    return UserSubtask
-}
+  };
+  UserSubtask.init({
+    userId: DataTypes.UUID,
+    subtaskId: DataTypes.UUID
+  }, {
+    sequelize,
+    modelName: 'UserSubtask',
+  });
+  return UserSubtask;
+};

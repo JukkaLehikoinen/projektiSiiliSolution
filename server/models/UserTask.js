@@ -1,29 +1,24 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    const UserTask = sequelize.define('UserTask', {
-        userId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: 'User',
-                key: 'id',
-            },
-            primaryKey: true,
-        },
-        taskId: {
-            type: DataTypes.UUID,
-            allowNull: false,
-            references: {
-                model: 'Task',
-                key: 'id',
-            },
-            primaryKey: true,
-        },
-    })
-
-    UserTask.associate = (models) => {
-        UserTask.belongsTo(models.Task, { foreignKey: 'taskId', targetKey: 'id', onDelete: 'cascade' })
-        UserTask.belongsTo(models.User, { foreignKey: 'userId', targetKey: 'id', onDelete: 'cascade' })
+  class UserTask extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
     }
-
-    return UserTask
-}
+  };
+  UserTask.init({
+    userId: DataTypes.UUID,
+    taskId: DataTypes.UUID
+  }, {
+    sequelize,
+    modelName: 'UserTask',
+  });
+  return UserTask;
+};
