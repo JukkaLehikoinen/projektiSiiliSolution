@@ -1,33 +1,28 @@
-'use strict';
-module.exports = {
+const { Sequelize } = require('sequelize');
+
+async function up({ context: queryInterface }) {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Subtasks', {
+    await queryInterface.createTable('Boards', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      id: {
+        type: Sequelize.INTEGER
+      },
       prettyId: {
         type: Sequelize.STRING
       },
-      columnOrderNumber: {
+      ticketCount: {
         type: Sequelize.INTEGER
-      },
-      done: {
-        type: Sequelize.BOOLEAN
       },
       name: {
         type: Sequelize.STRING
       },
-      content: {
-        type: Sequelize.STRING
-      },
-      size: {
-        type: Sequelize.FLOAT
-      },
-      deleteAt: {
-        type: Sequelize.DATE
+      orderNumber: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -38,8 +33,12 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-  },
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Subtasks');
   }
-};
+}
+  
+
+  async function down({ context: queryInterface }) {
+    await queryInterface.dropTable('Boards');
+  }
+
+module.exports = { up, down };

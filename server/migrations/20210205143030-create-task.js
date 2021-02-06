@@ -1,15 +1,15 @@
-'use strict';
-module.exports = {
+const { Sequelize } = require('sequelize');
+async function up({ context: queryInterface }) {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Colors', {
+    await queryInterface.createTable('Tasks', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      color: {
-        type: Sequelize.STRING
+      id: {
+        type: Sequelize.UUID
       },
       createdAt: {
         allowNull: false,
@@ -20,8 +20,10 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-  },
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Colors');
   }
-};
+}
+async function down({ context: queryInterface }) {
+await queryInterface.dropTable('Tasks');
+}
+
+module.exports = { up, down };

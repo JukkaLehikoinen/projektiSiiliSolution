@@ -1,5 +1,5 @@
-'use strict';
-module.exports = {
+const { Sequelize } = require('sequelize');
+async function up({ context: queryInterface }) {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Users', {
       id: {
@@ -8,7 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userName: {
+      id: {
+        type: Sequelize.UUID
+      },
+      username: {
         type: Sequelize.STRING
       },
       passwordHash: {
@@ -26,8 +29,10 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-  },
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Users');
   }
-};
+}
+async function down({ context: queryInterface }) {
+await queryInterface.dropTable('Users');
+}
+
+module.exports = { up, down };

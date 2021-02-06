@@ -1,7 +1,7 @@
-'use strict';
-module.exports = {
+const { Sequelize } = require('sequelize');
+async function up({ context: queryInterface }) {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Columns', {
+    await queryInterface.createTable('Projects', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,7 +11,7 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      orderNumber: {
+      oderNumber: {
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -23,8 +23,10 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-  },
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Columns');
   }
-};
+}
+  async function down({ context: queryInterface }) {
+  await queryInterface.dropTable('Projects');
+}
+
+module.exports = { up, down };
