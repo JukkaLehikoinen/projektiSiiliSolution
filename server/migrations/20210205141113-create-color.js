@@ -1,13 +1,15 @@
 const { Sequelize } = require('sequelize');
+const { boards, colors } = require('../dummyData');
+
 async function up({ context: queryInterface }) {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Colors', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
+      // id: {
+      //   allowNull: false,
+      //   autoIncrement: true,
+      //   primaryKey: true,
+      //   type: Sequelize.UUID
+      // },
       id: {
         type: Sequelize.UUID
       },
@@ -26,8 +28,8 @@ async function up({ context: queryInterface }) {
   }
 }
 
-  async function down({ context: queryInterface }) {
-    await queryInterface.dropTable('Colors');
-  }
+async function down({ context: queryInterface }) {
+  await queryInterface.dropTable('Colors');
+}
 
 module.exports = { up, down };

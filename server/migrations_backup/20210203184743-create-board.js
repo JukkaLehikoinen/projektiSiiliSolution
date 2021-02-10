@@ -1,18 +1,13 @@
-const { Sequelize } = require('sequelize');
-const { boards } = require('../dummyData');
-
-async function up({ context: queryInterface }) {
+'use strict';
+module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Boards', {
       id: {
         allowNull: false,
-        //autoIncrement: true,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.INTEGER
       },
-      // id: {
-      //   type: Sequelize.INTEGER
-      // },
       prettyId: {
         type: Sequelize.STRING
       },
@@ -34,12 +29,8 @@ async function up({ context: queryInterface }) {
         type: Sequelize.DATE
       }
     });
-  }
-}
-  
-
-  async function down({ context: queryInterface }) {
+  },
+  down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable('Boards');
   }
-
-module.exports = { up, down };
+};

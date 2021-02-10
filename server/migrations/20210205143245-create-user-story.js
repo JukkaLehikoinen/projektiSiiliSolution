@@ -1,16 +1,18 @@
 const { Sequelize } = require('sequelize');
+
+
 async function up({ context: queryInterface }) {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('UserStories', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
-      id: {
-        type: Sequelize.UUID
-      },
+      // id: {
+      //   allowNull: false,
+      //   autoIncrement: true,
+      //   primaryKey: true,
+      //   type: Sequelize.INTEGER
+      // },
+      // id: {
+      //   type: Sequelize.UUID
+      // },
       userId: {
         type: Sequelize.UUID
       },
