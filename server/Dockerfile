@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:12 as dependencies
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -9,11 +9,23 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # If you are building your code for production
-RUN npm install -g cross-env
 RUN npm ci --only=production
 
-# Bundle app source
+FROM node:12 as build
+WORKDIR /usr/src/app
 COPY . .
 
+RUN npm ci
+RUN npm run build
+RUN npm run copy-to-dist
+
+FROM node:12
+WORKDIR /usr/src/app
+
+# Bundle app source
+COPY --from=dependencies /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/build ./build
+COPY package*.json ./
+COPY config ./config
 EXPOSE 4001
 CMD [ "npm", "run", "start" ]
