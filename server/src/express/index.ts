@@ -3,8 +3,10 @@ import {dbConfig} from "../database";
 import boardsRouter from "../controllers/boards";
 import {migrator} from "../migrations";
 import {MigrationError} from "umzug";
+import {seeders} from "../seeders";
 const bodyParser = require('body-parser')
 const env = process.env.NODE_ENV || 'development'
+
 
 export const expressApp = (): express.Application => {
     dbConfig.authenticate().then(() => console.log("connected to db"))
@@ -13,14 +15,21 @@ export const expressApp = (): express.Application => {
         })
 
     if (env !== 'test') {
-        migrator.up().then(() => console.log("Migrating db"))
+        migrator.up().then(() => 
+            console.log("Migrating db"))
             .catch((e: any) => {
                 if (e instanceof MigrationError) {
                     console.log("Error while migrating", e.toString())
+                    seeders.up()
                 }
                 throw e
             })
     }
+    
+    /* setTimeout(() => {
+           
+    }, 5000); */
+    
 
     const app: Application = express();
     if (env === "production") {
