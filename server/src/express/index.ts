@@ -1,12 +1,11 @@
 import express, {Application} from "express";
 import {dbConfig} from "../database";
 import boardsRouter from "../controllers/boards";
-import {migrator} from "../migrations";
 import {MigrationError} from "umzug";
-import {seeders} from "../seeders";
+import {seeders} from "../seeder";
+import {migrator} from "../umzug";
 const bodyParser = require('body-parser')
 const env = process.env.NODE_ENV || 'development'
-
 
 export const expressApp = (): express.Application => {
     dbConfig.authenticate().then(() => console.log("connected to db"))
@@ -15,21 +14,25 @@ export const expressApp = (): express.Application => {
         })
 
     if (env !== 'test') {
-        migrator.up().then(() => 
-            console.log("Migrating db"))
+        migrator
+            .up()
+            .then(() => console.log("Migrations done"))
             .catch((e: any) => {
                 if (e instanceof MigrationError) {
                     console.log("Error while migrating", e.toString())
-                    seeders.up()
                 }
                 throw e
             })
+            .then(() => console.log("Running seeders to db"))
+            .then(() => seeders
+                    .up()
+                    .catch((e: any) => {
+                        console.log("Error while running seeders: ", e.toString())
+                        throw e;
+                    })
+                    .then(() => console.log("Seeders done"))
+            )
     }
-    
-    /* setTimeout(() => {
-           
-    }, 5000); */
-    
 
     const app: Application = express();
     if (env === "production") {

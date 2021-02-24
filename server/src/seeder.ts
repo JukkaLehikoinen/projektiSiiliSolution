@@ -1,9 +1,9 @@
-import {dbConfig as sequelize} from '../database';
+import {dbConfig as sequelize} from './database';
 import {SequelizeStorage, Umzug} from "umzug";
 
 export const seeders = new Umzug({
   migrations: {
-    glob: ['../seeders/*.ts', { cwd: __dirname }],
+    glob: ['seeders/*.ts', { cwd: __dirname }],
   },
   context: sequelize,
   storage: new SequelizeStorage({

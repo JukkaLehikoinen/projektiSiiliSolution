@@ -1,4 +1,4 @@
-import { Seeders } from "./index";
+import {Seeders} from "../seeder";
 
 export const up: Seeders = async ({ context: sequelize }) => {
     await sequelize.getQueryInterface().bulkInsert('Colors', [{
