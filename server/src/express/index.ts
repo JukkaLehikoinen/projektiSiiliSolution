@@ -1,7 +1,6 @@
 import express, {Application} from "express";
 import {dbConfig} from "../database";
 import boardsRouter from "../controllers/boards";
-import {MigrationError} from "umzug";
 import {seeders} from "../seeder";
 import {migrator} from "../umzug";
 const bodyParser = require('body-parser')
@@ -18,9 +17,7 @@ export const expressApp = (): express.Application => {
             .up()
             .then(() => console.log("Migrations done"))
             .catch((e: any) => {
-                if (e instanceof MigrationError) {
-                    console.log("Error while migrating", e.toString())
-                }
+                console.log("Error while migrating", e.toString())
                 throw e
             })
             .then(() => console.log("Running seeders to db"))
