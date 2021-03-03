@@ -23,10 +23,7 @@ export const up: Migration = async ({ context: sequelize }) => {
       allowNull: false,
       type: DataTypes.DATE
     },
-    // columnId: {
-    //   type: DataTypes.UUID,
-    //   references: { model: 'Columns', key: 'id' }
-    // }
+ 
   });
 };
 
