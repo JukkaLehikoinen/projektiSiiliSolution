@@ -8,11 +8,7 @@ export const up: Migration = async ({ context: sequelize }) => {
             type: DataTypes.UUID,
         })
 
-    await sequelize.getQueryInterface().addColumn('Columns',
-        'columnId',
-        {
-            type: DataTypes.UUID,
-        })
+
 
 
 
