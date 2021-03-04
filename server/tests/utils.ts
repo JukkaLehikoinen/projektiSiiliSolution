@@ -6,6 +6,13 @@ import Task from "../src/models/Task";
 import Story from "../src/models/Story";
 import {dbConfig} from "../src/database";
 import {expressApp} from "../src/express";
+import Project from "../src/models/Project";
+import Color from "../src/models/Color";
+import ColorSubtask from "../src/models/ColorSubtask";
+import ColorTask from "../src/models/ColorTask";
+import UserSubtask from "../src/models/UserSubtask";
+import UserStory from "../src/models/UserStory";
+import Usertask from "../src/models/UserTask";
 
 const supertest = require('supertest')
 // const db = require('../models/index.js')
@@ -25,6 +32,18 @@ export const initializeDb = async () => {
         await Promise.all(
             dummyData.users.map(async (user) => {
                 const resolved = await User.create(user)
+                return resolved
+            }),
+        )
+        await Promise.all(
+            dummyData.projects.map(async (project) => {
+                const resolved = await Project.create(project)
+                return resolved
+            }),
+        )
+        await Promise.all(
+            dummyData.colors.map(async (color) => {
+                const resolved = await Color.create(color)
                 return resolved
             }),
         )
@@ -55,6 +74,36 @@ export const initializeDb = async () => {
         await Promise.all(
             dummyData.subtasks.map(async (subtask) => {
                 const resolved = await Subtask.create(subtask)
+                return resolved
+            }),
+        )
+        await Promise.all(
+            dummyData.colorsubtasks.map(async (colorsubtask) => {
+                const resolved = await ColorSubtask.create(colorsubtask)
+                return resolved
+            }),
+        )
+        await Promise.all(
+            dummyData.colortasks.map(async (colortask) => {
+                const resolved = await ColorTask.create(colortask)
+                return resolved
+            }),
+        )
+        await Promise.all(
+            dummyData.userSubtasks.map(async (usersubtask) => {
+                const resolved = await UserSubtask.create(usersubtask)
+                return resolved
+            }),
+        )
+        await Promise.all(
+            dummyData.usertasks.map(async (usertask) => {
+                const resolved = await Usertask.create(usertask)
+                return resolved
+            }),
+        )
+        await Promise.all(
+            dummyData.userStories.map(async (userstory) => {
+                const resolved = await UserStory.create(userstory)
                 return resolved
             }),
         )
@@ -198,9 +247,10 @@ export const subtasksInTheDb = async () => {
 
 export const initialBoards = dummyData.boards
 
-export const testCall = async (query) => await request
+export const testCall = async (query) => {await request
     .post('/graphql')
     .send({ query })
+    }
 
 /* const taskOrderAtStart = await getTaskOrderOfColumn('7bce34e5-385b-41e6-acd3-ceb4bd57b4f6')
         const newTaskOrderArray = [

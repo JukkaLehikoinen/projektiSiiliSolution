@@ -3,12 +3,12 @@ import {
     boardsInTheDb,
     columnsInTheDb,
     columnsOfBoardInTheDb,
-    // getTaskOrderOfColumn,
+    getTaskOrderOfColumn,
     initialBoards,
     initializeDb,
     subtasksInTheDb,
     subtasksOfTaskInTheDb,
-    // taskById,
+    taskById,
     tasksInTheDb,
     tasksOfColumnInTheDb,
     testCall
@@ -19,13 +19,15 @@ describe('With initial test data in the database, queries', () => {
     // Reinitialize the database before each test in this describe block
     beforeEach(async () => await initializeDb())
 
-    test('Boards are returned as JSON', async (done) => {
+     test('Boards are returned as JSON', async (done) => {
         const response = await testCall('{ allBoards { id name } }')
         done()
-        const contentType = response.headers['content-type']
+        const contentType = response['content-type']
         expect(contentType).toEqual('application/json; charset=utf-8')
     }, 30000)
+})
 
+    /*
     test('allBoards query returns all the boards in the database', async () => {
         const response = await testCall('{ allBoards { id name columnOrder } }')
 
@@ -182,4 +184,4 @@ describe('mutations', () => {
     })
 })
 
-afterAll(() => afterTests())
+afterAll(() => afterTests()) */
