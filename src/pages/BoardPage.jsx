@@ -38,11 +38,11 @@ const BoardPage = ({ id, eventId }) => {
             id="boardElement"
         // spacing={3}
         >   
-            <Grid item >
-                <Button classes={{ root: projectClasses.navigationButton }} onClick={() => window.history.back()}>Go Back</Button>    
-            </Grid>
-            <Grid item >
-                <Button classes={{ root: projectClasses.navigationButton }} onClick={() => history.push("/")}>Go Home</Button>
+            <Grid container justify="flex-end" >
+                <Grid item >
+                    <Button classes={{ root: projectClasses.navigationButton }} onClick={() => window.history.back()}>Go Back</Button>    
+                    <Button classes={{ root: projectClasses.navigationButton }} onClick={() => history.push("/")}>Go Home</Button>
+                </Grid>
             </Grid>
             <Grid container item direction="column" justify="space-between" classes={{ root: classes.boardHeader }} id="boardHeader">                
                 <Grid item >
