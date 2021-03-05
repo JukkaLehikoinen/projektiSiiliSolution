@@ -134,10 +134,37 @@ export const boardsInTheDb = async () => {
     }
 }
 
+export const addBoardInTheDb = async (data) => {
+    try {
+        const addBoardtoDatabase = await Board.bulkCreate(data)
+        return addBoardtoDatabase
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const boardInTheDb = async (id) => {
+    try {
+        const boardInTheDadabase = await Board.findByPk(id)
+        return boardInTheDadabase
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 export const columnsOfBoardInTheDb = async (id) => {
     try {
         const columns = await Column.findAll({ where: { boardId: id } })
         return columns
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+export const addColumnForBoard = async (data) => {
+    try {
+        const addColumnForBoard = await Column.bulkCreate(data)
+        return addColumnForBoard
     } catch (e) {
         console.log(e)
     }
@@ -152,7 +179,7 @@ export const columnsInTheDb = async () => {
     }
 }
 
-const storiesOfColumnInTheDb = async (id) => {
+export const storiesOfColumnInTheDb = async (id) => {
     try {
         const stories = await Story.findAll({ where: { columnId: id } })
         return stories
@@ -161,7 +188,7 @@ const storiesOfColumnInTheDb = async (id) => {
     }
 }
 
-const storiesInTheDb = async () => {
+export const storiesInTheDb = async () => {
     try {
         const stories = await Story.findAll()
         return stories
@@ -170,7 +197,7 @@ const storiesInTheDb = async () => {
     }
 }
 
-const storyById = async (id) => {
+export const storyById = async (id) => {
     let story
     try {
         story = await Story.findByPk(id)
@@ -247,10 +274,10 @@ export const subtasksInTheDb = async () => {
 
 export const initialBoards = dummyData.boards
 
-export const testCall = async (query) => {await request
+export const testCall = (query) => request
     .post('/graphql')
     .send({ query })
-    }
+    
 
 /* const taskOrderAtStart = await getTaskOrderOfColumn('7bce34e5-385b-41e6-acd3-ceb4bd57b4f6')
         const newTaskOrderArray = [
