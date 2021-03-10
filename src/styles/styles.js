@@ -45,6 +45,19 @@ export const projectPageStyles = makeStyles({
         minWidth: '16rem',
     },
 
+    navigationButton: {
+        background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
+        borderRadius: 3,
+        border: 0,
+        color: colours.white,
+        height: 35,
+        padding: '0 30px',
+        margin: '10px',
+        boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+        fontSize: '0.8rem',
+        minWidth: '8rem',
+    },
+
     addNewButton: {
         height: '6rem',
         width: '6rem',
@@ -63,7 +76,7 @@ export const boardPageStyles = makeStyles({
     root: {
         minHeight: '100%',
         minWidth: '100%',
-        padding: 30,
+        padding: 10,
     },
 
     // BOARD STYLES
