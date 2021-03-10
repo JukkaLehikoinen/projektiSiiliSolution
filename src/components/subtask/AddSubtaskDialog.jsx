@@ -9,6 +9,7 @@ import useAddSubtask from '../../graphql/subtask/hooks/useAddSubtask'
 import useAllUsers from '../../graphql/user/hooks/useAllUsers'
 import { TICKETORDER, BOARDS_COLUMNS_AND_COLUMNORDER } from '../../graphql/fragments'
 import useAllColors from '../../graphql/task/hooks/useAllColors'
+import bubbleSort from '../bubblesort'
 
 const AddSubtaskDialog = ({ addDialogStatus, toggleAddDialog, columnId, taskId, boardId }) => {
     const userQuery = useAllUsers()
@@ -107,7 +108,13 @@ const AddSubtaskDialog = ({ addDialogStatus, toggleAddDialog, columnId, taskId, 
         toggleAddDialog(e)
     }
 
-    const modifiedUserData = userQuery.data.allUsers.map((user) => {
+    let userList = [];
+    userQuery.data.allUsers.map((user) => {
+        userList.push(user)
+    });
+    
+    let alphabeticalOrder = bubbleSort(userList);
+    const modifiedUserData = alphabeticalOrder.map((user) => {
         const newObject = { value: user.id, label: user.userName }
         return newObject
     })
