@@ -12,7 +12,7 @@ const schema = {
 
     Mutation: {
         addUser(root, args) {
-            return dataSources.boardService.addUser(args.userName)
+            return dataSources.boardService.addUser(args.userName, args.projectId)
         },
     },
 }
