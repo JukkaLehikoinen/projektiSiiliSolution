@@ -19,13 +19,13 @@ import {
     addBoardInTheDb
 } from "./utils";
 
-
-describe('With initial test data in the database, queries', () => {
+// FIXME
+describe('With initial test data in the database, graphql queries', () => {
     // Reinitialize the database before each test in this describe block
     beforeEach(async () => await initializeDb())
 
-    test('Boards are returned as JSON', () => {
-        const response = testCall('{ allBoards { id name } }');
+    test('Boards are returned as JSON', async () => {
+        const response = await testCall('{ allBoards { id name } }');
         console.log(response);
         const contentType = response.header['Content-Type'];
         expect(contentType).toEqual('application/json')
@@ -33,31 +33,33 @@ describe('With initial test data in the database, queries', () => {
 
     test('allBoards query returns all the boards in the database', async () => {
 
-        const boardsInTheDatabase = await boardsInTheDb()
+        const boardsInTheDatabase = await testCall('{ allBoards { id name } }')
+
+        console.log(boardsInTheDatabase)
         let boardCount = 0;
-        boardsInTheDatabase.map((board) => {
-            boardCount = boardCount + 1;
-        })
+        // boardsInTheDatabase.map((board) => {
+        //     boardCount = boardCount + 1;
+        // })
         expect(boardCount).toEqual(4)
     })
 
     test('allBoards query returns an array of boards inside the JSON', async () => {
         const boards = await boardsInTheDb()
-        const response = testCall('{ allBoards { id name } }');
+        const response = await testCall('{ allBoards { id name } }');
         const contentType = response.header['Content-Type']
         expect(contentType).toEqual('application/json')
         expect(Array.isArray(boards)).toBe(true)
     })
-    
+
     test('boardById query returns one board with the given id', async () => {
         const response = await boardInTheDb('0f154e01-f8ba-49c8-b2dc-e374d28f7f83')
         const board = response.id;
         expect(board).toBe('0f154e01-f8ba-49c8-b2dc-e374d28f7f83')
     })
 
-    
+
     test('task is returned as JSON', async () => {
-        const response = testCall('{ taskById(id: "e12d6ed1-c275-4047-8f3c-b50050bada6d") { id } }')
+        const response = await testCall('{ taskById(id: "e12d6ed1-c275-4047-8f3c-b50050bada6d") { id } }')
         const contentType = response.header['Content-Type']
         expect(contentType).toEqual('application/json')
     })
@@ -75,7 +77,7 @@ describe('With initial test data in the database, queries', () => {
         expect(Array.isArray([response])).toBe(true)
     })
 })
-    
+
 
 describe('mutations', () => {
     // Reinitialize the database before each test in this describe block

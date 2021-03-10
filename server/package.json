@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node build/index.js",
     "coverage": "jest --coverage --collectCoverageFrom=src/**/*.ts",
-    "test": "cross-env jest --verbose --runInBand --detectOpenHandles",
+    "test": "cross-env jest test.ts --verbose --detectOpenHandles",
+    "test-integ": "jest test.integ.ts --detectOpenHandles --verbose",
     "lint": "eslint src/**/**/*.ts && eslint tests/**/**/*.ts",
     "copy-to-dist": "cp -r src/graphql/typedefs/ build/graphql/typedefs",
     "watch": "tsc -w",

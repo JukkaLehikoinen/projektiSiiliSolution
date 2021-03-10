@@ -13,18 +13,14 @@ import ColorTask from "../src/models/ColorTask";
 import UserSubtask from "../src/models/UserSubtask";
 import UserStory from "../src/models/UserStory";
 import Usertask from "../src/models/UserTask";
-
-const supertest = require('supertest')
-// const db = require('../models/index.js')
-const dummyData = require('./dummyData')
-// const { closeHttpServer } = require('../src/index.js')
-// const { app } = require('../src/index.js')
-
-const request = supertest(expressApp)
+import supertest from "supertest";
+import dummyData from "./dummyData";
+import {startServer} from "../src";
 
 /*
   Drop all the tables, sync the models with the database,
   insert some testdata and return a promise when everything has resolved
+  //TODO Remove all sequelize stuff from here and leave only graphql stuff
 */
 export const initializeDb = async () => {
     try {
@@ -126,12 +122,7 @@ export const afterTests = async () => {
 }
 
 export const boardsInTheDb = async () => {
-    try {
-        const boardsInTheDatabase = await Board.findAll()
-        return boardsInTheDatabase
-    } catch (e) {
-        console.log(e)
-    }
+    return await Board.findAll()
 }
 
 export const addBoardInTheDb = async (data) => {
@@ -274,11 +265,26 @@ export const subtasksInTheDb = async () => {
 
 export const initialBoards = dummyData.boards
 
-export const testCall = (query) => request
+
+const startTestServer = () => {
+    const app = expressApp()
+    startServer(app)
+
+    return supertest(app)
+}
+
+/**
+ * For GraphQL tests
+ * @param query for example: '{ allBoards { id name } }'
+ */
+export const testCall = async (query) => await startTestServer()
     .post('/graphql')
     .send({ query })
-    
 
+
+export const allBoards = async () => {
+    await testCall('{ allBoards { id name } }')
+}
 /* const taskOrderAtStart = await getTaskOrderOfColumn('7bce34e5-385b-41e6-acd3-ceb4bd57b4f6')
         const newTaskOrderArray = [
             '6e766c63-0684-4cf2-8a46-868cfaf84033',

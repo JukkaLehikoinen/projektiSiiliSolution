@@ -2,8 +2,10 @@
   "compilerOptions": {
     "target": "ES2020",
     "lib": ["es2020"],
-    "types": ["jest", "node"],
+    "types": ["jest", "node", "sequelize"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "moduleResolution": "node",
+    "module": "commonjs",
   }
 }
