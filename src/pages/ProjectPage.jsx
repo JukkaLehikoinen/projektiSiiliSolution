@@ -26,6 +26,8 @@ const ProjectPage = ({ id, eventId }) => {
     if (queryResult.loading) return null
     const boardsInOrder = queryResult.data.projectById.boards.slice().sort((a, b) => a.orderNumber - b.orderNumber)
     const projectName = queryResult.data.projectById.name
+    const projectId = queryResult.data.projectById.id
+    window.localStorage.setItem('projectId', projectId)
 
     return (
         <Grid

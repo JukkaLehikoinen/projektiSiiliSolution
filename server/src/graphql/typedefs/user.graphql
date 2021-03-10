@@ -2,6 +2,7 @@ type User {
   id: ID!
   userName: String!
   email: String
+  projectId: String
   tasks: [Task!]!
 }
 

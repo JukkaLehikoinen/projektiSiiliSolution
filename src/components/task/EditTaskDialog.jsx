@@ -133,11 +133,12 @@ const EditTaskDialog = ({
     const handleDialogClick = (e) => e.stopPropagation()
 
     // Modifiying userData to be of form expected by the react select component
-    
-
+    const projectId = window.localStorage.getItem('projectId')
     let userList = [];
     userQuery.data.allUsers.map((user) => {
+        if (user.projectId === projectId) {
         userList.push(user)
+        }
     });
     
     let alphabeticalOrder = bubbleSort(userList);

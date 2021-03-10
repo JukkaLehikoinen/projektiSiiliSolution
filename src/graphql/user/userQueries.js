@@ -6,6 +6,7 @@ export const ALL_USERS = gql`
         allUsers {
             id
             userName
+            projectId
         }
     }
 `
@@ -14,6 +15,7 @@ export const ADD_USER = gql`
         addUser(userName: $userName) {
             id
             userName
+            projectId
         }
     }
 `
