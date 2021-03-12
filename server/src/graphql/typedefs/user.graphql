@@ -2,6 +2,7 @@ type User {
   id: ID!
   userName: String!
   email: String
+  projectId: String
   tasks: [Task!]!
 }
 
@@ -11,5 +12,5 @@ type Query {
 }
 
 type Mutation {
-  addUser(userName: String!): User
+  addUser(userName: String!, projectId: String!): User
 }

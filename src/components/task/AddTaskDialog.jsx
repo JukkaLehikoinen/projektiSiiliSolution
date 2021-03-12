@@ -117,9 +117,12 @@ const AddTaskDialog = ({
         toggleDialog()
     }
 
+    const projectId = window.localStorage.getItem('projectId')
     let userList = [];
     userQuery.data.allUsers.map((user) => {
+        if (user.projectId === projectId) {
         userList.push(user)
+        }
     });
     
     let alphabeticalOrder = bubbleSort(userList);

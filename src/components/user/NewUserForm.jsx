@@ -11,6 +11,7 @@ const NewUserForm = ({ setOpen, open }) => {
     const handleChange = (event) => {
         setName(event.target.value)
     }
+    const projectId = window.localStorage.getItem('projectId')
 
     const handleClose = () => {
         setOpen(false)
@@ -20,6 +21,7 @@ const NewUserForm = ({ setOpen, open }) => {
         addUser({
             variables: {
                 userName: name,
+                projectId: projectId,
             },
         })
         setName('')

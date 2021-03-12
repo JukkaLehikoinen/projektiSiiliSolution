@@ -28,6 +28,11 @@ class User extends Model {
             through: models.UserSubtask,
             foreignKey: 'userId',
         })
+        User.belongsToMany(models.Project, {
+            through: models.Project,
+            foreignKey: 'id',
+        })
+        
     }
 }
 
@@ -39,7 +44,8 @@ User.init({
     },
     userName: STRING,
     passwordHash: STRING,
-    email: STRING
+    email: STRING,
+    projectId: STRING
 }, {
     sequelize,
     modelName: 'User',
