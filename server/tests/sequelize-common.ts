@@ -42,7 +42,7 @@ export const mapProjectById = async (id: string) => {
     })
   ).map((project) => project.get("id"));
 };
-
+//Remember to return to this one
 export const mapProjectBoardsByProjectId = async (id: string) => {
   return (
     await Board.findAll({
@@ -56,7 +56,7 @@ export const mapProjectBoardsByProjectId = async (id: string) => {
 export const findByProjectPk = async (id: string) => {
   return await Project.findByPk(id);
 };
-
+//Remember to return to this
 export const initializeDb = async () => {
   await dbConfig.sync({ force: true });
   await Promise.all(
