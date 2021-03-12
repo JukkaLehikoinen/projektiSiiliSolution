@@ -26,9 +26,6 @@ export const up: Migration = async ({ context: sequelize }) => {
       allowNull: false,
       type: DataTypes.DATE
     },
-    projectId: {
-      type: DataTypes.STRING
-    },
   });
 };
 
