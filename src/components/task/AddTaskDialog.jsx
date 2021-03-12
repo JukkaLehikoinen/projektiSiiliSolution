@@ -12,6 +12,7 @@ import useAddTask from '../../graphql/task/hooks/useAddTask'
 import useAllUsers from '../../graphql/user/hooks/useAllUsers'
 import useAllColors from '../../graphql/task/hooks/useAllColors'
 import bubbleSort from '../bubblesort'
+import colourStyles from '../SelectDialogColors'
 
 const AddTaskDialog = ({
     dialogStatus, column, toggleDialog, boardId,
@@ -193,6 +194,7 @@ const AddTaskDialog = ({
                         options={modifiedColorData}
                         onChange={handleColorsChange}
                         closeMenuOnSelect={false}
+                        styles={colourStyles}
                     />
                     <Select
                         className="selectField"

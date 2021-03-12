@@ -21,6 +21,7 @@ import {
 } from "../../graphql/fragments";
 import useAllColors from "../../graphql/task/hooks/useAllColors";
 import bubbleSort from '../bubblesort'
+import colourStyles from '../SelectDialogColors'
 
 const AddSubtaskDialog = ({
   addDialogStatus,
@@ -212,6 +213,7 @@ const AddSubtaskDialog = ({
             options={modifiedColorData}
             onChange={handleColorsChange}
             closeMenuOnSelect={false}
+            styles={colourStyles}
           />
           <Select
             className="selectField"

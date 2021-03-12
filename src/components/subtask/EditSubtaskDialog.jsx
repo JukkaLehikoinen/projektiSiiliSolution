@@ -9,6 +9,7 @@ import { boardPageStyles } from '../../styles/styles'
 import useAllColors from '../../graphql/task/hooks/useAllColors'
 import useAllUsers from '../../graphql/user/hooks/useAllUsers'
 import bubbleSort from '../bubblesort'
+import colourStyles from '../SelectDialogColors'
 
 const EditSubtaskDialog = ({
     dialogStatus, editId, toggleDialog, subtask,
@@ -199,6 +200,7 @@ const EditSubtaskDialog = ({
                         components={animatedComponents}
                         isMulti
                         onChange={handleColorsChange}
+                        styles={colourStyles}
                     />
                     <Select
                         className="selectField"
