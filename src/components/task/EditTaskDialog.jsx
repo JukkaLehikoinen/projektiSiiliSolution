@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
-    Dialog, Grid, Button, TextField, DialogContent, DialogActions, DialogTitle,
+    Dialog, Grid, Button, TextField, DialogContent, DialogActions, DialogTitle, 
 } from '@material-ui/core'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
@@ -12,6 +12,7 @@ import { boardPageStyles } from '../../styles/styles'
 import useAllUsers from '../../graphql/user/hooks/useAllUsers'
 import useAllColors from '../../graphql/task/hooks/useAllColors'
 import bubbleSort from '../bubblesort'
+import chroma from 'chroma-js';
 
 const EditTaskDialog = ({
     dialogStatus, editId, toggleDialog, task,
@@ -32,6 +33,7 @@ const EditTaskDialog = ({
     const arrayOfOldColorIds = task?.colors?.map((color) => color.id)
     const animatedComponents = makeAnimated()
     const classes = boardPageStyles()
+    let varit = [];
 
     useEffect(() => {
         setTitle(task.title)
@@ -166,7 +168,7 @@ const EditTaskDialog = ({
     // data for showing only the members not yet chosen
     const modifiedMemberOptions = modifiedUserData
         .filter((user) => !arrayOfOldMemberIds.includes(user.id))
-
+    
     const modifiedColorOptions = modifiedColorData
         .filter((color) => !arrayOfOldColorIds.includes(color.id))
 
@@ -177,6 +179,58 @@ const EditTaskDialog = ({
         }
         return newObject
     })
+    
+
+    const colourStyles = {
+        control: styles => ({ ...styles, backgroundColor: 'white' }),
+        option: (styles, { data, isDisabled, isFocused, isSelected }) => {
+          const color = chroma(data.label);
+          return {
+            ...styles,
+            backgroundColor: isDisabled
+              ? null
+              : isSelected
+              ? data.label
+              : isFocused
+              ? color.alpha(0.1).css()
+              : null,
+            color: isDisabled
+              ? '#ccc'
+              : isSelected
+              ? chroma.contrast(color, 'white') > 2
+                ? 'white'
+                : 'black'
+              : data.label,
+            cursor: isDisabled ? 'not-allowed' : 'default',
+      
+            ':active': {
+              ...styles[':active'],
+              backgroundColor:
+                !isDisabled && (isSelected ? data.label : color.alpha(0.3).css()),
+            },
+          };
+        },
+        multiValue: (styles, { data }) => {
+          const color = chroma(data.label);
+          return {
+            ...styles,
+            backgroundColor: color.alpha(0.1).css(),
+          };
+        },
+        multiValueLabel: (styles, { data }) => ({
+          ...styles,
+          color: data.label,
+        }),
+        multiValueRemove: (styles, { data }) => ({
+          ...styles,
+          color: data.label,
+          ':hover': {
+            backgroundColor: data.label,
+            color: 'white',
+          },
+        }),
+      };
+  
 
     return (
         <Grid>
@@ -223,12 +277,13 @@ const EditTaskDialog = ({
                         className="selectField"
                         closeMenuOnSelect={false}
                         placeholder="Select colors"
-                        options={modifiedColorOptions}
                         defaultValue={chosenColorsData}
                         components={animatedComponents}
                         isMulti
                         onChange={handleColorsChange}
                         id="taskSelectColor"
+                        options={modifiedColorOptions}
+                        styles={colourStyles}
                     />
                     <Select
                         className="selectField"
