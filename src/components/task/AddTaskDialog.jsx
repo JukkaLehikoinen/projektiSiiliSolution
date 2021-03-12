@@ -125,7 +125,7 @@ const AddTaskDialog = ({
         userList.push(user)
         }
     });
-    
+
     let alphabeticalOrder = bubbleSort(userList);
     const modifiedUserData = alphabeticalOrder.map((user) => {
         const newObject = { value: user.id, label: user.userName }
@@ -133,7 +133,7 @@ const AddTaskDialog = ({
     })
 
     const modifiedColorData = colorQuery.data.allColors.map((color) => {
-        const newObject = { value: color.id, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
+        const newObject = { value: color.id, color: color.color, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
         return newObject
     })
 

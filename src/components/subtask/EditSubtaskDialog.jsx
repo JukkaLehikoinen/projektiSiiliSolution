@@ -108,7 +108,7 @@ const EditSubtaskDialog = ({
         userList.push(user)
         }
     });
-    
+
     let alphabeticalOrder = bubbleSort(userList);
     const modifiedUserData = alphabeticalOrder.map((user) => {
         const newObject = { value: user.id, label: user.userName }
@@ -121,12 +121,13 @@ const EditSubtaskDialog = ({
         return newObject
     })
 
-    const modifiedColorData = colorQuery.data.allColors.map((color) => {
-        const newObject = { value: color.id, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
+    const chosenColorsData = subtask.colors.map((color) => {
+        const newObject = { value: color.id, color: color.color, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
         return newObject
     })
-    const chosenColorsData = subtask.colors.map((color) => {
-        const newObject = { value: color.id, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
+
+    const modifiedColorData = colorQuery.data.allColors.map((color) => {
+        const newObject = { value: color.id, color: color.color, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
         return newObject
     })
 

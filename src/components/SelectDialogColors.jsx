@@ -4,13 +4,13 @@ import chroma from 'chroma-js';
 const colourStyles = {
     control: styles => ({ ...styles, backgroundColor: 'white' }),
     option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-      const color = chroma(data.label);
+      const color = chroma(data.color);
       return {
         ...styles,
         backgroundColor: isDisabled
           ? null
           : isSelected
-          ? data.label
+          ? data.color
           : isFocused
           ? color.alpha(0.1).css()
           : null,
@@ -20,18 +20,18 @@ const colourStyles = {
           ? chroma.contrast(color, 'white') > 2
             ? 'white'
             : 'black'
-          : data.label,
+          : data.color,
         cursor: isDisabled ? 'not-allowed' : 'default',
   
         ':active': {
           ...styles[':active'],
           backgroundColor:
-            !isDisabled && (isSelected ? data.label : color.alpha(0.3).css()),
+            !isDisabled && (isSelected ? data.color : color.alpha(0.3).css()),
         },
       };
     },
     multiValue: (styles, { data }) => {
-      const color = chroma(data.label);
+      const color = chroma(data.color);
       return {
         ...styles,
         backgroundColor: color.alpha(0.1).css(),
@@ -39,13 +39,13 @@ const colourStyles = {
     },
     multiValueLabel: (styles, { data }) => ({
       ...styles,
-      color: data.label,
+      color: data.color,
     }),
     multiValueRemove: (styles, { data }) => ({
       ...styles,
-      color: data.label,
+      color: data.color,
       ':hover': {
-        backgroundColor: data.label,
+        backgroundColor: data.color,
         color: 'white',
       },
     }),

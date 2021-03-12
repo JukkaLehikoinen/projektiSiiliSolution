@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
-    Dialog, Grid, Button, TextField, DialogContent, DialogActions, DialogTitle, 
+    Dialog, Grid, Button, TextField, DialogContent, DialogActions, DialogTitle,
 } from '@material-ui/core'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated'
@@ -141,7 +141,7 @@ const EditTaskDialog = ({
         userList.push(user)
         }
     });
-    
+
     let alphabeticalOrder = bubbleSort(userList);
     const modifiedUserData = alphabeticalOrder.map((user) => {
         const newObject = { value: user.id, label: user.userName }
@@ -155,19 +155,19 @@ const EditTaskDialog = ({
     })
 
     const chosenColorsData = task.colors.map((color) => {
-        const newObject = { value: color.id, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
+        const newObject = { value: color.id, color: color.color, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
         return newObject
     })
 
     const modifiedColorData = colorQuery.data.allColors.map((color) => {
-        const newObject = { value: color.id, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
+        const newObject = { value: color.id, color: color.color, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
         return newObject
     })
 
     // data for showing only the members not yet chosen
     const modifiedMemberOptions = modifiedUserData
         .filter((user) => !arrayOfOldMemberIds.includes(user.id))
-    
+
     const modifiedColorOptions = modifiedColorData
         .filter((color) => !arrayOfOldColorIds.includes(color.id))
 
@@ -178,10 +178,7 @@ const EditTaskDialog = ({
         }
         return newObject
     })
-    
 
-    
-  
 
     return (
         <Grid>
