@@ -9,10 +9,10 @@ import {
     sizeSchema, titleSchema, descriptionSchema, taskSchema,
 } from './validationSchema'
 import { boardPageStyles } from '../../styles/styles'
+import colourStyles from '../SelectDialogColors'
 import useAllUsers from '../../graphql/user/hooks/useAllUsers'
 import useAllColors from '../../graphql/task/hooks/useAllColors'
 import bubbleSort from '../bubblesort'
-import chroma from 'chroma-js';
 
 const EditTaskDialog = ({
     dialogStatus, editId, toggleDialog, task,
@@ -33,7 +33,6 @@ const EditTaskDialog = ({
     const arrayOfOldColorIds = task?.colors?.map((color) => color.id)
     const animatedComponents = makeAnimated()
     const classes = boardPageStyles()
-    let varit = [];
 
     useEffect(() => {
         setTitle(task.title)
@@ -181,55 +180,7 @@ const EditTaskDialog = ({
     })
     
 
-    const colourStyles = {
-        control: styles => ({ ...styles, backgroundColor: 'white' }),
-        option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-          const color = chroma(data.label);
-          return {
-            ...styles,
-            backgroundColor: isDisabled
-              ? null
-              : isSelected
-              ? data.label
-              : isFocused
-              ? color.alpha(0.1).css()
-              : null,
-            color: isDisabled
-              ? '#ccc'
-              : isSelected
-              ? chroma.contrast(color, 'white') > 2
-                ? 'white'
-                : 'black'
-              : data.label,
-            cursor: isDisabled ? 'not-allowed' : 'default',
-      
-            ':active': {
-              ...styles[':active'],
-              backgroundColor:
-                !isDisabled && (isSelected ? data.label : color.alpha(0.3).css()),
-            },
-          };
-        },
-        multiValue: (styles, { data }) => {
-          const color = chroma(data.label);
-          return {
-            ...styles,
-            backgroundColor: color.alpha(0.1).css(),
-          };
-        },
-        multiValueLabel: (styles, { data }) => ({
-          ...styles,
-          color: data.label,
-        }),
-        multiValueRemove: (styles, { data }) => ({
-          ...styles,
-          color: data.label,
-          ':hover': {
-            backgroundColor: data.label,
-            color: 'white',
-          },
-        }),
-      };
+    
   
 
     return (
