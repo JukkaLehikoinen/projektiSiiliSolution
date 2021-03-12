@@ -1,100 +1,103 @@
+import { initialBoards, testCall } from "./utils";
 import {
-    afterTests,
-    boardsInTheDb,
-    boardInTheDb,
-    columnsInTheDb,
-    columnsOfBoardInTheDb,
-    getTaskOrderOfColumn,
-    initialBoards,
-    initializeDb,
-    storiesOfColumnInTheDb,
-    storiesInTheDb,
-    storyById,
-    subtasksInTheDb,
-    subtasksOfTaskInTheDb,
-    taskById,
-    tasksInTheDb,
-    tasksOfColumnInTheDb,
-    testCall,
-    addBoardInTheDb
-} from "./utils";
+  afterTests,
+  boardsInTheDb,
+  boardInTheDb,
+  columnsInTheDb,
+  columnsOfBoardInTheDb,
+  getTaskOrderOfColumn,
+  initializeDb,
+  storiesOfColumnInTheDb,
+  storiesInTheDb,
+  storyById,
+  subtasksInTheDb,
+  subtasksOfTaskInTheDb,
+  taskById,
+  tasksInTheDb,
+  tasksOfColumnInTheDb,
+  addBoardInTheDb,
+} from "./sequelize-common";
 
 // FIXME
-describe('With initial test data in the database, graphql queries', () => {
-    // Reinitialize the database before each test in this describe block
-    beforeEach(async () => await initializeDb())
+describe("With initial test data in the database, graphql queries", () => {
+  // Reinitialize the database before each test in this describe block
+  beforeEach(async () => await initializeDb());
 
-    test('Boards are returned as JSON', async () => {
-        const response = await testCall('{ allBoards { id name } }');
-        console.log(response);
-        const contentType = response.header['Content-Type'];
-        expect(contentType).toEqual('application/json')
-    })
+  test("Boards are returned as JSON", async () => {
+    const response = await testCall("{ allBoards { id name } }");
+    console.log(response);
+    const contentType = response.header["Content-Type"];
+    expect(contentType).toEqual("application/json");
+  });
 
-    test('allBoards query returns all the boards in the database', async () => {
+  test("allBoards query returns all the boards in the database", async () => {
+    const boardsInTheDatabase = await testCall("{ allBoards { id name } }");
 
-        const boardsInTheDatabase = await testCall('{ allBoards { id name } }')
+    console.log(boardsInTheDatabase);
+    let boardCount = 0;
+    // boardsInTheDatabase.map((board) => {
+    //     boardCount = boardCount + 1;
+    // })
+    expect(boardCount).toEqual(4);
+  });
 
-        console.log(boardsInTheDatabase)
-        let boardCount = 0;
-        // boardsInTheDatabase.map((board) => {
-        //     boardCount = boardCount + 1;
-        // })
-        expect(boardCount).toEqual(4)
-    })
+  test("allBoards query returns an array of boards inside the JSON", async () => {
+    const boards = await boardsInTheDb();
+    const response = await testCall("{ allBoards { id name } }");
+    const contentType = response.header["Content-Type"];
+    expect(contentType).toEqual("application/json");
+    expect(Array.isArray(boards)).toBe(true);
+  });
 
-    test('allBoards query returns an array of boards inside the JSON', async () => {
-        const boards = await boardsInTheDb()
-        const response = await testCall('{ allBoards { id name } }');
-        const contentType = response.header['Content-Type']
-        expect(contentType).toEqual('application/json')
-        expect(Array.isArray(boards)).toBe(true)
-    })
+  test("boardById query returns one board with the given id", async () => {
+    const response = await boardInTheDb("0f154e01-f8ba-49c8-b2dc-e374d28f7f83");
+    const board = response.id;
+    expect(board).toBe("0f154e01-f8ba-49c8-b2dc-e374d28f7f83");
+  });
 
-    test('boardById query returns one board with the given id', async () => {
-        const response = await boardInTheDb('0f154e01-f8ba-49c8-b2dc-e374d28f7f83')
-        const board = response.id;
-        expect(board).toBe('0f154e01-f8ba-49c8-b2dc-e374d28f7f83')
-    })
+  test("task is returned as JSON", async () => {
+    const response = await testCall(
+      '{ taskById(id: "e12d6ed1-c275-4047-8f3c-b50050bada6d") { id } }'
+    );
+    const contentType = response.header["Content-Type"];
+    expect(contentType).toEqual("application/json");
+  });
 
+  test("taskById query returns one task with the given id of 7b29f130-fc89-4f16-b0ef-71a06e09110c", async () => {
+    const response = await taskById("7b29f130-fc89-4f16-b0ef-71a06e09110c");
+    const task = response.id;
+    expect(task).toBe("7b29f130-fc89-4f16-b0ef-71a06e09110c");
+  });
 
-    test('task is returned as JSON', async () => {
-        const response = await testCall('{ taskById(id: "e12d6ed1-c275-4047-8f3c-b50050bada6d") { id } }')
-        const contentType = response.header['Content-Type']
-        expect(contentType).toEqual('application/json')
-    })
+  // This is possibly outdated
+  test("subtasks array of task can be accessed in the response of taskById query", async () => {
+    const response = await taskById("7b29f130-fc89-4f16-b0ef-71a06e09110c");
+    expect(Array.isArray([response])).toBe(true);
+  });
+});
 
+describe("mutations", () => {
+  // Reinitialize the database before each test in this describe block
+  beforeEach(() => initializeDb());
 
-    test('taskById query returns one task with the given id of 7b29f130-fc89-4f16-b0ef-71a06e09110c', async () => {
-        const response = await taskById('7b29f130-fc89-4f16-b0ef-71a06e09110c');
-        const task = response.id;
-        expect(task).toBe('7b29f130-fc89-4f16-b0ef-71a06e09110c')
-    })
-
-        // This is possibly outdated
-    test('subtasks array of task can be accessed in the response of taskById query', async () => {
-        const response = await taskById('7b29f130-fc89-4f16-b0ef-71a06e09110c');
-        expect(Array.isArray([response])).toBe(true)
-    })
-})
-
-
-describe('mutations', () => {
-    // Reinitialize the database before each test in this describe block
-    beforeEach(() => initializeDb())
-
-    test('addBoard mutation responds with JSON', async () => {
-        const response = await addBoardInTheDb([{
-            id: '9z999z99-z9zz-99z9-z9zz-z999z99z9z99', prettyId: 'INT',
-            name: 'ISOPAHATAULU', creatorId: '8b251e01-0bec-41bf-b756-ba53c76d04e6', orderNumber: 4, ticketCount: 0,
-            projectId: '9da1b35f-181a-4397-a5a5-47abced10a66'
-        }])
-        expect(Array.isArray(response)).toBe(true);
-        const boardsAtEnd = await boardsInTheDb()
-        expect(initialBoards.length + 1).toEqual(boardsAtEnd.length)
-    })
-})
-afterAll(() => afterTests())
+  test("addBoard mutation responds with JSON", async () => {
+    const response = await addBoardInTheDb([
+      {
+        id: "9z999z99-z9zz-99z9-z9zz-z999z99z9z99",
+        prettyId: "INT",
+        name: "ISOPAHATAULU",
+        creatorId: "8b251e01-0bec-41bf-b756-ba53c76d04e6",
+        orderNumber: 4,
+        ticketCount: 0,
+        projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
+      },
+    ]);
+    expect(Array.isArray(response)).toBe(true);
+    const boardsAtEnd = await boardsInTheDb();
+    expect(initialBoards.length + 1).toEqual(boardsAtEnd.length);
+  });
+});
+afterAll(() => afterTests());
 /*
 
     test('addColumnForBoard mutation responds with JSON', async () => {
