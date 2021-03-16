@@ -20,7 +20,7 @@ const httpLink = new HttpLink({
     },
 })*/
 
-/*const splitLink = split(
+const splitLink = split(
     ({ query }) => {
         const definition = getMainDefinition(query)
         return (
@@ -30,7 +30,7 @@ const httpLink = new HttpLink({
     },
     wsLink,
     httpLink,
-)*/
+)
 
 export const client = new ApolloClient({
     // link: splitLink,
