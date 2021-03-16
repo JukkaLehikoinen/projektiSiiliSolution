@@ -8,17 +8,17 @@ import { getMainDefinition } from '@apollo/client/utilities'
 require('dotenv').config('../.env')
 
 const backEndUri = process.env.REACT_APP_ENVIRONMENT === 'production' ? process.env.REACT_APP_LOADBALANCER_HTTP_URI : 'http://localhost:4001/graphql';
-const wsUri = process.env.REACT_APP_ENVIRONMENT === 'production' ? process.env.REACT_APP_LOADBALANCER_WS_URI : 'ws://localhost:4001/graphql';
+// const wsUri = process.env.REACT_APP_ENVIRONMENT === 'production' ? process.env.REACT_APP_LOADBALANCER_WS_URI : 'ws://localhost:4001/graphql';
 const httpLink = new HttpLink({
     uri: backEndUri,
 })
 
-const wsLink = new WebSocketLink({
+/*const wsLink = new WebSocketLink({
     uri: wsUri,
     options: {
         reconnect: true,
     },
-})
+})*/
 
 const splitLink = split(
     ({ query }) => {
