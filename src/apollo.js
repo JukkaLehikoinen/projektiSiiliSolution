@@ -33,7 +33,7 @@ const splitLink = split(
 )
 
 export const client = new ApolloClient({
-    // link: splitLink,
+    link: splitLink,
     cache: new InMemoryCache({
         typePolicies: {
             Board: {
