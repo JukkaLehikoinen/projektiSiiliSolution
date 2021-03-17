@@ -14,6 +14,7 @@ import useAllUsers from '../../graphql/user/hooks/useAllUsers'
 import useAllColors from '../../graphql/task/hooks/useAllColors'
 import bubbleSort from '../bubblesort'
 
+
 const EditTaskDialog = ({
     dialogStatus, editId, toggleDialog, task, boardId
 }) => {
@@ -37,7 +38,6 @@ const EditTaskDialog = ({
     const [EpicColors, setEpicColors] = useState()
     let changedColors = [];
 
-    console.log(boardId)
     useEffect(() => {
         setTitle(task.title)
         setSize(task.size)
@@ -106,8 +106,10 @@ const EditTaskDialog = ({
         }
     }
 
+    //  const [addEpicColors] = useAddEpicColor()
     const inputChanged = (event) => {
-        changedColors[event.target.id].value = event.target.value
+        changedColors[event.target.id].name = event.target.value
+        //setEpicColors(changedColors[event.target.id])
       }
 
       
@@ -122,7 +124,7 @@ const EditTaskDialog = ({
                     {
                         changedColors.map((color, index) => <tr key={index}>
                             <td style={{ height:'20px', width:'20px', backgroundColor: color.color }}></td>
-                            <td><input name={color.color} id={index} onChange={inputChanged} defaultValue={color.value}></input></td></tr>)
+                            <td><input name={color.color} id={index} onChange={inputChanged} defaultValue={color.name}></input></td></tr>)
                     }
                 </tbody></table>
             </div>
@@ -190,22 +192,25 @@ const EditTaskDialog = ({
         return newObject
     })
 
-    const chosenColorsData = task.colors.map((color) => {
+    const chosenColorsData = task.colors.map((color) => {          
         const newObject = { value: color.id, color: color.color, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
         return newObject
     })
 
-    const testi = async () => {
+    const addColorsToChangedColors = async () => {
         const modifiedColorData = colorQuery.data.allColors.map((color) => {
-            changedColors.push({id: color.id, color: color.color, value: color.color});
+            changedColors.push({id: color.id, color: color.color, name: color.color});
         })
     }
-
-    const modifiedColorData = colorQuery.data.allColors.map((color) => {
-        const newObject = { value: color.id, color: color.color, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
+    addColorsToChangedColors();
+    if (EpicColors) {
+        changedColors=EpicColors;
+    }
+    const modifiedColorData = changedColors.map((color) => {
+        const newObject = { value: color.id, color: color.color, label: color.name.charAt(0).toUpperCase() + color.name.slice(1) }
         return newObject
     })
-    testi();
+    
 
     // data for showing only the members not yet chosen
     const modifiedMemberOptions = modifiedUserData
