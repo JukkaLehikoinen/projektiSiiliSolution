@@ -15,7 +15,7 @@ import useAllColors from '../../graphql/task/hooks/useAllColors'
 import bubbleSort from '../bubblesort'
 
 const EditTaskDialog = ({
-    dialogStatus, editId, toggleDialog, task,
+    dialogStatus, editId, toggleDialog, task, boardId
 }) => {
     const [editTask] = useEditTask()
     const userQuery = useAllUsers()
@@ -34,7 +34,10 @@ const EditTaskDialog = ({
     const animatedComponents = makeAnimated()
     const classes = boardPageStyles()
     const [options, setOptions] = useState('Rename Colors')
+    const [EpicColors, setEpicColors] = useState()
+    let changedColors = [];
 
+    console.log(boardId)
     useEffect(() => {
         setTitle(task.title)
         setSize(task.size)
@@ -98,18 +101,28 @@ const EditTaskDialog = ({
         if (options === 'Rename Colors') {
             setOptions('Save changes')
         } else {
+            setEpicColors(changedColors)
             setOptions('Rename Colors')
         }
     }
 
+    const inputChanged = (event) => {
+        changedColors[event.target.id].value = event.target.value
+      }
+
+      
     const colorList = () => {
+        if (EpicColors) {
+            changedColors = EpicColors
+        }
+
         return (
             <div>
                 <table><tbody>
                     {
-                        colorQuery.data.allColors.map((color, index) => <tr key={index}>
+                        changedColors.map((color, index) => <tr key={index}>
                             <td style={{ height:'20px', width:'20px', backgroundColor: color.color }}></td>
-                            <td><input defaultValue={color.color}></input></td></tr>)
+                            <td><input name={color.color} id={index} onChange={inputChanged} defaultValue={color.value}></input></td></tr>)
                     }
                 </tbody></table>
             </div>
@@ -182,10 +195,17 @@ const EditTaskDialog = ({
         return newObject
     })
 
+    const testi = async () => {
+        const modifiedColorData = colorQuery.data.allColors.map((color) => {
+            changedColors.push({id: color.id, color: color.color, value: color.color});
+        })
+    }
+
     const modifiedColorData = colorQuery.data.allColors.map((color) => {
         const newObject = { value: color.id, color: color.color, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
         return newObject
     })
+    testi();
 
     // data for showing only the members not yet chosen
     const modifiedMemberOptions = modifiedUserData
