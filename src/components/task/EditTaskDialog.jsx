@@ -33,6 +33,7 @@ const EditTaskDialog = ({
     const arrayOfOldColorIds = task?.colors?.map((color) => color.id)
     const animatedComponents = makeAnimated()
     const classes = boardPageStyles()
+    const [options, setOptions] = useState('Rename Colors')
 
     useEffect(() => {
         setTitle(task.title)
@@ -91,6 +92,28 @@ const EditTaskDialog = ({
 
     const handleColorsChange = (event) => {
         setColors(Array.isArray(event) ? event.map((color) => color.value) : [])
+    }
+
+    const renameColors = () => {
+        if (options === 'Rename Colors') {
+            setOptions('Save changes')
+        } else {
+            setOptions('Rename Colors')
+        }
+    }
+
+    const colorList = () => {
+        return (
+            <div>
+                <table><tbody>
+                    {
+                        colorQuery.data.allColors.map((color, index) => <tr key={index}>
+                            <td style={{ height:'20px', width:'20px', backgroundColor: color.color }}></td>
+                            <td><input defaultValue={color.color}></input></td></tr>)
+                    }
+                </tbody></table>
+            </div>
+        )
     }
 
     const handleSave = async (event) => {
@@ -269,12 +292,22 @@ const EditTaskDialog = ({
                         onChange={handleDescriptionChange}
                     />
                 </DialogContent>
+                <DialogContent>
+                    {options === 'Save changes' ? (<div> {colorList()}</div>) : (<div></div>)}
+                </DialogContent>
                 <DialogActions>
                     <Button
                         onClick={handleCancel}
                         color="secondary"
                     >
                         Cancel
+                    </Button>
+                    <Button
+                        onClick={() => renameColors()}
+                        color="default"
+                        id="changeColors"
+                    >
+                        {options}
                     </Button>
                     <Button
                         onClick={handleSave}
