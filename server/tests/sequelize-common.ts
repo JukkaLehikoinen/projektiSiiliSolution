@@ -57,6 +57,7 @@ export const findByProjectPk = async (id: string) => {
   return await Project.findByPk(id);
 };
 //Remember to return to this
+//HOW WE TEST THESE?
 export const initializeDb = async () => {
   await dbConfig.sync({ force: true });
   await Promise.all(
@@ -174,15 +175,17 @@ export const addColumnForBoard = async (data) => {
 export const columnsInTheDb = async () => {
   return await Column.findAll();
 };
-
+//RETURN TO THIS LATER
 export const storiesOfColumnInTheDb = async (id) => {
-  return await Story.findAll({ where: { columnId: id } });
+  const stories = await Story.findAll({ where: { columnId: id } });
+  return stories;
 };
 
 export const storiesInTheDb = async () => {
   return await Story.findAll();
 };
 
+//RETURN TO THIS LATER
 export const storyById = async (id) => {
   let story;
 
@@ -199,6 +202,7 @@ export const tasksInTheDb = async () => {
   return await Task.findAll();
 };
 
+//RETURN TO THIS LATER
 export const taskById = async (id) => {
   let task;
 
@@ -207,6 +211,7 @@ export const taskById = async (id) => {
   return task;
 };
 
+//RETURN TO THIS
 export const getTaskOrderOfColumn = async (columnId) => {
   let arrayOfIds;
 
