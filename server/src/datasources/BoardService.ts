@@ -401,7 +401,7 @@ export class BoardService {
             subtask.ownerId = ownerId
             await subtask.save()
             // Updating userSubtasks junction table
-            await Promise.all(addedMembers.map(async (userId: any) => {
+            await Promise.all(addedMembers.map(async (userId) => {
                 await this.addMemberForSubtask(subtask.id, userId)
             }))
             await Promise.all(removedMemberIds.map(async (userId: any) => {

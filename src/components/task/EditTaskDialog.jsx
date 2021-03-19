@@ -106,7 +106,7 @@ const EditTaskDialog = ({
             setOptions('Save changes')
         } else {
             setEpicColors(changedColors)
-            for (let i = 0; i < changedColors.length -1; i++) {
+            for (let i = 0; i < changedColors.length; i++) {
                 addEpicColor({
                     variables: {
                         colorId:changedColors[i].id,
