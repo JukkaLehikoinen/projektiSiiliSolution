@@ -7,6 +7,7 @@ import Task from "../models/Task";
 import Subtask from "../models/Subtask";
 import ColorTask from "../models/ColorTask";
 import Color from "../models/Color";
+import ColorBoard from "../models/ColorBoard"
 import ColorSubtask from "../models/ColorSubtask";
 import UserStory from "../models/UserStory";
 import User from "../models/User";
@@ -930,6 +931,31 @@ export class BoardService {
             console.error(e)
         }
         return addedUser
+    }
+
+    async allEpicColors() {
+        let epicColorsFromDB
+        try {
+            epicColorsFromDB = await ColorBoard.findAll()
+        } catch (e) {
+            console.error(e)
+        }
+        return epicColorsFromDB
+    }
+
+
+    async addEpicColors(colorId: any, boardId: any, name: any) {
+        let addedEpicColor
+        try {
+            addedEpicColor = await ColorBoard.create({
+                colorId: colorId,
+                boardId: boardId,
+                name: name,
+            })
+        } catch (e) {
+            console.error(e)
+        }
+        return addedEpicColor
     }
 
     async getOwnerById(ownerId: any) {

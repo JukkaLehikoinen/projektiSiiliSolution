@@ -1,4 +1,4 @@
-import {BuildOptions, Model, UUID} from 'sequelize';
+import {BuildOptions, Model, STRING, UUID} from 'sequelize';
 import { dbConfig as sequelize } from "../database";
 import Board from "./Board";
 import Color from "./Color";
@@ -6,6 +6,7 @@ import Color from "./Color";
 class ColorBoard extends Model {
   public boardId!: string;
   public colorId!: string;
+  public name!: string;
 
   static associate(models: any) {
     ColorBoard.belongsTo(models.Board, { foreignKey: 'boardId', targetKey: 'id', onDelete: 'cascade' })
@@ -30,7 +31,8 @@ ColorBoard.init({
       key: 'id',
     },
     primaryKey: true
-  }
+  },
+  name: STRING
 }, {
   sequelize,
   modelName: 'ColorBoard',
