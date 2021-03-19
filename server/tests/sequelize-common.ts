@@ -66,13 +66,21 @@ export const initializeDb = async () => {
       return resolved;
     })
   );
+
+  const users = await User.findAll()
+  expect(users.length).toEqual(7)
+
   await Promise.all(
     dummyData.projects.map(async (project) => {
       const resolved = await Project.create(project);
       return resolved;
     })
   );
-  await Promise.all(
+
+    const projects = await Project.findAll()
+    expect(projects.length).toEqual(1)
+
+    await Promise.all(
     dummyData.colors.map(async (color) => {
       const resolved = await Color.create(color);
       return resolved;
