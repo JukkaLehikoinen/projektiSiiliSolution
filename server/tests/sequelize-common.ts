@@ -64,7 +64,6 @@ export const initializeDb = async () => {
     dummyData.users.map(async (user) => {
       const resolved = await User.create(user);
       const users = await User.findAll();
-      console.log(users)
       expect(users.length).toEqual(7)
       return resolved;
     })
