@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import {
-    Grid, FormControlLabel, Switch,
+    Grid, FormControlLabel, Switch, Button
 } from '@material-ui/core'
 import Board from '../components/board/Board'
 import SwimlaneView from '../components/swimlane/SwimlaneView'
 import { boardPageStyles } from '../styles/styles'
+import { projectPageStyles } from '../styles/styles'
+import '../styles.css'
+import { useHistory } from "react-router-dom";
 import useBoardById from '../graphql/board/hooks/useBoardById'
 import useBoardSubscriptions from '../graphql/subscriptions/useBoardSubscriptions'
 import { client } from '../apollo'
@@ -14,6 +17,8 @@ const BoardPage = ({ id, eventId }) => {
         client.resetStore()
     }, [])
     const classes = boardPageStyles()
+    const projectClasses = projectPageStyles()
+    const history = useHistory();
     const [view, toggleView] = useState('kanban')
     const queryResult = useBoardById(id)
     useBoardSubscriptions(id, eventId)
@@ -32,9 +37,15 @@ const BoardPage = ({ id, eventId }) => {
             classes={{ root: classes.root }}
             id="boardElement"
         // spacing={3}
-        >
-            <Grid container item direction="column" justify="space-between" classes={{ root: classes.boardHeader }} id="boardHeader">
-                <Grid item>
+        >   
+            <Grid container justify="flex-end" >
+                <Grid item >
+                    <Button classes={{ root: projectClasses.navigationButton }} onClick={() => window.history.back()}>Go Back</Button>    
+                    <Button classes={{ root: projectClasses.navigationButton }} onClick={() => history.push("/")}>Go Home</Button>
+                </Grid>
+            </Grid>
+            <Grid container item direction="column" justify="space-between" classes={{ root: classes.boardHeader }} id="boardHeader">                
+                <Grid item >
                     <h1>{board.name}</h1>
                 </Grid>
                 <Grid item>

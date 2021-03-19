@@ -8,6 +8,7 @@ import useEditSubtask from '../../graphql/subtask/hooks/useEditSubtask'
 import { boardPageStyles } from '../../styles/styles'
 import useAllColors from '../../graphql/task/hooks/useAllColors'
 import useAllUsers from '../../graphql/user/hooks/useAllUsers'
+import bubbleSort from '../bubblesort'
 
 const EditSubtaskDialog = ({
     dialogStatus, editId, toggleDialog, subtask,
@@ -99,10 +100,20 @@ const EditSubtaskDialog = ({
     const handleDialogClick = (e) => e.stopPropagation()
 
     // Modifiying userData to be of form expected by the react select component
-    const modifiedUserData = userQuery.data.allUsers.map((user) => {
+    const projectId = window.localStorage.getItem('projectId')
+    let userList = [];
+    userQuery.data.allUsers.map((user) => {
+        if (user.projectId === projectId) {
+        userList.push(user)
+        }
+    });
+    
+    let alphabeticalOrder = bubbleSort(userList);
+    const modifiedUserData = alphabeticalOrder.map((user) => {
         const newObject = { value: user.id, label: user.userName }
         return newObject
     })
+
 
     const chosenMembersData = subtask.members.map((user) => {
         const newObject = { value: user.id, label: user.userName }
