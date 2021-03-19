@@ -120,10 +120,8 @@ const EditTaskDialog = ({
         }
     }
 
-    //  const [addEpicColors] = useAddEpicColor()
     const inputChanged = (event) => {
         changedColors[event.target.id].name = event.target.value
-        //setEpicColors(changedColors[event.target.id])
       }
 
 
@@ -228,7 +226,6 @@ const EditTaskDialog = ({
     })
 
     const addColorsToChangedColors = () => {
-        const epics = EpicColorQuery.data.allEpicColors.filter((epic) => epic.boardId === boardId);
         const modifiedColorData = colorQuery.data.allColors.map((color) => {
             changedColors.push({id: color.id, color: color.color, name: colorNamesToList(color)});
         })

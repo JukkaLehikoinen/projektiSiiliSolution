@@ -20,8 +20,10 @@ import {
   BOARDS_COLUMNS_AND_COLUMNORDER,
 } from "../../graphql/fragments";
 import useAllColors from "../../graphql/task/hooks/useAllColors";
-import bubbleSort from '../bubblesort'
+import bubbleSort from "../bubblesort";
 import colourStyles from '../SelectDialogColors'
+import colorboardqueries from '../../graphql/colorboards/hooks/useAddEpicColor'
+import allEpicColors from '../../graphql/colorboards/hooks/useAllEpicColors'
 
 const AddSubtaskDialog = ({
   addDialogStatus,
@@ -30,6 +32,8 @@ const AddSubtaskDialog = ({
   taskId,
   boardId,
 }) => {
+  const EpicColorQuery = allEpicColors()
+  const [addEpicColor] = colorboardqueries();
   const userQuery = useAllUsers();
   const colorQuery = useAllColors();
   const classes = boardPageStyles();
@@ -42,12 +46,15 @@ const AddSubtaskDialog = ({
   const [members, setMembers] = useState([]);
   const [colors, setColors] = useState([]);
   const [inputColumnId, setInputColumnId] = useState(null);
+  const [options, setOptions] = useState('Rename Colors')
+  const [EpicColors, setEpicColors] = useState()
+  let changedColors = [];
 
   const { columns, columnOrder } = client.cache.readFragment({
     id: `Board:${boardId}`,
     fragment: BOARDS_COLUMNS_AND_COLUMNORDER,
   });
-  if (userQuery.loading || colorQuery.loading) return null;
+  if (userQuery.loading || colorQuery.loading || EpicColorQuery.loading) return null
 
   const columnOfParentTask = columns.find((col) => col.id === columnId)?.name;
 
@@ -93,6 +100,47 @@ const AddSubtaskDialog = ({
     setColors([]);
   };
 
+  const renameColors = () => {
+    if (options === 'Rename Colors') {
+        setOptions('Save changes')
+    } else {
+        setEpicColors(changedColors)
+        for (let i = 0; i < changedColors.length; i++) {
+            addEpicColor({
+                variables: {
+                    colorId:changedColors[i].id,
+                    boardId: boardId,
+                    name: changedColors[i].name,
+                }
+            })
+        }
+
+        setOptions('Rename Colors')
+    }
+}
+
+const inputChanged = (event) => {
+    changedColors[event.target.id].name = event.target.value
+  }
+
+const colorList = () => {
+    if (EpicColors) {
+        changedColors = EpicColors
+    }
+
+    return (
+        <div>
+            <table><tbody>
+                {
+                    changedColors.map((color, index) => <tr key={index}>
+                        <td style={{ height:'20px', width:'20px', backgroundColor: color.color }}></td>
+                        <td><input name={color.color} id={index} onChange={inputChanged} defaultValue={color.name}></input></td></tr>)
+                }
+            </tbody></table>
+        </div>
+    )
+}
+
   const handleSave = (event) => {
     event.preventDefault();
     // Get the ticketOrder of the column to which user is creating the subtask
@@ -137,19 +185,44 @@ const AddSubtaskDialog = ({
         }
     });
 
-    let alphabeticalOrder = bubbleSort(userList);
-    const modifiedUserData = alphabeticalOrder.map((user) => {
-        const newObject = { value: user.id, label: user.userName }
-        return newObject
-    })
+  let alphabeticalOrder = bubbleSort(userList);
+  const modifiedUserData = alphabeticalOrder.map((user) => {
+    const newObject = { value: user.id, label: user.userName };
+    return newObject;
+  });
 
+
+  const colorNamesToList = (color) => {
+    if (EpicColorQuery.data.allEpicColors.filter((epic) => epic.boardId === boardId).length > 0) {
+    const epicBoard = EpicColorQuery.data.allEpicColors.filter((epic) => epic.colorId === color.id);
+    const epics = epicBoard.filter((epic) => epic.boardId === boardId);
+    if (epics.length > 0) {
+    return epics[0].name;
+    } else {
+        return color.color
+    }
+    } else {
+        return color.color;
+    }
+}
+
+const addColorsToChangedColors = () => {
+    const modifiedColorData = colorQuery.data.allColors.map((color) => {
+        changedColors.push({id: color.id, color: color.color, name: colorNamesToList(color)});
+    })
+}
+
+addColorsToChangedColors();
+if (EpicColors) {
+    changedColors=EpicColors;
+}
   const modifiedColorData = colorQuery.data.allColors.map((color) => {
     const newObject = {
       value: color.id,
       label:
-        color.color.charAt(0).toUpperCase() +
-        color.color.slice(1) +
-        <Button></Button>,
+          color.color.charAt(0).toUpperCase() +
+          color.color.slice(1) +
+          <Button></Button>,
     };
     return newObject;
   });
@@ -236,10 +309,18 @@ const AddSubtaskDialog = ({
             onChange={handleColumnChange}
           />
         </DialogContent>
+        {options === 'Save changes' ? (<div> {colorList()}</div>) : (<div></div>)}
         <DialogActions>
           <Button onClick={(e) => handleCancel(e)} color="secondary">
             Cancel
           </Button>
+          <Button
+                        onClick={() => renameColors()}
+                        color="default"
+                        id="changeColors"
+                    >
+                        {options}
+                    </Button>
           <Button disabled={!name.length} onClick={handleSave} color="primary">
             Create subtask
           </Button>
