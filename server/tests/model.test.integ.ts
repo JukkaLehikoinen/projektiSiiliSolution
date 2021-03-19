@@ -3,7 +3,6 @@ import { stories } from "./dummyData";
 
 import {
   findByProjectPk,
-  mapProjectBoardsByProjectId,
   mapProjectByName,
   projectByName,
   afterTests,
@@ -15,12 +14,9 @@ import {
   columnsOfBoardInTheDb,
   addColumnForBoard,
   columnsInTheDb,
-  storiesOfColumnInTheDb,
   storiesInTheDb,
-  storyById,
   tasksOfColumnInTheDb,
   tasksInTheDb,
-  taskById,
   getTaskOrderOfColumn,
   subtasksOfTaskInTheDb,
   subtasksInTheDb,
@@ -32,7 +28,7 @@ import {
     to run integration tests: npm run test-integ
 */
 describe("dummy project", () => {
-  beforeAll(() => initializeDb());
+  beforeAll(async () => await initializeDb());
 
   test("should be same as the model", async () => {
     const projects = await projectByName("SiiliWall");

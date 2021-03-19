@@ -36,8 +36,8 @@ export const expressApp = (): express.Application => {
         app.use(require("helmet")());
         app.use(require("compression")());
         app.use('/health', require('express-healthcheck')())
+        app.use(require("cors")());
     }
-    app.use(require("cors")());
     app.use(bodyParser.json())
 
     app.use('/graphql', bodyParser.json())

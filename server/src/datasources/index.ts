@@ -1,7 +1,5 @@
-const { BoardService } = require('./BoardService')
+import { BoardService } from "./BoardService";
 
-const dataSources = {
+export const dataSources = {
     boardService: new BoardService(),
 }
-
-module.exports = dataSources

@@ -1,4 +1,4 @@
-import {BuildOptions, Model, STRING, INTEGER, UUID} from 'sequelize';
+import { BuildOptions, Model, STRING, INTEGER, UUID } from 'sequelize';
 import { dbConfig as sequelize } from "../database";
 import Project from "./Project";
 import User from "./User";

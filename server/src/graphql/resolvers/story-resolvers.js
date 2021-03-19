@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-const dataSources = require('../../datasources')
+const {dataSources} = require("../../datasources");
 
 const schema = {
     Query: {
