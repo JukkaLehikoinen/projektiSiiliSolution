@@ -945,19 +945,31 @@ export class BoardService {
 
 
     async addEpicColors(colorId: any, boardId: any, name: any) {
-        let addedEpicColor
-        try {
-            addedEpicColor = await ColorBoard.create({
+        let colors = await ColorBoard.findAll()
+        const board = colors.filter((color) => color.colorId === colorId)
+        const color = board.filter((color) => color.boardId === boardId)
+        colors = color
+        if (colors[0].dataValues.colorId === colorId && colors[0].dataValues.boardId === boardId) {
+            await ColorBoard.destroy({
+                where: {
+                    colorId: colorId,
+                    boardId: boardId,
+                },
+            })
+            colors = await ColorBoard.create({
                 colorId: colorId,
                 boardId: boardId,
                 name: name,
             })
-        } catch (e) {
-            console.error(e)
+        } else {
+            colors = await ColorBoard.create({
+                colorId: colorId,
+                boardId: boardId,
+                name: name,
+            })
         }
-        return addedEpicColor
+        return colors
     }
-
     async getOwnerById(ownerId: any) {
         let owner
         try {

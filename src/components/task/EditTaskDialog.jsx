@@ -13,11 +13,15 @@ import colourStyles from '../SelectDialogColors'
 import useAllUsers from '../../graphql/user/hooks/useAllUsers'
 import useAllColors from '../../graphql/task/hooks/useAllColors'
 import bubbleSort from '../bubblesort'
+import colorboardqueries from '../../graphql/colorboards/hooks/useAddEpicColor'
+import allEpicColors from '../../graphql/colorboards/hooks/useAllEpicColors'
 
 
 const EditTaskDialog = ({
     dialogStatus, editId, toggleDialog, task, boardId
 }) => {
+    const EpicColorQuery = allEpicColors()
+    const [addEpicColor] = colorboardqueries();
     const [editTask] = useEditTask()
     const userQuery = useAllUsers()
     const colorQuery = useAllColors()
@@ -48,7 +52,7 @@ const EditTaskDialog = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [task])
 
-    if (userQuery.loading || colorQuery.loading) return null
+    if (userQuery.loading || colorQuery.loading || EpicColorQuery.loading) return null
 
     const handleTitleChange = (event) => {
         const input = event.target.value
@@ -102,6 +106,16 @@ const EditTaskDialog = ({
             setOptions('Save changes')
         } else {
             setEpicColors(changedColors)
+            for (let i = 0; i < changedColors.length -1; i++) {
+                addEpicColor({
+                    variables: {
+                        colorId:changedColors[i].id,
+                        boardId: boardId,
+                        name: changedColors[i].name,
+                    }
+                })
+            }
+
             setOptions('Rename Colors')
         }
     }
@@ -112,7 +126,7 @@ const EditTaskDialog = ({
         //setEpicColors(changedColors[event.target.id])
       }
 
-      
+
     const colorList = () => {
         if (EpicColors) {
             changedColors = EpicColors
@@ -173,6 +187,22 @@ const EditTaskDialog = ({
 
     // Modifiying userData to be of form expected by the react select component
     const projectId = window.localStorage.getItem('projectId')
+
+    const colorNamesToList = (color) => {
+        if (EpicColorQuery.data.allEpicColors.filter((epic) => epic.boardId === boardId).length > 0) {
+        const epicBoard = EpicColorQuery.data.allEpicColors.filter((epic) => epic.colorId === color.id);
+        const epics = epicBoard.filter((epic) => epic.boardId === boardId);
+        if (epics.length > 0) {
+        return epics[0].name;
+        } else {
+            return color.color
+        }
+        } else {
+            return color.color;
+        }
+
+    }
+
     let userList = [];
     userQuery.data.allUsers.map((user) => {
         if (user.projectId === projectId) {
@@ -192,16 +222,18 @@ const EditTaskDialog = ({
         return newObject
     })
 
-    const chosenColorsData = task.colors.map((color) => {          
-        const newObject = { value: color.id, color: color.color, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
+    const chosenColorsData = task.colors.map((color) => {
+        const newObject = { value: color.id, color: color.color, label: colorNamesToList(color) }
         return newObject
     })
 
-    const addColorsToChangedColors = async () => {
+    const addColorsToChangedColors = () => {
+        const epics = EpicColorQuery.data.allEpicColors.filter((epic) => epic.boardId === boardId);
         const modifiedColorData = colorQuery.data.allColors.map((color) => {
-            changedColors.push({id: color.id, color: color.color, name: color.color});
+            changedColors.push({id: color.id, color: color.color, name: colorNamesToList(color)});
         })
     }
+
     addColorsToChangedColors();
     if (EpicColors) {
         changedColors=EpicColors;
@@ -210,7 +242,7 @@ const EditTaskDialog = ({
         const newObject = { value: color.id, color: color.color, label: color.name.charAt(0).toUpperCase() + color.name.slice(1) }
         return newObject
     })
-    
+
 
     // data for showing only the members not yet chosen
     const modifiedMemberOptions = modifiedUserData
@@ -226,7 +258,6 @@ const EditTaskDialog = ({
         }
         return newObject
     })
-
 
     return (
         <Grid>
