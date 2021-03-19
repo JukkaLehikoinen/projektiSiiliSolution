@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 const { withFilter } = require('graphql-subscriptions')
-const dataSources = require('../../datasources')
+const { dataSources } = require("../../datasources");
 const { pubsub } = require('../pubsub')
 
 const TASK_MUTATED = 'TASK_MUTATED'

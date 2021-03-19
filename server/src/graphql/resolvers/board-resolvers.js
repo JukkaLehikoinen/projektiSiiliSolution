@@ -1,5 +1,5 @@
+const {dataSources} = require("../../datasources");
 const { withFilter } = require('graphql-subscriptions')
-const dataSources = require('../../datasources')
 const { pubsub } = require('../pubsub')
 
 const SWIMLANE_MOVED = 'SWIMLANE_MOVED'
@@ -10,6 +10,9 @@ const schema = {
         boardById(root, args) {
             return dataSources.boardService.getBoardById(args.id)
         },
+        allBoards() {
+            return dataSources.boardService.getBoards()
+        }
     },
 
     Subscription: {

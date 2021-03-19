@@ -1,207 +1,48 @@
+import Project from "../src/models/Project";
 import Board from "../src/models/Board";
-import User from "../src/models/User";
 import Column from "../src/models/Column";
 import Subtask from "../src/models/Subtask";
 import Task from "../src/models/Task";
 import Story from "../src/models/Story";
-import {dbConfig} from "../src/database";
-import {expressApp} from "../src/express";
+import { dbConfig } from "../src/database";
+import Color from "../src/models/Color";
+import ColorSubtask from "../src/models/ColorSubtask";
+import ColorTask from "../src/models/ColorTask";
+import User from "../src/models/User";
+import UserSubtask from "../src/models/UserSubtask";
+import UserStory from "../src/models/UserStory";
+import Usertask from "../src/models/UserTask";
 
-const supertest = require('supertest')
-// const db = require('../models/index.js')
-const dummyData = require('./dummyData')
-// const { closeHttpServer } = require('../src/index.js')
-// const { app } = require('../src/index.js')
-
-const request = supertest(expressApp)
+import { expressApp } from "../src/express";
+import supertest from "supertest";
+import dummyData from "./dummyData";
+import { startServer } from "../src";
 
 /*
   Drop all the tables, sync the models with the database,
   insert some testdata and return a promise when everything has resolved
+  //TODO Remove all sequelize stuff from here and leave only graphql stuff
 */
-export const initializeDb = async () => {
-    try {
-        await dbConfig.sync({ force: true })
-        await Promise.all(
-            dummyData.users.map(async (user) => {
-                const resolved = await User.create(user)
-                return resolved
-            }),
-        )
-        await Promise.all(
-            dummyData.boards.map(async (board) => {
-                const resolved = await Board.create(board)
-                return resolved
-            }),
-        )
-        await Promise.all(
-            dummyData.columns.map(async (column) => {
-                const resolved = await Column.create(column)
-                return resolved
-            }),
-        )
-        await Promise.all(
-            dummyData.stories.map(async (story) => {
-                const resolved = await Story.create(story)
-                return resolved
-            }),
-        )
-        await Promise.all(
-            dummyData.tasks.map(async (task) => {
-                const resolved = await Task.create(task)
-                return resolved
-            }),
-        )
-        await Promise.all(
-            dummyData.subtasks.map(async (subtask) => {
-                const resolved = await Subtask.create(subtask)
-                return resolved
-            }),
-        )
-    } catch (e) {
-        console.log(e)
-    }
 
-    return Promise.resolve()
-}
+export const initialBoards = dummyData.boards;
 
-export const afterTests = async () => {
-    // closeHttpServer()
-    try {
-        await dbConfig.drop()
-        await dbConfig.close()
-    } catch (e) {
-        console.log(e)
-    }
-    return Promise.resolve()
-}
+const startTestServer = () => {
+  const app = expressApp();
+  startServer(app);
 
-export const boardsInTheDb = async () => {
-    try {
-        const boardsInTheDatabase = await Board.findAll()
-        return boardsInTheDatabase
-    } catch (e) {
-        console.log(e)
-    }
-}
+  return supertest(app);
+};
 
-export const columnsOfBoardInTheDb = async (id) => {
-    try {
-        const columns = await Column.findAll({ where: { boardId: id } })
-        return columns
-    } catch (e) {
-        console.log(e)
-    }
-}
+/**
+ * For GraphQL tests
+ * @param query for example: '{ allBoards { id name } }'
+ */
+export const testCall = async (query) =>
+  await startTestServer().post("/graphql").send({ query });
 
-export const columnsInTheDb = async () => {
-    try {
-        const columns = await Column.findAll()
-        return columns
-    } catch (e) {
-        console.log(e)
-    }
-}
-
-const storiesOfColumnInTheDb = async (id) => {
-    try {
-        const stories = await Story.findAll({ where: { columnId: id } })
-        return stories
-    } catch (e) {
-        console.log(e)
-    }
-}
-
-const storiesInTheDb = async () => {
-    try {
-        const stories = await Story.findAll()
-        return stories
-    } catch (e) {
-        console.log(e)
-    }
-}
-
-const storyById = async (id) => {
-    let story
-    try {
-        story = await Story.findByPk(id)
-    } catch (e) {
-        console.log(e)
-    }
-    return story
-}
-
-export const tasksOfColumnInTheDb = async (id) => {
-    try {
-        const tasks = await Task.findAll({ where: { columnId: id } })
-        return tasks
-    } catch (e) {
-        console.log(e)
-    }
-}
-
-export const tasksInTheDb = async () => {
-    try {
-        const tasks = await Task.findAll()
-        return tasks
-    } catch (e) {
-        console.log(e)
-    }
-}
-
-export const taskById = async (id) => {
-    let task
-    try {
-        task = await Task.findByPk(id)
-    } catch (e) {
-        console.log(e)
-    }
-    return task
-}
-
-export const getTaskOrderOfColumn = async (columnId) => {
-    let arrayOfIds
-    try {
-        const tasks = await Task.findAll({
-            attributes: ['id'],
-            where: { columnId },
-            order: dbConfig.Sequelize.literal('columnOrderNumber ASC'),
-        })
-        arrayOfIds = tasks.map((task) => task.getDataValue("id"))
-    } catch (e) {
-        console.log(e)
-    }
-    return arrayOfIds
-}
-
-export const subtasksOfTaskInTheDb = async (taskId) => {
-    let subtasks
-    try {
-        subtasks = await Subtask.findAll({
-            where: { taskId },
-        })
-        return subtasks
-    } catch (e) {
-        console.log(e)
-    }
-}
-
-export const subtasksInTheDb = async () => {
-    let subtasks
-    try {
-        subtasks = await Subtask.findAll()
-        return subtasks
-    } catch (e) {
-        console.log(e)
-    }
-}
-
-export const initialBoards = dummyData.boards
-
-export const testCall = async (query) => await request
-    .post('/graphql')
-    .send({ query })
-
+export const allBoards = async () => {
+  await testCall("{ allBoards { id name } }");
+};
 /* const taskOrderAtStart = await getTaskOrderOfColumn('7bce34e5-385b-41e6-acd3-ceb4bd57b4f6')
         const newTaskOrderArray = [
             '6e766c63-0684-4cf2-8a46-868cfaf84033',

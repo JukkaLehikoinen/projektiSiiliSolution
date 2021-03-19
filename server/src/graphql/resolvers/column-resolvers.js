@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
-import {withFilter} from "graphql-subscriptions";
 
-const dataSources = require('../../datasources')
+const {withFilter} = require("graphql-subscriptions");
+const {dataSources} = require("../../datasources");
 const { pubsub } = require('../pubsub')
 
 const TICKET_MOVED_IN_COLUMN = 'TICKET_MOVED_IN_COLUMN'

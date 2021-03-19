@@ -1,5 +1,5 @@
 const { withFilter } = require('graphql-subscriptions')
-const dataSources = require('../../datasources')
+const {dataSources} = require("../../datasources");
 const { pubsub } = require('../pubsub')
 
 const SUBTASK_MUTATED = 'SUBTASK_MUTATED'

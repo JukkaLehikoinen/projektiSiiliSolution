@@ -30,3 +30,4 @@ yarn-error.log*
 /server/config/config.json
 
 debug.log
+server/coverage
