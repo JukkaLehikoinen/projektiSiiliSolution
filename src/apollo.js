@@ -1,6 +1,5 @@
-/* eslint-disable import/prefer-default-export */
 import {
-    ApolloClient, InMemoryCache, split, HttpLink,
+    ApolloClient, InMemoryCache, split, ApolloLink, createHttpLink,
 } from '@apollo/client'
 import { WebSocketLink } from '@apollo/client/link/ws'
 import { getMainDefinition } from '@apollo/client/utilities'
@@ -8,10 +7,14 @@ import { getMainDefinition } from '@apollo/client/utilities'
 require('dotenv').config('../.env')
 
 const backEndUri = process.env.REACT_APP_ENVIRONMENT === 'production' ? process.env.REACT_APP_LOADBALANCER_HTTP_URI : 'http://localhost:4001/graphql';
-const wsUri = process.env.REACT_APP_ENVIRONMENT === 'production' ? process.env.REACT_APP_LOADBALANCER_WS_URI : 'ws://localhost:4001/graphql';
-const httpLink = new HttpLink({
-    uri: backEndUri,
-})
+const wsUri = process.env.REACT_APP_ENVIRONMENT === 'production' ? process.env.REACT_APP_LOADBALANCER_WS_URI : 'ws://localhost:5000/subscriptions';
+// const httpLink = new HttpLink({
+//     uri: backEndUri,
+// })
+
+const link = ApolloLink.from([
+    createHttpLink({ uri: backEndUri, })
+]);
 
 const wsLink = new WebSocketLink({
     uri: wsUri,
@@ -29,7 +32,7 @@ const splitLink = split(
         )
     },
     wsLink,
-    httpLink,
+    link,
 )
 
 export const client = new ApolloClient({

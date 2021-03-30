@@ -1,6 +1,6 @@
-const { withFilter } = require('graphql-subscriptions')
-const {dataSources} = require("../../datasources");
-const { pubsub } = require('../pubsub')
+import { pubsub } from '../pubsub'
+import { withFilter } from 'graphql-subscriptions'
+import { dataSources } from '../../datasources'
 
 const SUBTASK_MUTATED = 'SUBTASK_MUTATED'
 const SUBTASK_REMOVED = 'SUBTASK_REMOVED'
@@ -33,7 +33,7 @@ const schema = {
             taskId, columnId, boardId, name, content, size, ownerId, memberIds, colorIds, ticketOrder, eventId,
         }) {
             const addedSubtask = await dataSources.boardService.addSubtaskForTask(taskId, columnId, boardId, name, content, size, ownerId, memberIds, colorIds, ticketOrder)
-            pubsub.publish(SUBTASK_MUTATED, {
+            await pubsub.publish(SUBTASK_MUTATED, {
                 boardId,
                 eventId,
                 subtaskMutated: {
@@ -54,7 +54,7 @@ const schema = {
             let deletedSubtask
             try {
                 deletedSubtask = await dataSources.boardService.deleteSubtaskById(id)
-                pubsub.publish(SUBTASK_REMOVED, {
+                await pubsub.publish(SUBTASK_REMOVED, {
                     boardId,
                     eventId,
                     subtaskRemoved: {
@@ -78,7 +78,7 @@ const schema = {
             let archivedSubtask
             try {
                 archivedSubtask = await dataSources.boardService.archiveSubtaskById(id)
-                pubsub.publish(SUBTASK_REMOVED, {
+                await pubsub.publish(SUBTASK_REMOVED, {
                     boardId,
                     eventId,
                     subtaskRemoved: {
@@ -100,7 +100,7 @@ const schema = {
             id, name, content, size, ownerId, oldMemberIds, newMemberIds, oldColorIds, newColorIds
         }) {
             const editedSubtask = await dataSources.boardService.editSubtaskById(id, name, content, size, ownerId, oldMemberIds, newMemberIds, oldColorIds, newColorIds)
-            pubsub.publish(SUBTASK_MUTATED, {
+            await pubsub.publish(SUBTASK_MUTATED, {
                 boardId: editedSubtask.boardId,
                 subtaskMutated: {
                     mutationType: 'UPDATED',

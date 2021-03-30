@@ -1,6 +1,6 @@
-const {dataSources} = require("../../datasources");
-const { withFilter } = require('graphql-subscriptions')
-const { pubsub } = require('../pubsub')
+import { pubsub } from '../subs'
+import { dataSources } from '../../datasources'
+import { withFilter } from 'graphql-subscriptions'
 
 const SWIMLANE_MOVED = 'SWIMLANE_MOVED'
 const BOARD_ADDED = 'BOARD_ADDED'
@@ -35,7 +35,7 @@ const schema = {
             name, prettyId, eventId, projectId,
         }) {
             const addedBoard = await dataSources.boardService.addBoard(name, prettyId, projectId)
-            pubsub.publish(BOARD_ADDED, {
+            await pubsub.publish(BOARD_ADDED, {
                 projectId,
                 eventId,
                 boardAdded: {
@@ -46,10 +46,10 @@ const schema = {
             return addedBoard
         },
 
-        moveSwimlane(root, {
+        async moveSwimlane(root, {
             boardId, affectedSwimlanes, swimlaneOrder, eventId,
         }) {
-            pubsub.publish(SWIMLANE_MOVED, {
+            await pubsub.publish(SWIMLANE_MOVED, {
                 boardId,
                 eventId,
                 swimlaneMoved: {
