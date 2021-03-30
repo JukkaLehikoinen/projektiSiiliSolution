@@ -51,7 +51,7 @@ export const expressApp = (serverType: ServerType): express.Application => {
         app.use('/subscriptions', bodyParser.json())
 
     }
-    app.use(bodyParser.urlencoded({ extended: true, limit: "5m" }));
+    app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
 
     app.use('/api/boards', boardsRouter)
 
