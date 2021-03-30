@@ -1,4 +1,4 @@
-const {dataSources} = require("../../datasources");
+import { dataSources } from '../../datasources'
 
 const schema = {
     Query: {

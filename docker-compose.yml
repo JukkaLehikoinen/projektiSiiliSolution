@@ -11,6 +11,7 @@ services:
       DB_PASSWORD: "root"
       DB_HOST: "db"
       DB_DATABASE: "siiliwalldev"
+      QUEUE_URL: "https://sqs.eu-west-1.amazonaws.com/018666200346/siiliwall.fifo"
   db:
     build: "./mysql"
     ports:

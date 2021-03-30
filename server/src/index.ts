@@ -1,16 +1,19 @@
-import {expressApp} from "./express";
-import { ApolloServer } from 'apollo-server-express';
+import {expressApp, ServerType} from "./express";
+import {ApolloServer} from 'apollo-server-express';
 import * as http from "http";
-const { makeExecutableSchema } = require('graphql-tools')
+import {execute, subscribe} from 'graphql';
+import {applyMiddleware} from 'graphql-middleware';
+import express from 'express';
+import {createContext} from "./context";
+import {SubscriptionServer} from "subscriptions-transport-ws";
 
+const { makeExecutableSchema } = require('graphql-tools')
 const config = require('./utils/config')
 const typeDefs = require('./graphql/typedefs')
 const resolvers = require('./graphql/resolvers')
-import { applyMiddleware } from 'graphql-middleware';
-import express from 'express';
-import {createContext} from "./context";
 
 const env = process.env.NODE_ENV
+
 
 const schema = applyMiddleware(
     makeExecutableSchema({
@@ -18,33 +21,6 @@ const schema = applyMiddleware(
         resolvers: resolvers,
     }),
 );
-
-// const corsOptions = {
-//     origin: frontendUrl,
-//     methods: ['GET, POST'],
-//     allowedHeaders: ['Content-Type', 'Accept', 'User-Agent', 'Referer'],
-//     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
-/*
-const app = expressApp()
-
-const apollo = new ApolloServer({
-    schema,
-    cor: corsOptions,
-    playground: true,
-    introspection: true,
-    formatError: (err: GraphQLError) => {
-        console.log("formatError")
-        console.log(err)
-        // Don't give the specific errors to the client.
-        if (err.message.startsWith("Database Error: ")) {
-            return new Error('Internal server error');
-        }
-        // Otherwise return the original error.  The error can also
-        // be manipulated in other ways, so long as it's returned.
-        return err;
-    },
-})*/
 
 const createApolloServer = (): ApolloServer => new ApolloServer({
     schema,
@@ -55,6 +31,10 @@ const createApolloServer = (): ApolloServer => new ApolloServer({
         onConnect: (): void => {
             process.stdout.write('Connected to websocket\n');
         },
+        onDisconnect: (): void => {
+            process.stdout.write('Disconnected from websocket\n');
+        },
+
     },
 });
 
@@ -69,12 +49,35 @@ const initializeApolloServer = (apollo: ApolloServer, app: express.Application) 
     };
 };
 
+const WS_PORT = 5000;
+
+const startSubscriptionServer = async (app: express.Application) => {
+    // Create WebSocket listener server
+    const websocketServer = http.createServer(app);
+
+    // Bind it to port and start listening
+    websocketServer.listen(WS_PORT, () => console.log(
+        `Websocket Server is now running on ws://localhost:${WS_PORT}`
+    ));
+
+    SubscriptionServer.create({
+        execute,
+        subscribe,
+        schema,
+    }, {
+        server: websocketServer,
+        path: '/subscriptions'
+    })
+}
+
+
 export const startServer = async (app: express.Application) => {
     const httpServer = http.createServer(app)
 
     const apollo = createApolloServer();
     apollo.installSubscriptionHandlers(httpServer);
     const handleApolloServerInitialized = initializeApolloServer(apollo, app);
+
 
     return httpServer.listen({ port: config.PORT }, () => {
         handleApolloServerInitialized()
@@ -84,8 +87,9 @@ export const startServer = async (app: express.Application) => {
 }
 
 if (env !== 'test') {
-    const app = expressApp()
+    const app = expressApp(ServerType.httpServer)
     startServer(app)
+    startSubscriptionServer(expressApp(ServerType.wsServer)).catch(e => console.log(`subscription server start failed: ${e}`))
 }
 
 
