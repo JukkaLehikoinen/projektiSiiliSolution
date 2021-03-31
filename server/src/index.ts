@@ -14,7 +14,6 @@ const resolvers = require('./graphql/resolvers')
 
 const env = process.env.NODE_ENV
 
-
 const schema = applyMiddleware(
     makeExecutableSchema({
         typeDefs,
@@ -49,7 +48,7 @@ const initializeApolloServer = (apollo: ApolloServer, app: express.Application) 
     };
 };
 
-const WS_PORT = 5000;
+const WS_PORT = process.env.WS_PORT || 5000;
 
 const startSubscriptionServer = async (app: express.Application) => {
     // Create WebSocket listener server
