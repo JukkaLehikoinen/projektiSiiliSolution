@@ -933,6 +933,26 @@ export class BoardService {
         return addedUser
     }
 
+    async deleteUser(id: string, userName: string) {
+        let deletedUser
+        try {
+            deletedUser = await User.findByPk(id)
+            if (deletedUser) {
+                if (deletedUser.userName.includes(' (Removed user)')) {
+                    let length = deletedUser.userName.length;
+
+                    deletedUser.userName = deletedUser.userName.substring(0, length - 14);
+                } else {
+                    deletedUser.userName = userName + ' (Removed user)'
+                }
+                await deletedUser.save()
+            }
+        } catch (e) {
+            console.error(e)
+        }
+        return deletedUser
+    }
+
     async getOwnerById(ownerId: any) {
         let owner
         try {
