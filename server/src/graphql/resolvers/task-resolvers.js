@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { pubsub } from '../pubsub'
+import { pubsub } from '../subs'
 import { withFilter } from 'graphql-subscriptions'
 import { dataSources } from '../../datasources'
 
