@@ -86,10 +86,19 @@ export const startServer = async (app: express.Application) => {
 }
 
 if (env !== 'test') {
-    const app = expressApp(ServerType.httpServer)
-    startServer(app)
-    startSubscriptionServer(expressApp(ServerType.wsServer)).catch(e => console.log(`subscription server start failed: ${e}`))
-}
+    if (env === 'production') {
+        const service = process.env.SERVICE;
+        if (service === 'backend') {
+            const app = expressApp(ServerType.httpServer)
+            startServer(app).catch(e => console.log(`subscription server start failed: ${e}`))
+        } else {
+            startSubscriptionServer(expressApp(ServerType.wsServer)).catch(e => console.log(`subscription server start failed: ${e}`))
+        }
+    } else {
+        const app = expressApp(ServerType.httpServer)
+        startServer(app).catch(e => console.log(`subscription server start failed: ${e}`))
+    }
+    }
 
 
 // apollo.applyMiddleware({ app: app })
