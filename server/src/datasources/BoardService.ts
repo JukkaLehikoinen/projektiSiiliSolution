@@ -88,6 +88,36 @@ export class BoardService {
         }
         return boardFromDb
     }
+    //tehtiin funktio getColumns, joka palauttaa kaikki sarakkeet
+    async getColumns(){
+        let columnFromDb
+        try{
+            columnFromDb = await Column.findAll()
+        }catch (e){
+            console.error(e)
+        }
+        return columnFromDb
+    }
+
+    async getTasks(){
+        let taskFromDb
+        try{
+            taskFromDb = await Task.findAll()
+        }catch (e){
+            console.error(e)
+        }
+        return taskFromDb
+    }
+
+    async getSubtasks(){
+        let subtasksFromDb
+        try {
+            subtasksFromDb = await Subtask.findAll()
+        }catch (e){
+            console.error(e)
+        }
+        return subtasksFromDb
+    }
 
     async getColumnsByBoardId(boardId: any) {
         let columnsByBoardIdFromDb

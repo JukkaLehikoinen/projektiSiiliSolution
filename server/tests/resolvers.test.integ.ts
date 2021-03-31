@@ -9,7 +9,9 @@ import { Mutation as ColumnMutation } from "../src/graphql/resolvers/column-reso
 import { Query as ColumnQuery } from "../src/graphql/resolvers/column-resolvers";
 import { Mutation as TaskMutation } from "../src/graphql/resolvers/task-resolvers";
 import { Query as TaskQuery } from "../src/graphql/resolvers/task-resolvers";
-
+import { boards, columns } from "./dummyData";
+import { Mutation as SubTaskMutation } from "../src/graphql/resolvers/subtask-resolver";
+import { Query as subTaskQuery } from "../src/graphql/resolvers/subtask-resolver";
 
 describe('With initial test data in the database, graphql queries', () => {
     // Reinitialize the database before each test in this describe block
@@ -72,38 +74,67 @@ describe('mutations', () => {
         const user = await UserQuery.allUsers()
         expect(user.length).toEqual(8)
     })
-    //test keeps failing. Maybe there is insufficient data in dummydata?
-    // test('should add column to db', async () => {
-    //     const columns = await ColumnQuery.allColumns()
-    //     expect(columns.length).toEqual(16)
-    //     await ColumnMutation.addColumn(null, {
-    //         //id: "38d0ce05-b1e1-4c21-9c8a-87ba1b2a0527",
 
-    //     })
+    test('should add column to board in db', async () => {
+        const columns = await ColumnQuery.allColumns()
+        console.log(columns)
+        console.log(columns.slice().map(boards => console.log(boards.id)))
+        expect(columns.slice().length).toEqual(16)
+        await ColumnMutation.addColumnForBoard(null, {
+            boardId: "83fa4f89-8ea1-4d1c-9fee-321daa941485",
+            columnName: "fsefsef",
+            eventId: null
 
-    //     const column = await ColumnQuery.allColumns()
-    //     expect(column.length).toEqual(1)
-    // })
+        })
+
+        const column = await ColumnQuery.allColumns()
+        expect(column.length).toEqual(17)
+    })
 
     //Test fails, possibly caused by outdated dummydata
-    // test('should add tasks to db', async () => {
-    //     const tasks = await TaskQuery.allTask()
-    //     expect(tasks.length).toEqual(9)
-    //     await TaskMutation.addTask(null, {
-    //         prettyId: "KNBN-2",
-    //         title: "Add drag and drop function to cards",
-    //         content: "Add drag and drop function to cards",
-    //         size: 1,
-    //         columnId: "f6209adb-91ca-476b-8269-328a82d05d4a",
-    //         columnOrderNumber: 0,
-    //         swimlaneOrderNumber: 1,
-    //         ownerId: "654df13f-51be-4b25-8f0e-7c2f40a3a81e",
-    //         boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
-    //     })
+    test('should add tasks to db', async () => {
+        const tasks = await TaskQuery.allTasks()
+        console.log(tasks)
+        console.log(tasks.slice().map(columns => console.log(columns.id)))
+        expect(tasks.slice().length).toEqual(8)
+        await TaskMutation.addTaskForColumn(null, {
+            boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
+            columnId: "f6209adb-91ca-476b-8269-328a82d05d4a",
+            title: "Add drag and drop function to cards",
+            size: null,
+            ownerId: "654df13f-51be-4b25-8f0e-7c2f40a3a81e",
+            memberIds: 1,
+            colorIds: "ca1b1793-e569-4fb3-8498-5a36406eeca6",
+            description: " ",
+            eventId: null,
+        })
 
-    //     const task = await TaskQuery.allTasks()
-    //     expect(task.length).toEqual(10)
-    // })
+        const task = await TaskQuery.allTasks()
+        expect(task.length).toEqual(9)
+    })
+
+    test('should add subtask to db', async ()=>{
+        const subtasks = await subTaskQuery.allSubtasks()
+        console.log(subtasks)
+        console.log(subtasks.slice().map(tasks => console.log(tasks.id)))
+        expect(subtasks.slice().length).toEqual(6)
+        await SubTaskMutation.addSubtaskForTask(null,{
+            taskId: "f6209adb-91ca-476b-8269-328a82d05555", 
+            columnId: "ce175646-4035-41f5-99d7-7d742f0e8ac5", 
+            boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83", 
+            name: "sadsadadsa", 
+            content: "", 
+            size: 2, 
+            ownerId: "6285867e-7db8-4769-8730-26d18ef9aba9", 
+            memberIds: 2, 
+            colorIds: 2, 
+            ticketOrder: 2, 
+            eventId: 2,
+        })
+
+        const subtask = await subTaskQuery.allSubtasks()
+        expect(subtask.length).toEqual(7)
+    })
 
 })
 afterAll(() => afterTests())

@@ -11,6 +11,9 @@ const schema = {
         allColors() {
             return dataSources.boardService.getColors()
         },
+        allSubtasks(){
+            return dataSources.boardService.getSubtasks()
+        }
     },
 
     Subscription: {
