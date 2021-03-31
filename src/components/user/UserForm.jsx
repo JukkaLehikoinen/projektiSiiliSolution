@@ -4,14 +4,19 @@ import {
     DialogTitle, TextField, Button,
 } from '@material-ui/core'
 import useAddUser from '../../graphql/user/hooks/useAddUser'
+import useAllUsers from '../../graphql/user/hooks/useAllUsers'
+import bubbleSort from '../bubblesort'
 
-const NewUserForm = ({ setOpen, open }) => {
+const UserForm = ({ setOpen, open }) => {
+    const userQuery = useAllUsers()
     const [addUser] = useAddUser()
     const [name, setName] = useState('')
     const handleChange = (event) => {
         setName(event.target.value)
     }
     const projectId = window.localStorage.getItem('projectId')
+
+    if (userQuery.loading) return null
 
     const handleClose = () => {
         setOpen(false)
@@ -28,24 +33,45 @@ const NewUserForm = ({ setOpen, open }) => {
         setOpen(false)
     }
 
+    let userList = [];
+    userQuery.data.allUsers.map((user) => {
+        if (user.projectId === projectId) {
+        userList.push(user)
+        }
+    });
+    console.log(userList);
+    
+    let alphabeticalOrder = bubbleSort(userList);
+    const modifiedUserData = alphabeticalOrder.map((user) => {
+        const newObject = { value: user.id, label: user.userName }
+        return newObject
+    })
+    console.log(modifiedUserData);
+
+    const newUserList = () => {
+
+        return (
+            <div>
+                <table><tbody>
+                    {
+                        modifiedUserData.map((user, index) => <tr key={index}>
+                            <td >{user.label}</td>
+                            </tr>)
+                    }
+                </tbody></table>
+            </div>
+        )
+    }
+    console.log(newUserList);
+
+
     return (
         <div>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">User</DialogTitle>
+                <DialogTitle id="form-dialog-title">Users</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        Please enter ..
-                    </DialogContentText>
-                    <TextField
-                        autoComplete="off"
-                        autoFocus
-                        margin="dense"
-                        name="name"
-                        label="Name"
-                        type="text"
-                        fullWidth
-                        onChange={(event) => handleChange(event)}
-                    />
+                {newUserList()}
+                    
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
@@ -59,4 +85,4 @@ const NewUserForm = ({ setOpen, open }) => {
         </div>
     )
 }
-export default NewUserForm
+export default UserForm
