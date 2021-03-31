@@ -919,12 +919,13 @@ export class BoardService {
         return usersFromDb
     }
 
-    async addUser(userName: any) {
+    async addUser(userName: string, projectId: string) {
         let addedUser
         try {
             addedUser = await User.create({
                 id: uuid(),
-                userName,
+                userName: userName,
+                projectId: projectId
             })
         } catch (e) {
             console.error(e)
