@@ -1,15 +1,15 @@
-const dataSources = require('../../datasources')
+import { dataSources } from "../../datasources";
 
 const schema = {
     Query: {
-        allEpicColors() {
-            return dataSources.boardService.allEpicColors()
+        async allEpicColors() {
+            return await dataSources.boardService.allEpicColors()
         },
     },
 
-    Mutation: { 
-        addEpicColors(root, args) {
-            return dataSources.boardService.addEpicColors(args.colorId, args.boardId, args.name)
+    Mutation: {
+        async addEpicColors(root, args) {
+            return await dataSources.boardService.addEpicColors(args.colorId, args.boardId, args.name)
         },
     },
 }

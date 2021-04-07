@@ -101,19 +101,24 @@ const EditTaskDialog = ({
         setColors(Array.isArray(event) ? event.map((color) => color.value) : [])
     }
 
-    const renameColors = () => {
+    const renameColors = async () => {
         if (options === 'Rename Colors') {
             setOptions('Save changes')
         } else {
             setEpicColors(changedColors)
             for (let i = 0; i < changedColors.length; i++) {
-                addEpicColor({
-                    variables: {
-                        colorId:changedColors[i].id,
-                        boardId: boardId,
-                        name: changedColors[i].name,
-                    }
-                })
+                try {
+                    await addEpicColor({
+                        variables: {
+                            colorId:changedColors[i].id,
+                            boardId: boardId,
+                            name: changedColors[i].name,
+                        }
+                    })
+                } catch (e) {
+                    console.log(e)
+                }
+
             }
 
             setOptions('Rename Colors')

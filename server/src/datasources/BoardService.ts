@@ -401,7 +401,7 @@ export class BoardService {
             subtask.ownerId = ownerId
             await subtask.save()
             // Updating userSubtasks junction table
-            await Promise.all(addedMembers.map(async (userId) => {
+            await Promise.all(addedMembers.map(async (userId: any) => {
                 await this.addMemberForSubtask(subtask.id, userId)
             }))
             await Promise.all(removedMemberIds.map(async (userId: any) => {
@@ -945,30 +945,34 @@ export class BoardService {
 
 
     async addEpicColors(colorId: any, boardId: any, name: any) {
-        let colors = await ColorBoard.findAll()
-        const board = colors.filter((color) => color.colorId === colorId)
-        const color = board.filter((color) => color.boardId === boardId)
-        colors = color
-        if (colors[0].dataValues.colorId === colorId && colors[0].dataValues.boardId === boardId) {
-            await ColorBoard.destroy({
-                where: {
+        try {
+            const colors = await ColorBoard.findAll();
+            const board = colors.filter((color) => color.colorId === colorId)
+            const boardColors = board.filter((color) => color.boardId === boardId)
+            if (boardColors.length > 0) {
+                if (boardColors[0].getDataValue("colorId") === colorId && boardColors[0].getDataValue("boardId") === boardId) {
+                    await ColorBoard.destroy({
+                        where: {
+                            colorId: colorId,
+                            boardId: boardId,
+                        },
+                    })
+                    return await ColorBoard.create({
+                        colorId: colorId,
+                        boardId: boardId,
+                        name: name,
+                    })
+            }
+            } else {
+                return await ColorBoard.create({
                     colorId: colorId,
                     boardId: boardId,
-                },
-            })
-            colors = await ColorBoard.create({
-                colorId: colorId,
-                boardId: boardId,
-                name: name,
-            })
-        } else {
-            colors = await ColorBoard.create({
-                colorId: colorId,
-                boardId: boardId,
-                name: name,
-            })
+                    name: name,
+                })
+            }
+        } catch (e) {
+            console.error(e)
         }
-        return colors
     }
     async getOwnerById(ownerId: any) {
         let owner
