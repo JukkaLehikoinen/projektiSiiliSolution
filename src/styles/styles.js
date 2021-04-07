@@ -196,6 +196,16 @@ export const boardPageStyles = makeStyles({
     fontFamily: font,
   },
 
+  deletedMemberCircle: {
+    borderRadius: 100,
+    height: 32,
+    width: 32,
+    textAlign: "center",
+    backgroundColor: colours.red,
+    color: colours.white,
+    fontFamily: font,
+  },
+
   // SUBTASK STYLES
   subtaskComponent: {
     backgroundColor: "#fff",

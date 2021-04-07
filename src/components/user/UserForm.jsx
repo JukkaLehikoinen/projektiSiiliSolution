@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core'
 import useDeleteUser from '../../graphql/user/hooks/useDeleteUser'
 import useAllUser from '../../graphql/user/hooks/useAllUsers'
+import bubbleSort from '../bubblesort'
 
 const NewUserForm = ({ setOpen, open }) => {
     const [deleteUser] = useDeleteUser()
@@ -40,9 +41,9 @@ const NewUserForm = ({ setOpen, open }) => {
     }
 
     
-    
+   
     const users = allUser.data.allUsers.filter((user) => user.projectId === projectId && !user.userName.includes(' (Removed user)')) 
-    let deleteUsers = users;
+    let deleteUsers = bubbleSort(users);
     const usersList = (users) => {
         deleteUsers = users;
         return (
@@ -72,7 +73,7 @@ const NewUserForm = ({ setOpen, open }) => {
                     <DialogContentText>
                     {options === 'SAVE' ? 'Select removal user' : ('Remaining users')}    
                     </DialogContentText>
-                    { removingUsers.length > 0 ? usersList(del) : (usersList(users)) }
+                    { removingUsers.length > 0 ? usersList(del) : (usersList(deleteUsers)) }
                 </DialogContent>
                 <DialogActions>
                     {options === 'SAVE' ? <Button onClick={handleClose} color="primary">CANCEL</Button> : (<p></p>)}
