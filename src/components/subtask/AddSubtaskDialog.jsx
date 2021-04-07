@@ -179,154 +179,149 @@ const colorList = () => {
 
     const projectId = window.localStorage.getItem('projectId')
     let userList = [];
-    userQuery.data.allUsers.map((user) => {
+    userQuery.data.allUsers.filter((user) => !user.userName.includes(' (Removed user)')).map((user) => {
         if (user.projectId === projectId) {
         userList.push(user)
         }
     });
 
-  let alphabeticalOrder = bubbleSort(userList);
-  const modifiedUserData = alphabeticalOrder.map((user) => {
-    const newObject = { value: user.id, label: user.userName };
-    return newObject;
-  });
-
-
-  const colorNamesToList = (color) => {
-    if (EpicColorQuery.data.allEpicColors.filter((epic) => epic.boardId === boardId).length > 0) {
-    const epicBoard = EpicColorQuery.data.allEpicColors.filter((epic) => epic.colorId === color.id);
-    const epics = epicBoard.filter((epic) => epic.boardId === boardId);
-    if (epics.length > 0) {
-    return epics[0].name;
-    } else {
-        return color.color
-    }
-    } else {
-        return color.color;
-    }
-}
-
-const addColorsToChangedColors = () => {
-    const modifiedColorData = colorQuery.data.allColors.map((color) => {
-        changedColors.push({id: color.id, color: color.color, name: colorNamesToList(color)});
-    })
-}
-
-addColorsToChangedColors();
-if (EpicColors) {
-    changedColors=EpicColors;
-}
-  const modifiedColorData = colorQuery.data.allColors.map((color) => {
-    const newObject = {
-      value: color.id,
-      label:
-          color.color.charAt(0).toUpperCase() +
-          color.color.slice(1) +
-          <Button></Button>,
-    };
-    return newObject;
-  });
-
-  const columnsData = columnOrder
-    .map((id) => columns.find((col) => col.id === id))
-    .map((col) => {
-      const newObject = { value: col.id, label: col.name };
+    let alphabeticalOrder = bubbleSort(userList);
+    const modifiedUserData = alphabeticalOrder.map((user) => {
+      const newObject = { value: user.id, label: user.userName };
       return newObject;
     });
-
-  return (
-    <Grid>
-      <Dialog
-        fullWidth
-        maxWidth="md"
-        onClose={handleCancel}
-        open={addDialogStatus}
-        aria-labelledby="max-width-dialog-title"
-        classes={{ paper: classes.dialogPaper }}
-      >
-        <DialogTitle aria-labelledby="max-width-dialog-title">
-          Create new subtask
-        </DialogTitle>
-        <DialogContent>
-          <TextField
-            required
-            autoComplete="off"
-            margin="dense"
-            name="name"
-            label="Name"
-            type="text"
-            value={name}
-            fullWidth
-            onChange={handleNameChange}
-          />
-          <TextField
-            autoComplete="off"
-            margin="dense"
-            name="content"
-            label="Content"
-            type="text"
-            value={content}
-            fullWidth
-            onChange={handleContentChange}
-          />
-          <TextField
-            autoComplete="off"
-            margin="dense"
-            name="size"
-            label="Size"
-            type="text"
-            value={size || ""}
-            fullWidth
-            onChange={handleSizeChange}
-          />
-          <Select
-            isMulti
-            className="selectField"
-            placeholder="Select colors"
-            options={modifiedColorData}
-            onChange={handleColorsChange}
-            closeMenuOnSelect={false}
-            styles={colourStyles}
-          />
-          <Select
-            className="selectField"
-            placeholder="Select owner"
-            options={modifiedUserData}
-            onChange={handleOwnerChange}
-          />
-          <Select
-            isMulti
-            className="selectField"
-            placeholder="Select members"
-            options={modifiedUserData}
-            onChange={handleMembersChange}
-            closeMenuOnSelect={false}
-          />
-          <Select
-            className="selectField"
-            placeholder={`Select column - ${columnOfParentTask}`}
-            options={columnsData}
-            onChange={handleColumnChange}
-          />
-        </DialogContent>
-        {options === 'Save changes' ? (<div> {colorList()}</div>) : (<div></div>)}
-        <DialogActions>
-          <Button onClick={(e) => handleCancel(e)} color="secondary">
-            Cancel
-          </Button>
-          <Button
-                        onClick={() => renameColors()}
-                        color="default"
-                        id="changeColors"
-                    >
-                        {options}
-                    </Button>
-          <Button disabled={!name.length} onClick={handleSave} color="primary">
-            Create subtask
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Grid>
-  );
-};
-export default AddSubtaskDialog;
+  
+  
+    const colorNamesToList = (color) => {
+      if (EpicColorQuery.data.allEpicColors.filter((epic) => epic.boardId === boardId).length > 0) {
+      const epicBoard = EpicColorQuery.data.allEpicColors.filter((epic) => epic.colorId === color.id);
+      const epics = epicBoard.filter((epic) => epic.boardId === boardId);
+      if (epics.length > 0) {
+      return epics[0].name;
+      } else {
+          return color.color
+      }
+      } else {
+          return color.color;
+      }
+  }
+  
+  const addColorsToChangedColors = () => {
+      const modifiedColorData = colorQuery.data.allColors.map((color) => {
+          changedColors.push({id: color.id, color: color.color, name: colorNamesToList(color)});
+      })
+  }
+  
+  addColorsToChangedColors();
+  if (EpicColors) {
+      changedColors=EpicColors;
+  }
+  const modifiedColorData = changedColors.map((color) => {
+    const newObject = { value: color.id, color: color.color, label: color.name.charAt(0).toUpperCase() + color.name.slice(1) }
+    return newObject
+})
+  
+    const columnsData = columnOrder
+      .map((id) => columns.find((col) => col.id === id))
+      .map((col) => {
+        const newObject = { value: col.id, label: col.name };
+        return newObject;
+      });
+  
+    return (
+      <Grid>
+        <Dialog
+          fullWidth
+          maxWidth="md"
+          onClose={handleCancel}
+          open={addDialogStatus}
+          aria-labelledby="max-width-dialog-title"
+          classes={{ paper: classes.dialogPaper }}
+        >
+          <DialogTitle aria-labelledby="max-width-dialog-title">
+            Create new subtask
+          </DialogTitle>
+          <DialogContent>
+            <TextField
+              required
+              autoComplete="off"
+              margin="dense"
+              name="name"
+              label="Name"
+              type="text"
+              value={name}
+              fullWidth
+              onChange={handleNameChange}
+            />
+            <TextField
+              autoComplete="off"
+              margin="dense"
+              name="content"
+              label="Content"
+              type="text"
+              value={content}
+              fullWidth
+              onChange={handleContentChange}
+            />
+            <TextField
+              autoComplete="off"
+              margin="dense"
+              name="size"
+              label="Size"
+              type="text"
+              value={size || ""}
+              fullWidth
+              onChange={handleSizeChange}
+            />
+            <Select
+              isMulti
+              className="selectField"
+              placeholder="Select colors"
+              options={modifiedColorData}
+              onChange={handleColorsChange}
+              closeMenuOnSelect={false}
+              styles={colourStyles}
+            />
+            <Select
+              className="selectField"
+              placeholder="Select owner"
+              options={modifiedUserData}
+              onChange={handleOwnerChange}
+            />
+            <Select
+              isMulti
+              className="selectField"
+              placeholder="Select members"
+              options={modifiedUserData}
+              onChange={handleMembersChange}
+              closeMenuOnSelect={false}
+            />
+            <Select
+              className="selectField"
+              placeholder={`Select column - ${columnOfParentTask}`}
+              options={columnsData}
+              onChange={handleColumnChange}
+            />
+          </DialogContent>
+          {options === 'Save changes' ? (<div> {colorList()}</div>) : (<div></div>)}
+          <DialogActions>
+            <Button onClick={(e) => handleCancel(e)} color="secondary">
+              Cancel
+            </Button>
+            <Button
+                          onClick={() => renameColors()}
+                          color="default"
+                          id="changeColors"
+                      >
+                          {options}
+                      </Button>
+            <Button disabled={!name.length} onClick={handleSave} color="primary">
+              Create subtask
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Grid>
+    );
+  };
+  export default AddSubtaskDialog;
+  
