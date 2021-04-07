@@ -7,6 +7,7 @@ import Task from "../models/Task";
 import Subtask from "../models/Subtask";
 import ColorTask from "../models/ColorTask";
 import Color from "../models/Color";
+import ColorBoard from "../models/ColorBoard"
 import ColorSubtask from "../models/ColorSubtask";
 import UserStory from "../models/UserStory";
 import User from "../models/User";
@@ -932,6 +933,47 @@ export class BoardService {
         return addedUser
     }
 
+    async allEpicColors() {
+        let epicColorsFromDB
+        try {
+            epicColorsFromDB = await ColorBoard.findAll()
+        } catch (e) {
+            console.error(e)
+        }
+        return epicColorsFromDB
+    }
+
+
+    async addEpicColors(colorId: any, boardId: any, name: any) {
+        try {
+            const colors = await ColorBoard.findAll();
+            const board = colors.filter((color) => color.colorId === colorId)
+            const boardColors = board.filter((color) => color.boardId === boardId)
+            if (boardColors.length > 0) {
+                if (boardColors[0].getDataValue("colorId") === colorId && boardColors[0].getDataValue("boardId") === boardId) {
+                    await ColorBoard.destroy({
+                        where: {
+                            colorId: colorId,
+                            boardId: boardId,
+                        },
+                    })
+                    return await ColorBoard.create({
+                        colorId: colorId,
+                        boardId: boardId,
+                        name: name,
+                    })
+            }
+            } else {
+                return await ColorBoard.create({
+                    colorId: colorId,
+                    boardId: boardId,
+                    name: name,
+                })
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
     async getOwnerById(ownerId: any) {
         let owner
         try {
