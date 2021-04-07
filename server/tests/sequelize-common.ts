@@ -10,9 +10,10 @@ import ColorSubtask from "../src/models/ColorSubtask";
 import ColorTask from "../src/models/ColorTask";
 import User from "../src/models/User";
 import UserSubtask from "../src/models/UserSubtask";
-import UserStory from "../src/models/UserStory";
+//import UserStory from "../src/models/UserStory";
 import Usertask from "../src/models/UserTask";
 import dummyData from "./dummyData";
+import { ExpansionPanelActions } from "@material-ui/core";
 
 //TODO Move all Sequelize stuff from utils.ts to this file
 export const projectByName = async (name: string) => {
@@ -83,9 +84,14 @@ export const initializeDb = async () => {
     await Promise.all(
     dummyData.colors.map(async (color) => {
       const resolved = await Color.create(color);
+      console.log(resolved)
       return resolved;
     })
   );
+    const colors = await Color.findAll()
+    console.log(colors.length)
+    expect(colors.length).toEqual(9)
+
   await Promise.all(
     dummyData.boards.map(async (board) => {
       const resolved = await Board.create(board);
@@ -98,12 +104,13 @@ export const initializeDb = async () => {
       return resolved;
     })
   );
-  await Promise.all(
-    dummyData.stories.map(async (story) => {
-      const resolved = await Story.create(story);
-      return resolved;
-    })
-  );
+  //commented out because of deleted stories data
+  // await Promise.all(
+  //   dummyData.stories.map(async (story) => {
+  //     const resolved = await Story.create(story);
+  //     return resolved;
+  //   })
+  // );
   await Promise.all(
     dummyData.tasks.map(async (task) => {
       const resolved = await Task.create(task);
@@ -140,12 +147,13 @@ export const initializeDb = async () => {
       return resolved;
     })
   );
-  await Promise.all(
-    dummyData.userStories.map(async (userstory) => {
-      const resolved = await UserStory.create(userstory);
-      return resolved;
-    })
-  );
+
+  // await Promise.all(
+  //   dummyData.userStories.map(async (userstory) => {
+  //     const resolved = await UserStory.create(userstory);
+  //     return resolved;
+  //   })
+  // );
 
   return Promise.resolve();
 };

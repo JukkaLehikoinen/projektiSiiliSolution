@@ -6,6 +6,17 @@ const projects = [
     orderNumber: 1,
   },
 ];
+
+const board1 = {
+  id: "83fa4f89-8ea1-4d1c-9fee-321daa941489",
+  prettyId: "PO",
+  name: "PO:n taulu",
+  creatorId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
+  orderNumber: 2,
+  ticketCount: 2,
+  projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
+}
+
 const boards = [
   {
     id: "83fa4f89-8ea1-4d1c-9fee-321daa941485",
@@ -15,7 +26,7 @@ const boards = [
     orderNumber: 2,
     ticketCount: 2,
     projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
-    creatorId: "abc123"
+
   },
   {
     id: "d3553f65-7ed4-4f43-9847-c14e4539eb5e",
@@ -25,7 +36,7 @@ const boards = [
     orderNumber: 3,
     ticketCount: 2,
     projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
-    creatorId: "abc123"
+
   },
   {
     id: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
@@ -35,7 +46,7 @@ const boards = [
     orderNumber: 1,
     ticketCount: 10,
     projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
-    creatorId: "abc123"
+
   },
   {
     id: "0f154e01-f8ba-49c8-b2dc-e884d28e7f83",
@@ -45,7 +56,7 @@ const boards = [
     orderNumber: 4,
     ticketCount: 0,
     projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
-    creatorId: "abc123"
+
   },
 ];
 
@@ -100,6 +111,7 @@ const users = [
     projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
   },
 ];
+
 
 const columns = [
   {
@@ -197,36 +209,6 @@ const columns = [
     boardId: "0f154e01-f8ba-49c8-b2dc-e884d28e7f83",
     orderNumber: 4,
     id: "f6209adb-91ca-476b-8269-asda82d05drt",
-  },
-];
-
-const stories = [
-  {
-    title: "First story",
-    description: "this is the content",
-    size: 4,
-    columnId: "asd75646-4035-41f5-99d7-7d742f0e8ac5",
-    id: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
-    ownerId: "1fd5abe7-159e-4224-8a44-7ae3ee902a54",
-    boardId: "0f154e01-f8ba-49c8-b2dc-e884d28e7f83",
-  },
-  {
-    title: "Second story",
-    description: "this is the content",
-    size: 2,
-    columnId: "asd75646-4035-41f5-99d7-7d742f0e8ac5",
-    id: "asd75646-6666-41f5-99d7-7d742f0e8a77",
-    ownerId: "1fd5abe7-159e-4224-8a44-7ae3ee902a54",
-    boardId: "0f154e01-f8ba-49c8-b2dc-e884d28e7f83",
-  },
-  {
-    title: "Third story",
-    description: "this is the content",
-    size: 3.4,
-    columnId: "f6209adb-91ca-476b-8269-asda82d05drt",
-    id: "asd75646-6666-41f5-9879-7d742f0e8ac5",
-    ownerId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
-    boardId: "0f154e01-f8ba-49c8-b2dc-e884d28e7f83",
   },
 ];
 
@@ -435,16 +417,16 @@ const colors = [
   { id: "99d0f5f1-6ff4-4e02-a564-fad8f3726c27", color: "lightgrey" },
 ];
 
-const userStories = [
-  {
-    userId: "1fd5abe7-159e-4224-8a44-7ae3ee902a54",
-    storyId: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
-  },
-  {
-    userId: "8b251e01-0bec-41bf-b756-ba53c76d04e6",
-    storyId: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
-  },
-];
+// const userStories = [
+//   {
+//     userId: "1fd5abe7-159e-4224-8a44-7ae3ee902a54",
+//     storyId: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
+//   },
+//   {
+//     userId: "8b251e01-0bec-41bf-b756-ba53c76d04e6",
+//     storyId: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
+//   },
+// ];
 
 const usertasks = [
   {
@@ -521,15 +503,14 @@ module.exports = {
   projects,
   boards,
   columns,
-  stories,
   tasks,
   subtasks,
   users,
-  userStories,
   usertasks,
   userSubtasks,
   colors,
   colortasks,
   colorsubtasks,
-  projectUser
+  projectUser,
+  board1
 };

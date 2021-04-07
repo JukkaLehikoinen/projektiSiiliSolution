@@ -46,6 +46,23 @@ const schema = {
             return addedBoard
         },
 
+        async deleteBoardById(root, {id}){
+            let deleteBoardById
+            try{
+                deleteBoardById = await dataSources.boardService.deleteBoardById(id)
+                pubsub.publish(BOARD_DELETED, {
+                    id,
+                    boardRemoved: {
+                        removeType: 'DELETED',
+                        removeInfo: { Id: id},
+                    },
+                })
+            }catch (e){
+                console.log(e)
+            }
+            return deleteBoardById
+        },
+
         moveSwimlane(root, {
             boardId, affectedSwimlanes, swimlaneOrder, eventId,
         }) {

@@ -69,6 +69,18 @@ export class BoardService {
         return addedProject
     }
 
+    async deleteProjectById(id: any) {
+        try {
+            await Project.destroy({
+                where: { id },
+            })
+        } catch (e) {
+            console.error(e)
+        }
+        return id
+    }
+
+
     async getBoardById(boardId: any) {
         let boardFromDb
         try {
@@ -88,6 +100,18 @@ export class BoardService {
         }
         return boardFromDb
     }
+
+    async deleteBoardById(id: any) {
+        try {
+            await Board.destroy({
+                where: { id },
+            })
+        } catch (e) {
+            console.error(e)
+        }
+        return id
+    }
+
     //tehtiin funktio getColumns, joka palauttaa kaikki sarakkeet
     async getColumns(){
         let columnFromDb

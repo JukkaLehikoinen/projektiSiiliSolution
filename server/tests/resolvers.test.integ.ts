@@ -9,9 +9,11 @@ import { Mutation as ColumnMutation } from "../src/graphql/resolvers/column-reso
 import { Query as ColumnQuery } from "../src/graphql/resolvers/column-resolvers";
 import { Mutation as TaskMutation } from "../src/graphql/resolvers/task-resolvers";
 import { Query as TaskQuery } from "../src/graphql/resolvers/task-resolvers";
-import { boards, columns } from "./dummyData";
+import { boards, columns, projects, tasks } from "./dummyData";
 import { Mutation as SubTaskMutation } from "../src/graphql/resolvers/subtask-resolver";
 import { Query as subTaskQuery } from "../src/graphql/resolvers/subtask-resolver";
+import {board1} from "./dummyData"
+import {Mutation as moveTicketFromColumn} from "../src/graphql/resolvers/column-resolvers"
 
 describe('With initial test data in the database, graphql queries', () => {
     // Reinitialize the database before each test in this describe block
@@ -19,14 +21,14 @@ describe('With initial test data in the database, graphql queries', () => {
 
     test('allBoards query returns all the boards in the database', async () => {
         const response = await BoardQuery.allBoards()
-        console.log(response)
-        console.log(response.slice().map(board => console.log(board.id)))
+       // console.log(response)
+       // console.log(response.slice().map(board => console.log(board.id)))
         expect(response.slice().length).toEqual(4)
     })
 
     test('allProject query returns all the boards in the database', async () => {
         const response = await ProjectQuery.allProjects()
-        console.log(response.slice().map(project => console.log(project.id)))
+       // console.log(response.slice().map(project => console.log(project.id)))
         expect(response.slice().length).toEqual(1)
     })
 
@@ -59,6 +61,8 @@ describe('mutations', () => {
         })
 
         const board = await BoardQuery.allBoards()
+        const boardId = await BoardQuery.boardById(null, board1)
+        //console.log(`received boardid ${boardId}`)
         expect(board.length).toEqual(5)
     })
 
@@ -77,8 +81,6 @@ describe('mutations', () => {
 
     test('should add column to board in db', async () => {
         const columns = await ColumnQuery.allColumns()
-        console.log(columns)
-        console.log(columns.slice().map(boards => console.log(boards.id)))
         expect(columns.slice().length).toEqual(16)
         await ColumnMutation.addColumnForBoard(null, {
             boardId: "83fa4f89-8ea1-4d1c-9fee-321daa941485",
@@ -91,11 +93,9 @@ describe('mutations', () => {
         expect(column.length).toEqual(17)
     })
 
-    //Test fails, possibly caused by outdated dummydata
+    
     test('should add tasks to db', async () => {
         const tasks = await TaskQuery.allTasks()
-        console.log(tasks)
-        console.log(tasks.slice().map(columns => console.log(columns.id)))
         expect(tasks.slice().length).toEqual(8)
         await TaskMutation.addTaskForColumn(null, {
             boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
@@ -135,6 +135,55 @@ describe('mutations', () => {
         const subtask = await subTaskQuery.allSubtasks()
         expect(subtask.length).toEqual(7)
     })
+
+    // no idea how to do this
+    // test('should be able to move a task from column to another', async()=>{
+    //     const from = await moveTicketFromColumn.changeTicketsColumnId()
+
+
+    // })
+
+    test('should delete board from db', async () => {
+        const boards = await BoardQuery.allBoards()
+        expect(boards.length).toEqual(4)
+        await BoardMutation.addBoard(null, {
+            name: 'PO:n taulu 2',
+            prettyId: 'PO2',
+            eventId: '9da1b35f-181a-4397-a5a5-47abced10a66',
+            projectId: '9da1b35f-181a-4397-a5a5-47abced10a66'
+        })
+
+        const board = await BoardQuery.allBoards()
+        const boardId = await BoardQuery.boardById(null, board1)
+        console.log(`received boardid ${boardId}`)
+        expect(board.length).toEqual(5)
+
+        const brds = await BoardQuery.allBoards()
+        console.log("brds", brds)
+        await BoardMutation.deleteBoardById(null, {
+            id: brds[4].dataValues.id
+        })
+
+        const allbrds = await BoardQuery.allBoards()
+        expect(allbrds.length).toEqual(4)
+    })
+
+    // test('should delete project from db', async () => {
+    //     const projects = await ProjectQuery.allProjects()
+    //     expect(projects.length).toEqual(1)
+    //     await ProjectMutation.addProject(null, {
+    //         name: "SiiliWall2",
+    //     })
+        
+    //     const aprojects = await ProjectQuery.allProjects()
+    //     expect(aprojects.length).toEqual(2)
+    //     await ProjectMutation.deleteProjectById(null, {
+    //         id: aprojects[1].dataValues.id
+    //     })
+
+    //     const allprojects = await ProjectQuery.allProjects()
+    //     expect(allprojects.length).toEqual(1)
+    // })
 
 })
 afterAll(() => afterTests())
