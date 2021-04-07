@@ -58,8 +58,8 @@ const NewUserForm = ({ setOpen, open }) => {
         )        
     }
     const deleteUserFunction = async (user, index)=>{
-        let nimi = removingUsers.filter((uzer) => uzer.id === user.id)
-        if (nimi.length === 0) {
+        let delName = removingUsers.filter((uzer) => uzer.id === user.id)
+        if (delName.length === 0) {
             removingUsers.push(user)
         }      
         setDel(await deleteUsers.filter((user, i)=> index !== i))
@@ -70,7 +70,7 @@ const NewUserForm = ({ setOpen, open }) => {
                 <DialogTitle id="form-dialog-title">User</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                    {options === 'SAVE' ? 'Select removal player' : ('Remaining users')}    
+                    {options === 'SAVE' ? 'Select removal user' : ('Remaining users')}    
                     </DialogContentText>
                     { removingUsers.length > 0 ? usersList(del) : (usersList(users)) }
                 </DialogContent>
