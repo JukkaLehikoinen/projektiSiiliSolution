@@ -8,6 +8,7 @@ import UserForm from '../components/user/UserForm'
 import { projectPageStyles } from '../styles/styles'
 import '../styles.css'
 import useProjectSubscriptions from '../graphql/subscriptions/useProjectSubscriptions'
+import { useHistory } from "react-router-dom";
 
 const ProjectPage = ({ id, eventId }) => {
     const queryResult = useProjectById(id)
@@ -15,6 +16,7 @@ const ProjectPage = ({ id, eventId }) => {
     const [openUserForm, setUserFormOpen] = useState(false)
     const [openUserDialog, setUserDialogOpen] = useState(false)
     const classes = projectPageStyles()
+    const history = useHistory();
     const handleClickOpen = () => {
         setOpen(true)
     }
@@ -35,6 +37,12 @@ const ProjectPage = ({ id, eventId }) => {
     window.localStorage.setItem('projectId', projectId)
 
     return (
+        <Grid>
+        <Grid container justify="flex-end" >
+                <Grid item >
+                    <Button classes={{ root: classes.navigationButton }} onClick={() => history.push("/")}>Go Home</Button>
+                </Grid>
+            </Grid>
         <Grid
             container
             direction="column"
@@ -89,6 +97,7 @@ const ProjectPage = ({ id, eventId }) => {
                     </Grid>
                 ))}
             </Grid>
+        </Grid>
         </Grid>
     )
 }

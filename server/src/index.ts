@@ -14,7 +14,6 @@ const resolvers = require('./graphql/resolvers')
 
 const env = process.env.NODE_ENV
 
-
 const schema = applyMiddleware(
     makeExecutableSchema({
         typeDefs,
@@ -49,7 +48,7 @@ const initializeApolloServer = (apollo: ApolloServer, app: express.Application) 
     };
 };
 
-const WS_PORT = 5000;
+const WS_PORT = process.env.WS_PORT || 5000;
 
 const startSubscriptionServer = async (app: express.Application) => {
     // Create WebSocket listener server
@@ -87,10 +86,20 @@ export const startServer = async (app: express.Application) => {
 }
 
 if (env !== 'test') {
-    const app = expressApp(ServerType.httpServer)
-    startServer(app)
-    startSubscriptionServer(expressApp(ServerType.wsServer)).catch(e => console.log(`subscription server start failed: ${e}`))
-}
+    if (env === 'production') {
+        const service = process.env.SERVICE;
+        if (service === 'backend') {
+            const app = expressApp(ServerType.httpServer)
+            startServer(app).catch(e => console.log(`subscription server start failed: ${e}`))
+        } else {
+            startSubscriptionServer(expressApp(ServerType.wsServer)).catch(e => console.log(`subscription server start failed: ${e}`))
+        }
+    } else {
+        const app = expressApp(ServerType.httpServer)
+        startServer(app).catch(e => console.log(`subscription server start failed: ${e}`))
+        startSubscriptionServer(expressApp(ServerType.wsServer)).catch(e => console.log(`subscription server start failed: ${e}`))
+    }
+    }
 
 
 // apollo.applyMiddleware({ app: app })

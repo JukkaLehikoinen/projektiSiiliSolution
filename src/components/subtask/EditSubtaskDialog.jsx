@@ -9,10 +9,15 @@ import { boardPageStyles } from '../../styles/styles'
 import useAllColors from '../../graphql/task/hooks/useAllColors'
 import useAllUsers from '../../graphql/user/hooks/useAllUsers'
 import bubbleSort from '../bubblesort'
+import colourStyles from '../SelectDialogColors'
+import colorboardqueries from '../../graphql/colorboards/hooks/useAddEpicColor'
+import allEpicColors from '../../graphql/colorboards/hooks/useAllEpicColors'
 
 const EditSubtaskDialog = ({
-    dialogStatus, editId, toggleDialog, subtask,
+    dialogStatus, editId, toggleDialog, subtask
 }) => {
+    const EpicColorQuery = allEpicColors()
+    const [addEpicColor] = colorboardqueries();
     const [editSubtask] = useEditSubtask()
     const userQuery = useAllUsers()
     const colorQuery = useAllColors()
@@ -26,7 +31,11 @@ const EditSubtaskDialog = ({
     const [colors, setColors] = useState()
     const animatedComponents = makeAnimated()
     const classes = boardPageStyles()
-
+    const [options, setOptions] = useState('Rename Colors')
+    const [EpicColors, setEpicColors] = useState()
+    let changedColors = [];
+    const boardId = subtask.board.id    
+    
     useEffect(() => {
         setName(subtask.name)
         setSize(subtask.size)
@@ -36,8 +45,7 @@ const EditSubtaskDialog = ({
         setColors(subtask.colors.length > 0 ? arrayOfOldColorIds : [])
     }, [subtask])
 
-    if (userQuery.loading || colorQuery.loading) return null
-
+    if (userQuery.loading || colorQuery.loading || EpicColorQuery.loading) return null
     const handleOwnerChange = (action) => {
         setOwner(action != null ? action.value : null)
     }
@@ -60,6 +68,47 @@ const EditSubtaskDialog = ({
 
     const handleColorsChange = (event) => {
         setColors(Array.isArray(event) ? event.map((color) => color.value) : [])
+    }
+
+    const renameColors = () => {
+        if (options === 'Rename Colors') {
+            setOptions('Save changes')
+        } else {
+            setEpicColors(changedColors)
+            for (let i = 0; i < changedColors.length; i++) {
+                addEpicColor({
+                    variables: {
+                        colorId:changedColors[i].id,
+                        boardId: boardId,
+                        name: changedColors[i].name,
+                    }
+                })
+            }
+            
+            setOptions('Rename Colors')
+        }
+    }
+
+    const inputChanged = (event) => {
+        changedColors[event.target.id].name = event.target.value
+      }
+      
+    const colorList = () => {
+        if (EpicColors) {
+            changedColors = EpicColors
+        }
+
+        return (
+            <div>
+                <table><tbody>
+                    {
+                        changedColors.map((color, index) => <tr key={index}>
+                            <td style={{ height:'20px', width:'20px', backgroundColor: color.color }}></td>
+                            <td><input name={color.color} id={index} onChange={inputChanged} defaultValue={color.name}></input></td></tr>)
+                    }
+                </tbody></table>
+            </div>
+        )
     }
 
     const handleSave = (event) => {
@@ -107,7 +156,7 @@ const EditSubtaskDialog = ({
         userList.push(user)
         }
     });
-    
+
     let alphabeticalOrder = bubbleSort(userList);
     const modifiedUserData = alphabeticalOrder.map((user) => {
         const newObject = { value: user.id, label: user.userName }
@@ -120,12 +169,38 @@ const EditSubtaskDialog = ({
         return newObject
     })
 
-    const modifiedColorData = colorQuery.data.allColors.map((color) => {
-        const newObject = { value: color.id, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
+    const colorNamesToList = (color) => {
+        if (EpicColorQuery.data.allEpicColors.filter((epic) => epic.boardId === boardId).length > 0) {
+        const epicBoard = EpicColorQuery.data.allEpicColors.filter((epic) => epic.colorId === color.id);
+        const epics = epicBoard.filter((epic) => epic.boardId === boardId);
+        if (epics.length > 0) {
+        return epics[0].name;
+        } else {
+            return color.color
+        }
+        } else {
+            return color.color;
+        }
+        
+    }
+
+    const chosenColorsData = subtask.colors.map((color) => {
+        const newObject = { value: color.id, color: color.color, label: colorNamesToList(color) }
         return newObject
     })
-    const chosenColorsData = subtask.colors.map((color) => {
-        const newObject = { value: color.id, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
+
+    const addColorsToChangedColors = () => {
+        const modifiedColorData = colorQuery.data.allColors.map((color) => {
+            changedColors.push({id: color.id, color: color.color, name: colorNamesToList(color)});
+        })
+    }
+
+    addColorsToChangedColors();
+    if (EpicColors) {
+        changedColors=EpicColors;
+    }
+    const modifiedColorData = changedColors.map((color) => {
+        const newObject = { value: color.id, color: color.color, label: color.name.charAt(0).toUpperCase() + color.name.slice(1) }
         return newObject
     })
 
@@ -199,6 +274,7 @@ const EditSubtaskDialog = ({
                         components={animatedComponents}
                         isMulti
                         onChange={handleColorsChange}
+                        styles={colourStyles}
                     />
                     <Select
                         className="selectField"
@@ -219,12 +295,20 @@ const EditSubtaskDialog = ({
                         onChange={handleMembersChange}
                     />
                 </DialogContent>
+                {options === 'Save changes' ? (<div> {colorList()}</div>) : (<div></div>)}
                 <DialogActions>
                     <Button
                         onClick={handleCancel}
                         color="secondary"
                     >
                         Cancel
+                    </Button>
+                    <Button
+                        onClick={() => renameColors()}
+                        color="default"
+                        id="changeColors"
+                    >
+                        {options}
                     </Button>
                     <Button
                         onClick={handleSave}
