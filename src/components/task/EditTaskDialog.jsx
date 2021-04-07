@@ -207,7 +207,7 @@ const EditTaskDialog = ({
     }
 
     let userList = [];
-    userQuery.data.allUsers.map((user) => {
+    userQuery.data.allUsers.filter((user) => !user.userName.includes(' (Removed user)')).map((user) => {
         if (user.projectId === projectId) {
         userList.push(user)
         }

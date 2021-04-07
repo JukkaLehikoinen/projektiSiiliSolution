@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import useProjectById from '../graphql/project/hooks/useProjectById'
 import NewBoardForm from '../components/board/NewBoardForm'
 import NewUserForm from '../components/user/NewUserForm'
+import UserForm from '../components/user/UserForm'
 import { projectPageStyles } from '../styles/styles'
 import '../styles.css'
 import useProjectSubscriptions from '../graphql/subscriptions/useProjectSubscriptions'
@@ -13,6 +14,7 @@ const ProjectPage = ({ id, eventId }) => {
     const queryResult = useProjectById(id)
     const [open, setOpen] = useState(false)
     const [openUserForm, setUserFormOpen] = useState(false)
+    const [openUserDialog, setUserDialogOpen] = useState(false)
     const classes = projectPageStyles()
     const history = useHistory();
     const handleClickOpen = () => {
@@ -21,6 +23,9 @@ const ProjectPage = ({ id, eventId }) => {
 
     const handleClickOpenUser = () => {
         setUserFormOpen(true)
+    }
+    const handleClickOpenUserDialog = () => {
+        setUserDialogOpen(true)
     }
 
     useProjectSubscriptions(id, eventId)
@@ -48,6 +53,7 @@ const ProjectPage = ({ id, eventId }) => {
         >
             {open && <NewBoardForm setOpen={setOpen} open={open} projectId={id} />}
             {openUserForm && <NewUserForm setOpen={setUserFormOpen} open={openUserForm} />}
+            {openUserDialog && <UserForm setOpen={setUserDialogOpen} open={openUserDialog} />}
             <Grid item classes={{ root: classes.title }}>
                 <h1 id="landingTitle">{projectName}</h1>
             </Grid>
@@ -66,6 +72,11 @@ const ProjectPage = ({ id, eventId }) => {
                 <Grid item>
                     <Button onClick={handleClickOpenUser} classes={{ root: classes.addNewButton }}>
                         Add User
+                    </Button>
+                </Grid>
+                <Grid item>
+                    <Button onClick={handleClickOpenUserDialog} classes={{ root: classes.addNewButton }}>
+                        Users
                     </Button>
                 </Grid>
             </Grid>

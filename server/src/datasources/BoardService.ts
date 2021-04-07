@@ -920,12 +920,13 @@ export class BoardService {
         return usersFromDb
     }
 
-    async addUser(userName: any) {
+    async addUser(userName: string, projectId: string) {
         let addedUser
         try {
             addedUser = await User.create({
                 id: uuid(),
-                userName,
+                userName: userName,
+                projectId: projectId
             })
         } catch (e) {
             console.error(e)
@@ -933,6 +934,27 @@ export class BoardService {
         return addedUser
     }
 
+    async deleteUser(id: string, userName: string) {
+        let deletedUser
+        try {
+            deletedUser = await User.findByPk(id)
+            if (deletedUser) {
+                if (deletedUser.userName.includes(' (Removed user)')) {
+                    let length = deletedUser.userName.length;
+
+                    deletedUser.userName = deletedUser.userName.substring(0, length - 14);
+                } else {
+                    deletedUser.userName = userName + ' (Removed user)'
+                }
+                await deletedUser.save()
+            }
+        } catch (e) {
+            console.error(e)
+        }
+        return deletedUser
+    }
+
+                
     async allEpicColors() {
         let epicColorsFromDB
         try {
@@ -974,6 +996,7 @@ export class BoardService {
             console.error(e)
         }
     }
+
     async getOwnerById(ownerId: any) {
         let owner
         try {
