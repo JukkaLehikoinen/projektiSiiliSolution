@@ -15,6 +15,7 @@ const NewUserForm = ({ setOpen, open }) => {
     const [options, setOptions] = useState('SAVE')
     const [del, setDel] = useState([])
     const [popupIsOpen, setPopupIsOpen] = React.useState(false)
+    const [popp, setPopp] = useState(false)
     
     if (allUser.loading) return null
     
@@ -23,8 +24,10 @@ const NewUserForm = ({ setOpen, open }) => {
     const openPopup = () => setPopupIsOpen(true)
     const closePopup = () => setPopupIsOpen(false)
 
-    const popup = () => {
-        return <DeleteUserPopup open={popupIsOpen} handleClose={closePopup}/>
+    const popup = async () => {
+        //return <DeleteUserPopup open={popupIsOpen} handleClose={closePopup}/>
+        setPopp(true)
+        setPopupIsOpen(true)
     } 
 
     const handleClose = () => {
@@ -59,9 +62,9 @@ const NewUserForm = ({ setOpen, open }) => {
             <div>
                  <table><tbody>
                 {   removingUsers.length > 0 ? del.map((user, index) => <tr key={index}>
-                            <td onClick={()=>popup}><Button size="small" color="secondary"  > {user.userName} </Button> </td></tr>) : 
+                            <td onClick={()=>popup()}><Button size="small" color="secondary"  > {user.userName} </Button> </td></tr>) : 
                         (deleteUsers.map((user, index) => <tr key={index}>
-                            <td onClick={()=>popup}><Button size="small" color="secondary" > {user.userName} </Button> </td></tr>))
+                            <td onClick={()=>popup()}><Button size="small" color="secondary" > {user.userName} </Button> </td></tr>))
                     }
                 </tbody></table>
             </div>
@@ -91,6 +94,7 @@ const NewUserForm = ({ setOpen, open }) => {
                     {options === 'SAVE' ? <Button onClick={handleSave} color="primary">SAVE</Button> : (<Button onClick={ok} color="primary">OK</Button>)}
                 </DialogActions>
             </Dialog>
+            {popp ===true ? <DeleteUserPopup  open={popupIsOpen} handleClose={closePopup}/> : <div></div> }
         </div>
     )
 }

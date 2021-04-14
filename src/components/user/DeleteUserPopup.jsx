@@ -9,6 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 export default function DeleteUserPopup(props) {
     console.log("MOI")
     const { open, handleClose } = props
+    console.log(open)
 //   const [open, setOpen] = React.useState(false);
 
 //   const handleClickOpen = () => {
