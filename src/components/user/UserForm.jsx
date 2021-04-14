@@ -6,6 +6,7 @@ import {
 import useDeleteUser from '../../graphql/user/hooks/useDeleteUser'
 import useAllUser from '../../graphql/user/hooks/useAllUsers'
 import bubbleSort from '../bubblesort'
+import DeleteUserPopup from './DeleteUserPopup'
 
 const NewUserForm = ({ setOpen, open }) => {
     const [deleteUser] = useDeleteUser()
@@ -13,10 +14,18 @@ const NewUserForm = ({ setOpen, open }) => {
     const [removingUsers, setRemovingUsers] = useState([])
     const [options, setOptions] = useState('SAVE')
     const [del, setDel] = useState([])
+    const [popupIsOpen, setPopupIsOpen] = React.useState(false)
     
     if (allUser.loading) return null
     
     const projectId = window.localStorage.getItem('projectId')
+    
+    const openPopup = () => setPopupIsOpen(true)
+    const closePopup = () => setPopupIsOpen(false)
+
+    const popup = () => {
+        return <DeleteUserPopup open={popupIsOpen} handleClose={closePopup}/>
+    } 
 
     const handleClose = () => {
         setOpen(false)
@@ -50,14 +59,16 @@ const NewUserForm = ({ setOpen, open }) => {
             <div>
                  <table><tbody>
                 {   removingUsers.length > 0 ? del.map((user, index) => <tr key={index}>
-                            <td onClick={()=>deleteUserFunction(user, index)}>{user.userName} </td></tr>) : 
+                            <td onClick={()=>popup}><Button size="small" color="secondary"  > {user.userName} </Button> </td></tr>) : 
                         (deleteUsers.map((user, index) => <tr key={index}>
-                            <td onClick={()=>deleteUserFunction(user, index)}>{user.userName} </td></tr>))
+                            <td onClick={()=>popup}><Button size="small" color="secondary" > {user.userName} </Button> </td></tr>))
                     }
                 </tbody></table>
             </div>
         )        
     }
+
+
     const deleteUserFunction = async (user, index)=>{
         let delName = removingUsers.filter((uzer) => uzer.id === user.id)
         if (delName.length === 0) {
