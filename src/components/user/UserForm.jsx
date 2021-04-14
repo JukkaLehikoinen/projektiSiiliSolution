@@ -9,6 +9,8 @@ import bubbleSort from '../bubblesort'
 import DeleteUserPopup from './DeleteUserPopup'
 
 const NewUserForm = ({ setOpen, open }) => {
+    const [user, setUser] = useState()
+    const [index, setIndex] = useState()
     const [deleteUser] = useDeleteUser()
     const allUser = useAllUser()
     const [removingUsers, setRemovingUsers] = useState([])
@@ -24,10 +26,11 @@ const NewUserForm = ({ setOpen, open }) => {
     const openPopup = () => setPopupIsOpen(true)
     const closePopup = () => setPopupIsOpen(false)
 
-    const popup = async () => {
-        //return <DeleteUserPopup open={popupIsOpen} handleClose={closePopup}/>
+    const popup = async (user, index) => {
         setPopp(true)
         setPopupIsOpen(true)
+        setUser(user)
+        setIndex(index)
     } 
 
     const handleClose = () => {
@@ -62,15 +65,14 @@ const NewUserForm = ({ setOpen, open }) => {
             <div>
                  <table><tbody>
                 {   removingUsers.length > 0 ? del.map((user, index) => <tr key={index}>
-                            <td onClick={()=>popup()}><Button size="small" color="secondary"  > {user.userName} </Button> </td></tr>) : 
+                            <td onClick={()=>popup(user, index)}><Button size="small" color="secondary"  > {user.userName} </Button> </td></tr>) : 
                         (deleteUsers.map((user, index) => <tr key={index}>
-                            <td onClick={()=>popup()}><Button size="small" color="secondary" > {user.userName} </Button> </td></tr>))
+                            <td onClick={()=>popup(user, index)}><Button size="small" color="secondary" > {user.userName} </Button> </td></tr>))
                     }
                 </tbody></table>
             </div>
         )        
     }
-
 
     const deleteUserFunction = async (user, index)=>{
         let delName = removingUsers.filter((uzer) => uzer.id === user.id)
@@ -94,7 +96,7 @@ const NewUserForm = ({ setOpen, open }) => {
                     {options === 'SAVE' ? <Button onClick={handleSave} color="primary">SAVE</Button> : (<Button onClick={ok} color="primary">OK</Button>)}
                 </DialogActions>
             </Dialog>
-            {popp ===true ? <DeleteUserPopup  open={popupIsOpen} handleClose={closePopup}/> : <div></div> }
+            {popp ===true ? <DeleteUserPopup  open={popupIsOpen} handleClose={closePopup} user={user} index={index}/> : <div></div> }
         </div>
     )
 }

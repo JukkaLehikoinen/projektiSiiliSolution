@@ -1,24 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import useDeleteUser from '../../graphql/user/hooks/useDeleteUser'
+
 
 export default function DeleteUserPopup(props) {
     console.log("MOI")
-    const { open, handleClose } = props
-    console.log(open)
-//   const [open, setOpen] = React.useState(false);
+    const { open, handleClose, user, index } = props
+    const [deleteUser] = useDeleteUser()
+    console.log(props.user.userName, index)
 
-//   const handleClickOpen = () => {
-//     setOpen(true);
-//   };
+    // const handleSave = (index, user) => {
+    //     // setOptions('OK')
+    //     for (let i = 0; i < removingUsers.length; i++) {
+            
+    //         deleteUser({
+    //             variables: {
+    //                 id: removingUsers[i].id,
+    //                 userName: removingUsers[i].userName,
+    //             },
+    //         })     
+    //     }
+    // }
 
-//   const handleClose = () => {
-//     setOpen(false);
-//   };
+    // const ok = () => {
+    //     setOpen(false)
+    // }
+  
 
   return (
       <Dialog
@@ -27,20 +39,17 @@ export default function DeleteUserPopup(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Are you sure you want to delete " + props.user.userName + " from this project?"} </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-          MORO
-          </DialogContentText>
         </DialogContent>
-        {/* <DialogActions>
+        <DialogActions>
           <Button onClick={handleClose} color="primary">
             Disagree
           </Button>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={handleClose} color="primary" user={user} index={index} autoFocus>
             Agree
           </Button>
-        </DialogActions> */}
+        </DialogActions>
       </Dialog>
   );
 }
