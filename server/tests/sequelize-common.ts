@@ -3,7 +3,7 @@ import Board from "../src/models/Board";
 import Column from "../src/models/Column";
 import Subtask from "../src/models/Subtask";
 import Task from "../src/models/Task";
-import Story from "../src/models/Story";
+//import Story from "../src/models/Story";
 import { dbConfig } from "../src/database";
 import Color from "../src/models/Color";
 import ColorSubtask from "../src/models/ColorSubtask";
@@ -13,7 +13,6 @@ import UserSubtask from "../src/models/UserSubtask";
 //import UserStory from "../src/models/UserStory";
 import Usertask from "../src/models/UserTask";
 import dummyData from "./dummyData";
-import { ExpansionPanelActions } from "@material-ui/core";
 
 //TODO Move all Sequelize stuff from utils.ts to this file
 export const projectByName = async (name: string) => {
@@ -68,8 +67,8 @@ export const initializeDb = async () => {
     })
   );
 
-  const users = await User.findAll()
-  expect(users.length).toEqual(7)
+  const users = await User.findAll();
+  expect(users.length).toEqual(7);
 
   await Promise.all(
     dummyData.projects.map(async (project) => {
@@ -78,19 +77,19 @@ export const initializeDb = async () => {
     })
   );
 
-    const projects = await Project.findAll()
-    expect(projects.length).toEqual(1)
+  const projects = await Project.findAll();
+  expect(projects.length).toEqual(1);
 
-    await Promise.all(
+  await Promise.all(
     dummyData.colors.map(async (color) => {
       const resolved = await Color.create(color);
-      console.log(resolved)
+      console.log(resolved);
       return resolved;
     })
   );
-    const colors = await Color.findAll()
-    console.log(colors.length)
-    expect(colors.length).toEqual(9)
+  const colors = await Color.findAll();
+  console.log(colors.length);
+  expect(colors.length).toEqual(9);
 
   await Promise.all(
     dummyData.boards.map(async (board) => {
@@ -192,6 +191,7 @@ export const columnsInTheDb = async () => {
   return await Column.findAll();
 };
 //RETURN TO THIS LATER
+/*
 export const storiesOfColumnInTheDb = async (id) => {
   const stories = await Story.findAll({ where: { columnId: id } });
   return stories;
@@ -209,7 +209,7 @@ export const storyById = async (id) => {
 
   return story;
 };
-
+*/
 export const tasksOfColumnInTheDb = async (id) => {
   return await Task.findAll({ where: { columnId: id } });
 };

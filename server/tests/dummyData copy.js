@@ -188,7 +188,7 @@ const columns = [
     id: "f6209adb-91ca-476b-8269-asda82d05drt",
   },
 ];
-
+/*
 const stories = [
   {
     title: "First story",
@@ -218,7 +218,7 @@ const stories = [
     boardId: "0f154e01-f8ba-49c8-b2dc-e884d28e7f83",
   },
 ];
-
+*/
 //DO WE NEED TO UPDATE THIS FROM MODELS -> TASK.TS??
 const tasks = [
   {
@@ -401,7 +401,7 @@ const colors = [
   { id: "9a965133-5817-42b3-8b3c-ce1c453e0b88", color: "gray" },
   { id: "99d0f5f1-6ff4-4e02-a564-fad8f3726c27", color: "lightgrey" },
 ];
-
+/*
 const userStories = [
   {
     userId: "1fd5abe7-159e-4224-8a44-7ae3ee902a54",
@@ -412,7 +412,7 @@ const userStories = [
     storyId: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
   },
 ];
-
+*/
 const usertasks = [
   {
     userId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
@@ -477,11 +477,11 @@ module.exports = {
   projects,
   boards,
   columns,
-  stories,
+  //stories,
   tasks,
   subtasks,
   users,
-  userStories,
+  //userStories,
   usertasks,
   userSubtasks,
   colors,
