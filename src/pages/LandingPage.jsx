@@ -12,15 +12,13 @@ const LandingPage = () => {
     const [open, setOpen] = useState(false)
     const classes = projectPageStyles()
 
-    const [loading, setLoading] = useState(false);
-
     const handleClickOpen = () => {
         setOpen(true)
     }
-    
+
     if (queryResult.loading) {
-        
-        return <div 
+
+        return <div
             style={{
                 display: "flex",
                 justifyContent: "center",
@@ -28,16 +26,41 @@ const LandingPage = () => {
                 marginTop: '20%',
                 color: "#FF8E53"
             }}>
-            <LoadingSpinner/>
+            <LoadingSpinner />
         </div>
-  
+
     }
 
     if (queryResult.error) {
         console.log(queryResult.error)
-        return <div>Error</div>
+        return <div
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: '15%',
+                // color: "#FF8E53"
+            }}>
+            
+            <div>
+            <img src="https://cdn.pixabay.com/photo/2018/01/04/15/51/404-error-3060993_960_720.png" height= "150" width="150"/>
+                <li>
+                    <ul>Something went wrong!</ul>
+                    <ul>What caused this error:</ul>
+                
+                    <br></br>
+                    <ol>1. Check your internet connection</ol>
+                    <ol>2. There might be an error in the database</ol>
+                    <ol>3. Who knows?</ol>
+                    <ol>4. Contact the admin about this problem</ol>
+                    <ol>5. Go do something else while the problem is solved</ol>
+                    <ol>6. Have a nice day!</ol>
+                </li>
+            </div>
+
+        </div>
     }
-    
+
     const projectsInOrder = queryResult.data.allProjects.slice().sort((a, b) => a.orderNumber - b.orderNumber)
 
     return (
