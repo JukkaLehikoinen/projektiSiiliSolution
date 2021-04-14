@@ -19,23 +19,18 @@ const LandingPage = () => {
     }
     
     if (queryResult.loading) {
-        /* setLoading(loading)
-        setTimeout(() => {
-            setLoading(!loading)
-        }, 1000) */
-
-        //if (loading) {
-            return <div 
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginTop: '20%',
-                    color: "#FF8E53"
-                }}>
-                <LoadingSpinner/>
-            </div>
-        //}     
+        
+        return <div 
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: '20%',
+                color: "#FF8E53"
+            }}>
+            <LoadingSpinner/>
+        </div>
+  
     }
 
     if (queryResult.error) {

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Grid, Button } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import useProjectById from '../graphql/project/hooks/useProjectById'
+import LoadingSpinner from '../components/LoadingSpinner'
 import NewBoardForm from '../components/board/NewBoardForm'
 import NewUserForm from '../components/user/NewUserForm'
 import UserForm from '../components/user/UserForm'
@@ -30,7 +31,18 @@ const ProjectPage = ({ id, eventId }) => {
 
     useProjectSubscriptions(id, eventId)
 
-    if (queryResult.loading) return null
+    if (queryResult.loading) {
+        return <div 
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: '20%',
+                    color: "#FF8E53"
+                }}>
+                <LoadingSpinner/>
+        </div>
+    }
     const boardsInOrder = queryResult.data.projectById.boards.slice().sort((a, b) => a.orderNumber - b.orderNumber)
     const projectName = queryResult.data.projectById.name
     const projectId = queryResult.data.projectById.id
