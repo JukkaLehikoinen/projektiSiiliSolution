@@ -1,5 +1,4 @@
 import Project from "../src/models/Project";
-//import { stories } from "./dummyData";
 
 import {
   findByProjectPk,
@@ -14,13 +13,12 @@ import {
   columnsOfBoardInTheDb,
   addColumnForBoard,
   columnsInTheDb,
-  storiesInTheDb,
   tasksOfColumnInTheDb,
   tasksInTheDb,
   getTaskOrderOfColumn,
   subtasksOfTaskInTheDb,
   subtasksInTheDb,
-  mapProjectBoardsByProjectId
+  mapProjectBoardsByProjectId,
 } from "./sequelize-common";
 
 /**
@@ -52,7 +50,6 @@ describe("dummy project", () => {
     const id = await mapProjectById("9da1b35f-181a-4397-a5a5-47abced10a66");
     expect(id).toContain("9da1b35f-181a-4397-a5a5-47abced10a66");
   });
-
 });
 
 describe("dummy board", () => {
@@ -114,12 +111,6 @@ describe("dummy board", () => {
     expect(columns.length).toBe(17);
   });
 
-  test("should return all stories in the db", async () => {
-    const stories = await storiesInTheDb();
-    expect(stories.length).toBe(3);
-  });
-
-
   test("should return all tasks in the column", async () => {
     const tasks = await tasksOfColumnInTheDb(
       "f6209adb-91ca-476b-8269-328a82d05d4a"
@@ -178,7 +169,6 @@ describe("dummy board", () => {
     const subtasks = await subtasksInTheDb();
     expect(subtasks.length).toBe(6);
   });
-
 });
 
 describe("dummy board", () => {
@@ -189,7 +179,7 @@ describe("dummy board", () => {
     const projectId = await mapProjectBoardsByProjectId(
       "83fa4f89-8ea1-4d1c-9fee-321daa941485"
     );
-    console.log("---------------------------")
+    console.log("---------------------------");
     console.log(projectId);
     expect(projectId).toEqual(["9da1b35f-181a-4397-a5a5-47abced10a66"]);
   });

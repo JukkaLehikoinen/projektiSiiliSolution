@@ -15,7 +15,7 @@ const board1 = {
   orderNumber: 2,
   ticketCount: 2,
   projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
-}
+};
 
 const boards = [
   {
@@ -26,7 +26,6 @@ const boards = [
     orderNumber: 2,
     ticketCount: 2,
     projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
-
   },
   {
     id: "d3553f65-7ed4-4f43-9847-c14e4539eb5e",
@@ -36,7 +35,6 @@ const boards = [
     orderNumber: 3,
     ticketCount: 2,
     projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
-
   },
   {
     id: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
@@ -46,7 +44,6 @@ const boards = [
     orderNumber: 1,
     ticketCount: 10,
     projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
-
   },
   {
     id: "0f154e01-f8ba-49c8-b2dc-e884d28e7f83",
@@ -56,7 +53,6 @@ const boards = [
     orderNumber: 4,
     ticketCount: 0,
     projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
-
   },
 ];
 
@@ -111,7 +107,6 @@ const users = [
     projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
   },
 ];
-
 
 const columns = [
   {
@@ -491,11 +486,11 @@ const userSubtasks = [
 const projectUser = [
   {
     id: "bca123",
-    name: "User One"
+    name: "User One",
   },
   {
     id: "bca456",
-    name: "User Two"
+    name: "User Two",
   },
 ];
 
@@ -512,19 +507,21 @@ const task1 = {
   boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
   description: "Add drag and drop function to cards",
   difficulty: 2,
-}
-const column1 = {
-  name: "Todo",
-  boardId: "83fa4f89-8ea1-4d1c-9fee-321daa941485",
-  orderNumber: 1,
-  id: "28d0ce05-b1e1-4c21-9c8a-87ba1b2a0527",
-}
-const column2 = {
-  name: "In Progress",
-  boardId: "83fa4f89-8ea1-4d1c-9fee-321daa941485",
-  orderNumber: 2,
-  id: "28d0ce05-b1e1-4c21-9c8a-87ba1b2a0528",
-}
+};
+const testColumns = [
+  {
+    name: "Todo",
+    boardId: "83fa4f89-8ea1-4d1c-9fee-321daa949999",
+    orderNumber: 1,
+    id: "f6209adb-91ca-476b-8269-328a82d05d4a",
+  },
+  {
+    name: "In Progress",
+    boardId: "83fa4f89-8ea1-4d1c-9fee-321daa949999",
+    orderNumber: 2,
+    id: "28d0ce05-b1e1-4c21-9c8a-87ba1b2a0528",
+  },
+];
 
 module.exports = {
   projects,
@@ -540,7 +537,6 @@ module.exports = {
   colorsubtasks,
   projectUser,
   board1,
-  column1,
-  column2,
-  task1
+  testColumns,
+  task1,
 };

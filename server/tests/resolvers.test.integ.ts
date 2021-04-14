@@ -147,11 +147,7 @@ describe("mutations", () => {
         });
         const changedTasks = await TaskQuery.taskById(null, tasks[0])
         expect(changedTasks.dataValues.columnId).toEqual(columns[10].id);
-        //expect(changedTasks[0].dataValues.columnId).toEqual(columns[10].id);
-        //const data = await moveTicketFromColumn.changeTicketsColumnId()
-        
-        //const sourceColumn = await moveTicketFromColumn.reOrderTicketsOfColumn()
-        //const destColumn = await moveTicketFromColumn.reOrderTicketsOfColumn()
+      
 
     })
 
