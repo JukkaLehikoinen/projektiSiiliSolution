@@ -101,10 +101,10 @@ export class BoardService {
         return boardFromDb
     }
 
-    async deleteBoardById(id: any) {
+    async deleteBoardById(id: string) {
         try {
             await Board.destroy({
-                where: { id },
+                where: { id: id },
             })
         } catch (e) {
             console.error(e)

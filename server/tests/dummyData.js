@@ -499,6 +499,33 @@ const projectUser = [
   },
 ];
 
+const task1 = {
+  prettyId: "KNBN-2",
+  title: "Add drag and drop function to cards",
+  content: "Add drag and drop function to cards",
+  size: 1,
+  columnId: "28d0ce05-b1e1-4c21-9c8a-87ba1b2a0527",
+  columnOrderNumber: 0,
+  swimlaneOrderNumber: 1,
+  id: "f3f3c12d-cee0-46bf-9374-f19ba8894ad6",
+  ownerId: "654df13f-51be-4b25-8f0e-7c2f40a3a81e",
+  boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
+  description: "Add drag and drop function to cards",
+  difficulty: 2,
+}
+const column1 = {
+  name: "Todo",
+  boardId: "83fa4f89-8ea1-4d1c-9fee-321daa941485",
+  orderNumber: 1,
+  id: "28d0ce05-b1e1-4c21-9c8a-87ba1b2a0527",
+}
+const column2 = {
+  name: "In Progress",
+  boardId: "83fa4f89-8ea1-4d1c-9fee-321daa941485",
+  orderNumber: 2,
+  id: "28d0ce05-b1e1-4c21-9c8a-87ba1b2a0528",
+}
+
 module.exports = {
   projects,
   boards,
@@ -512,5 +539,8 @@ module.exports = {
   colortasks,
   colorsubtasks,
   projectUser,
-  board1
+  board1,
+  column1,
+  column2,
+  task1
 };
