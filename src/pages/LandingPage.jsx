@@ -5,24 +5,44 @@ import { projectPageStyles } from '../styles/styles'
 import '../styles.css'
 import useAllProjects from '../graphql/project/hooks/useAllProjects'
 import NewProjectForm from '../components/project/NewProjectForm'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 const LandingPage = () => {
     const queryResult = useAllProjects()
     const [open, setOpen] = useState(false)
     const classes = projectPageStyles()
 
+    const [loading, setLoading] = useState(false);
+
     const handleClickOpen = () => {
         setOpen(true)
     }
-
+    
     if (queryResult.loading) {
-        return <div>Loading</div>
+        /* setLoading(loading)
+        setTimeout(() => {
+            setLoading(!loading)
+        }, 1000) */
+
+        //if (loading) {
+            return <div 
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: '20%',
+                    color: "#FF8E53"
+                }}>
+                <LoadingSpinner/>
+            </div>
+        //}     
     }
+
     if (queryResult.error) {
         console.log(queryResult.error)
         return <div>Error</div>
     }
-
+    
     const projectsInOrder = queryResult.data.allProjects.slice().sort((a, b) => a.orderNumber - b.orderNumber)
 
     return (
