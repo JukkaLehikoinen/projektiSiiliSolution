@@ -99,7 +99,7 @@ if (env !== 'test') {
         startServer(app).catch(e => console.log(`subscription server start failed: ${e}`))
         startSubscriptionServer(expressApp(ServerType.wsServer)).catch(e => console.log(`subscription server start failed: ${e}`))
     }
-    }
+}
 
 
 // apollo.applyMiddleware({ app: app })
