@@ -135,14 +135,14 @@ describe("mutations", () => {
     test('should be able to move a task from column to another', async()=>{
         const sourceColumn1 = await ColumnQuery.columnById(null, columns[9]);
         const destColumn1 = await ColumnQuery.columnById(null, columns[10]);
-    
+        expect(tasks[0].columnId).toEqual(columns[9].id)
         const moveTicket = await ColumnMutation.moveTicketFromColumn(null, {
           type: "task",
           ticketId: tasks[0].id,
           sourceColumnId: sourceColumn1.dataValues.id,
           destColumnId: destColumn1.dataValues.id,
           sourceTicketOrder: [],
-          destTicketOrder: [{ ticketId: tasks[2].id, type: "task" }],
+          destTicketOrder: [{ ticketId: tasks[0].id, type: "task" }],
           eventId: "",
         });
         const changedTasks = await TaskQuery.taskById(null, tasks[0])
