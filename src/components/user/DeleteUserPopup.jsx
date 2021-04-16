@@ -12,19 +12,14 @@ export default function DeleteUserPopup(props) {
     console.log("MOI")
     const { open, handleClose, user } = props
     const [deleteUser] = useDeleteUser()
-    console.log(props.user.userName)
 
      const handleSave = () => {
-       
-            
            deleteUser({
                variables: {
                     id: user.id,
                      userName: user.userName,
                  },
             })    
-
-    
        handleClose()
     }
   
