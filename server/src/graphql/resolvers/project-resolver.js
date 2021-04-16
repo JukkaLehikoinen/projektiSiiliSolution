@@ -1,6 +1,6 @@
-//const { delete } = require("../../controllers/boards");
-const {dataSources} = require("../../datasources");
-const { pubsub } = require("../pubsub");
+const { dataSources } = require("../../datasources");
+const { withFilter } = require("graphql-subscriptions");
+const { pubsub } = require("../subs");
 
 const schema = {
     Query: {

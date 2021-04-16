@@ -9,13 +9,19 @@ import {
     sizeSchema, titleSchema, descriptionSchema, taskSchema,
 } from './validationSchema'
 import { boardPageStyles } from '../../styles/styles'
+import colourStyles from '../SelectDialogColors'
 import useAllUsers from '../../graphql/user/hooks/useAllUsers'
 import useAllColors from '../../graphql/task/hooks/useAllColors'
 import bubbleSort from '../bubblesort'
+import colorboardqueries from '../../graphql/colorboards/hooks/useAddEpicColor'
+import allEpicColors from '../../graphql/colorboards/hooks/useAllEpicColors'
+
 
 const EditTaskDialog = ({
-    dialogStatus, editId, toggleDialog, task,
+    dialogStatus, editId, toggleDialog, task, boardId
 }) => {
+    const EpicColorQuery = allEpicColors()
+    const [addEpicColor] = colorboardqueries();
     const [editTask] = useEditTask()
     const userQuery = useAllUsers()
     const colorQuery = useAllColors()
@@ -32,6 +38,9 @@ const EditTaskDialog = ({
     const arrayOfOldColorIds = task?.colors?.map((color) => color.id)
     const animatedComponents = makeAnimated()
     const classes = boardPageStyles()
+    const [options, setOptions] = useState('Rename Colors')
+    const [EpicColors, setEpicColors] = useState()
+    let changedColors = [];
 
     useEffect(() => {
         setTitle(task.title)
@@ -43,7 +52,7 @@ const EditTaskDialog = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [task])
 
-    if (userQuery.loading || colorQuery.loading) return null
+    if (userQuery.loading || colorQuery.loading || EpicColorQuery.loading) return null
 
     const handleTitleChange = (event) => {
         const input = event.target.value
@@ -92,6 +101,53 @@ const EditTaskDialog = ({
         setColors(Array.isArray(event) ? event.map((color) => color.value) : [])
     }
 
+    const renameColors = async () => {
+        if (options === 'Rename Colors') {
+            setOptions('Save changes')
+        } else {
+            setEpicColors(changedColors)
+            for (let i = 0; i < changedColors.length; i++) {
+                try {
+                    await addEpicColor({
+                        variables: {
+                            colorId:changedColors[i].id,
+                            boardId: boardId,
+                            name: changedColors[i].name,
+                        }
+                    })
+                } catch (e) {
+                    console.log(e)
+                }
+
+            }
+
+            setOptions('Rename Colors')
+        }
+    }
+
+    const inputChanged = (event) => {
+        changedColors[event.target.id].name = event.target.value
+      }
+
+
+    const colorList = () => {
+        if (EpicColors) {
+            changedColors = EpicColors
+        }
+
+        return (
+            <div>
+                <table><tbody>
+                    {
+                        changedColors.map((color, index) => <tr key={index}>
+                            <td style={{ height:'20px', width:'20px', backgroundColor: color.color }}></td>
+                            <td><input name={color.color} id={index} onChange={inputChanged} defaultValue={color.name}></input></td></tr>)
+                    }
+                </tbody></table>
+            </div>
+        )
+    }
+
     const handleSave = async (event) => {
         event.preventDefault()
         const eventId = window.localStorage.getItem('eventId')
@@ -134,13 +190,29 @@ const EditTaskDialog = ({
 
     // Modifiying userData to be of form expected by the react select component
     const projectId = window.localStorage.getItem('projectId')
+
+    const colorNamesToList = (color) => {
+        if (EpicColorQuery.data.allEpicColors.filter((epic) => epic.boardId === boardId).length > 0) {
+        const epicBoard = EpicColorQuery.data.allEpicColors.filter((epic) => epic.colorId === color.id);
+        const epics = epicBoard.filter((epic) => epic.boardId === boardId);
+        if (epics.length > 0) {
+        return epics[0].name;
+        } else {
+            return color.color
+        }
+        } else {
+            return color.color;
+        }
+
+    }
+
     let userList = [];
-    userQuery.data.allUsers.map((user) => {
+    userQuery.data.allUsers.filter((user) => !user.userName.includes(' (Removed user)')).map((user) => {
         if (user.projectId === projectId) {
         userList.push(user)
         }
     });
-    
+
     let alphabeticalOrder = bubbleSort(userList);
     const modifiedUserData = alphabeticalOrder.map((user) => {
         const newObject = { value: user.id, label: user.userName }
@@ -154,14 +226,25 @@ const EditTaskDialog = ({
     })
 
     const chosenColorsData = task.colors.map((color) => {
-        const newObject = { value: color.id, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
+        const newObject = { value: color.id, color: color.color, label: colorNamesToList(color) }
         return newObject
     })
 
-    const modifiedColorData = colorQuery.data.allColors.map((color) => {
-        const newObject = { value: color.id, label: color.color.charAt(0).toUpperCase() + color.color.slice(1) }
+    const addColorsToChangedColors = () => {
+        const modifiedColorData = colorQuery.data.allColors.map((color) => {
+            changedColors.push({id: color.id, color: color.color, name: colorNamesToList(color)});
+        })
+    }
+
+    addColorsToChangedColors();
+    if (EpicColors) {
+        changedColors=EpicColors;
+    }
+    const modifiedColorData = changedColors.map((color) => {
+        const newObject = { value: color.id, color: color.color, label: color.name.charAt(0).toUpperCase() + color.name.slice(1) }
         return newObject
     })
+
 
     // data for showing only the members not yet chosen
     const modifiedMemberOptions = modifiedUserData
@@ -223,12 +306,13 @@ const EditTaskDialog = ({
                         className="selectField"
                         closeMenuOnSelect={false}
                         placeholder="Select colors"
-                        options={modifiedColorOptions}
                         defaultValue={chosenColorsData}
                         components={animatedComponents}
                         isMulti
                         onChange={handleColorsChange}
                         id="taskSelectColor"
+                        options={modifiedColorOptions}
+                        styles={colourStyles}
                     />
                     <Select
                         className="selectField"
@@ -266,12 +350,22 @@ const EditTaskDialog = ({
                         onChange={handleDescriptionChange}
                     />
                 </DialogContent>
+                <DialogContent>
+                    {options === 'Save changes' ? (<div> {colorList()}</div>) : (<div></div>)}
+                </DialogContent>
                 <DialogActions>
                     <Button
                         onClick={handleCancel}
                         color="secondary"
                     >
                         Cancel
+                    </Button>
+                    <Button
+                        onClick={() => renameColors()}
+                        color="default"
+                        id="changeColors"
+                    >
+                        {options}
                     </Button>
                     <Button
                         onClick={handleSave}

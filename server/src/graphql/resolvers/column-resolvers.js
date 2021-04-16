@@ -1,8 +1,7 @@
 /* eslint-disable max-len */
-
-const { withFilter } = require("graphql-subscriptions");
 const { dataSources } = require("../../datasources");
-const { pubsub } = require("../pubsub");
+const { withFilter } = require("graphql-subscriptions");
+const { pubsub } = require("../subs");
 
 const TICKET_MOVED_IN_COLUMN = "TICKET_MOVED_IN_COLUMN";
 const TICKET_MOVED_FROM_COLUMN = "TICKET_MOVED_FROM_COLUMN";
@@ -71,101 +70,103 @@ const schema = {
       return createdColumn;
     },
 
-    async editColumnById(root, { id, name, boardId, eventId }) {
-      let editedColumn;
-      try {
-        editedColumn = await dataSources.boardService.editColumnById(id, name);
-        pubsub.publish(COLUMN_MUTATED, {
-          boardId,
-          eventId,
-          columnMutated: {
-            mutationType: "EDITED",
-            column: editedColumn.dataValues,
-          },
-        });
-      } catch (e) {
-        console.log(e);
-      }
-      return editedColumn;
-    },
-
-    async deleteColumnById(root, { id, boardId, eventId }) {
-      let deletedColumnId;
-      try {
-        deletedColumnId = await dataSources.boardService.deleteColumnById(id);
-        pubsub.publish(COLUMN_DELETED, {
-          boardId,
-          eventId,
-          columnDeleted: {
-            removeType: "DELETED",
-            removeInfo: { columnId: id, boardId },
-          },
-        });
-      } catch (e) {
-        console.log(e);
-      }
-      return deletedColumnId;
-    },
-
-    async moveTicketInColumn(root, { newOrder, columnId, boardId }) {
-      const modifiedColumn = await dataSources.boardService.reOrderTicketsOfColumn(
-        newOrder,
-        columnId
-      );
-      pubsub.publish(TICKET_MOVED_IN_COLUMN, {
-        boardId,
-        ticketMovedInColumn: {
-          newOrder,
-          columnId,
+    Mutation: {
+        async addColumnForBoard(root, { boardId, columnName, eventId }) {
+            let createdColumn
+            try {
+                createdColumn = await dataSources.boardService.addColumnForBoard(boardId, columnName)
+                await pubsub.publish(COLUMN_MUTATED, {
+                    boardId,
+                    eventId,
+                    columnMutated: {
+                        mutationType: 'CREATED',
+                        column: createdColumn.dataValues,
+                    },
+                })
+            } catch (e) {
+                console.error(e)
+            }
+            return createdColumn
         },
-      });
-      return modifiedColumn;
-    },
 
-    async moveTicketFromColumn(
-      root,
-      {
-        type,
-        ticketId,
-        sourceColumnId,
-        destColumnId,
-        sourceTicketOrder,
-        destTicketOrder,
-        eventId,
-      }
-    ) {
-      await dataSources.boardService.changeTicketsColumnId(
-        type,
-        ticketId,
-        destColumnId
-      );
+        async editColumnById(root, {
+            id, name, boardId, eventId,
+        }) {
+            let editedColumn
+            try {
+                editedColumn = await dataSources.boardService.editColumnById(id, name)
+                await pubsub.publish(COLUMN_MUTATED, {
+                    boardId,
+                    eventId,
+                    columnMutated: {
+                        mutationType: 'EDITED',
+                        column: editedColumn.dataValues,
+                    },
+                })
+            } catch (e) {
+                console.log(e)
+            }
+            return editedColumn
+        },
 
-      const sourceColumn = await dataSources.boardService.reOrderTicketsOfColumn(
-        sourceTicketOrder,
-        sourceColumnId
-      );
-      const destColumn = await dataSources.boardService.reOrderTicketsOfColumn(
-        destTicketOrder,
-        destColumnId
-      );
-      pubsub.publish(TICKET_MOVED_FROM_COLUMN, {
+        async deleteColumnById(root, { id, boardId, eventId }) {
+          let deletedColumnId;
+          try {
+            deletedColumnId = await dataSources.boardService.deleteColumnById(id);
+            pubsub.publish(COLUMN_DELETED, {
+              boardId,
+              eventId,
+              columnDeleted: {
+                removeType: "DELETED",
+                removeInfo: { columnId: id, boardId },
+              },
+            });
+          } catch (e) {
+            console.log(e);
+          }
+          return deletedColumnId;
+        },
+    
+  async moveTicketInColumn(root, { newOrder, columnId, boardId }) {
+    const modifiedColumn = await dataSources.boardService.reOrderTicketsOfColumn(
+      newOrder,
+      columnId
+    );
+    pubsub.publish(TICKET_MOVED_IN_COLUMN, {
+      boardId,
+      ticketMovedInColumn: {
+        newOrder,
+        columnId,
+      },
+    });
+    return modifiedColumn;
+  },
+
+  async moveTicketFromColumn(root, {
+    type, ticketId, sourceColumnId, destColumnId, sourceTicketOrder, destTicketOrder, eventId,
+}) {
+    await dataSources.boardService.changeTicketsColumnId(type, ticketId, destColumnId)
+    const sourceColumn = await dataSources.boardService.reOrderTicketsOfColumn(sourceTicketOrder, sourceColumnId)
+    const destColumn = await dataSources.boardService.reOrderTicketsOfColumn(destTicketOrder, destColumnId)
+    await pubsub.publish(TICKET_MOVED_FROM_COLUMN, {
         boardId: sourceColumn.boardId,
         eventId,
         ticketMovedFromColumn: {
-          ticketInfo: { ticketId, type },
-          sourceColumnId,
-          destColumnId,
-          sourceTicketOrder,
-          destTicketOrder,
+            ticketInfo: { ticketId, type },
+            sourceColumnId,
+            destColumnId,
+            sourceTicketOrder,
+            destTicketOrder,
         },
-      });
-      return [sourceColumn, destColumn];
-    },
-    async moveColumn(root, { boardId, newColumnOrder }) {
-      await dataSources.boardService.reOrderColumns(newColumnOrder);
-      return boardId;
-    },
-  },
+    })
+    return [sourceColumn, destColumn]
+},
+async moveColumn(root, { boardId, newColumnOrder }) {
+    await dataSources.boardService.reOrderColumns(newColumnOrder)
+    return boardId
+},
+},
+
 
   Column: {
     board(root) {
@@ -184,6 +185,6 @@ const schema = {
       return dataSources.boardService.getTicketOrderOfColumn(root.id);
     },
   },
-};
-
+},
+}
 module.exports = schema;

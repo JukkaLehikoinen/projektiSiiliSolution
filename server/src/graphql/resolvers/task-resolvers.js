@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
+const { pubsub } = require('../subs')
 const { withFilter } = require('graphql-subscriptions')
-const { dataSources } = require("../../datasources");
-const { pubsub } = require('../pubsub')
+const { dataSources } = require('../../datasources')
 
 const TASK_MUTATED = 'TASK_MUTATED'
 const TASK_REMOVED = 'TASK_REMOVED'
@@ -42,7 +42,7 @@ const schema = {
             try {
                 addedTask = await dataSources.boardService
                     .addTaskForColumn(boardId, columnId, title, size, ownerId, memberIds, colorIds, description)
-                pubsub.publish(TASK_MUTATED, {
+                await pubsub.publish(TASK_MUTATED, {
                     boardId,
                     eventId,
                     taskMutated: {
@@ -62,7 +62,7 @@ const schema = {
             let editedTask
             try {
                 editedTask = await dataSources.boardService.editTaskById(id, title, size, ownerId, oldMemberIds, newMemberIds, oldColorIds, newColorIds, description)
-                pubsub.publish(TASK_MUTATED, {
+                await pubsub.publish(TASK_MUTATED, {
                     boardId: editedTask.boardId,
                     eventId,
                     taskMutated: {
@@ -81,7 +81,7 @@ const schema = {
             let deletedTaskId
             try {
                 deletedTaskId = await dataSources.boardService.deleteTaskById(id)
-                pubsub.publish(TASK_REMOVED, {
+                await pubsub.publish(TASK_REMOVED, {
                     boardId,
                     eventId,
                     taskRemoved: {
@@ -99,7 +99,7 @@ const schema = {
         }) {
             try {
                 await dataSources.boardService.archiveTaskById(id)
-                pubsub.publish(TASK_REMOVED, {
+                await pubsub.publish(TASK_REMOVED, {
                     boardId,
                     eventId,
                     taskRemoved: {

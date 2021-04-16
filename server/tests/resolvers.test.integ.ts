@@ -136,7 +136,8 @@ describe("mutations", () => {
         const sourceColumn1 = await ColumnQuery.columnById(null, columns[9]);
         const destColumn1 = await ColumnQuery.columnById(null, columns[10]);
         expect(tasks[0].columnId).toEqual(columns[9].id)
-        await ColumnMutation.moveTicketFromColumn(null, {
+        
+        await ColumnMutation.Mutation.moveTicketFromColumn(null, {
           type: "task",
           ticketId: tasks[0].id,
           sourceColumnId: sourceColumn1.dataValues.id,

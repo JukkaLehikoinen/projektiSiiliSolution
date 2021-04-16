@@ -106,6 +106,7 @@ const Task = ({
                         toggleDialog={toggleDialog}
                         editId={task.id}
                         task={task}
+                        boardId = {boardId}
                     />
                 </Grid >
             )}

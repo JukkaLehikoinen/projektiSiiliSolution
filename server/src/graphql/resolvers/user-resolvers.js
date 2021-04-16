@@ -1,5 +1,4 @@
-const {dataSources} = require("../../datasources");
-
+const { dataSources } = require("../../datasources");
 const schema = {
     Query: {
         allUsers() {
@@ -13,6 +12,9 @@ const schema = {
     Mutation: {
         addUser(root, args) {
             return dataSources.boardService.addUser(args.userName, args.projectId)
+        },
+        deleteUser(root, args) {
+            return dataSources.boardService.deleteUser(args.id, args.userName)
         },
     },
 }

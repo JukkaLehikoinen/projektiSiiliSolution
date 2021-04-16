@@ -7,6 +7,7 @@ import Task from "../models/Task";
 import Subtask from "../models/Subtask";
 import ColorTask from "../models/ColorTask";
 import Color from "../models/Color";
+import ColorBoard from "../models/ColorBoard"
 import ColorSubtask from "../models/ColorSubtask";
 import UserStory from "../models/UserStory";
 import User from "../models/User";
@@ -1104,8 +1105,95 @@ export class BoardService {
     } catch (e) {
       console.log(e);
     }
-    return colorsFromDb;
   }
+
+    async addUser(userName: string, projectId: string) {
+        let addedUser
+        try {
+            addedUser = await User.create({
+                id: uuid(),
+                userName: userName,
+                projectId: projectId
+            })
+        } catch (e) {
+            console.error(e)
+        }
+        return addedUser
+    }
+
+    async deleteUser(id: string, userName: string) {
+        let deletedUser
+        try {
+            deletedUser = await User.findByPk(id)
+            if (deletedUser) {
+                if (deletedUser.userName.includes(' (Removed user)')) {
+                    let length = deletedUser.userName.length;
+
+                    deletedUser.userName = deletedUser.userName.substring(0, length - 14);
+                } else {
+                    deletedUser.userName = userName + ' (Removed user)'
+                }
+                await deletedUser.save()
+            }
+        } catch (e) {
+            console.error(e)
+        }
+        return deletedUser
+    }
+
+                
+    async allEpicColors() {
+        let epicColorsFromDB
+        try {
+            epicColorsFromDB = await ColorBoard.findAll()
+        } catch (e) {
+            console.error(e)
+        }
+        return epicColorsFromDB
+    }
+
+
+    async addEpicColors(colorId: any, boardId: any, name: any) {
+        try {
+            const colors = await ColorBoard.findAll();
+            const board = colors.filter((color) => color.colorId === colorId)
+            const boardColors = board.filter((color) => color.boardId === boardId)
+            if (boardColors.length > 0) {
+                if (boardColors[0].getDataValue("colorId") === colorId && boardColors[0].getDataValue("boardId") === boardId) {
+                    await ColorBoard.destroy({
+                        where: {
+                            colorId: colorId,
+                            boardId: boardId,
+                        },
+                    })
+                    return await ColorBoard.create({
+                        colorId: colorId,
+                        boardId: boardId,
+                        name: name,
+                    })
+            }
+            } else {
+                return await ColorBoard.create({
+                    colorId: colorId,
+                    boardId: boardId,
+                    name: name,
+                })
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    async getOwnerById(ownerId: any) {
+        let owner
+        try {
+            owner = await User.findByPk(ownerId)
+        } catch (e) {
+            console.log(e)
+        }
+        return owner
+    }
+
 
   async getUsers() {
     let usersFromDb;
@@ -1115,29 +1203,6 @@ export class BoardService {
       console.error(e);
     }
     return usersFromDb;
-  }
-
-  async addUser(userName: any) {
-    let addedUser;
-    try {
-      addedUser = await User.create({
-        id: uuid(),
-        userName,
-      });
-    } catch (e) {
-      console.error(e);
-    }
-    return addedUser;
-  }
-
-  async getOwnerById(ownerId: any) {
-    let owner;
-    try {
-      owner = await User.findByPk(ownerId);
-    } catch (e) {
-      console.log(e);
-    }
-    return owner;
   }
 
   async archiveStoryById(storyId: any) {
