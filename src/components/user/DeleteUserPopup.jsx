@@ -10,26 +10,23 @@ import useDeleteUser from '../../graphql/user/hooks/useDeleteUser'
 
 export default function DeleteUserPopup(props) {
     console.log("MOI")
-    const { open, handleClose, user, index } = props
+    const { open, handleClose, user } = props
     const [deleteUser] = useDeleteUser()
-    console.log(props.user.userName, index)
+    console.log(props.user.userName)
 
-    // const handleSave = (index, user) => {
-    //     // setOptions('OK')
-    //     for (let i = 0; i < removingUsers.length; i++) {
+     const handleSave = () => {
+       
             
-    //         deleteUser({
-    //             variables: {
-    //                 id: removingUsers[i].id,
-    //                 userName: removingUsers[i].userName,
-    //             },
-    //         })     
-    //     }
-    // }
+           deleteUser({
+               variables: {
+                    id: user.id,
+                     userName: user.userName,
+                 },
+            })    
 
-    // const ok = () => {
-    //     setOpen(false)
-    // }
+    
+       handleClose()
+    }
   
 
   return (
@@ -46,10 +43,10 @@ export default function DeleteUserPopup(props) {
           <Button onClick={handleClose} color="primary">
             Disagree
           </Button>
-          <Button onClick={handleClose} color="primary" user={user} index={index} autoFocus>
+          <Button onClick={handleSave} color="primary"  autoFocus>
             Agree
           </Button>
         </DialogActions>
       </Dialog>
   );
-}
+  }
