@@ -8,6 +8,8 @@ import { useApolloClient } from '@apollo/client'
 import { TICKETORDER } from '../../graphql/fragments'
 import AlertBox from '../AlertBox'
 import { boardPageStyles } from '../../styles/styles'
+import SearchIcon from '@material-ui/icons/Search';
+import FilterDialog from './FilterDialog'
 
 const DropdownColumn = ({ columnId, boardId }) => {
     const [anchorEl, setAnchorEl] = useState(null)
@@ -15,6 +17,7 @@ const DropdownColumn = ({ columnId, boardId }) => {
     const [alertDialogStatus, setAlertDialogStatus] = useState(false)
     const classes = boardPageStyles()
     const client = useApolloClient()
+    
 
     const { ticketOrder } = client.readFragment({
         id: `Column:${columnId}`,
@@ -34,6 +37,9 @@ const DropdownColumn = ({ columnId, boardId }) => {
         setAnchorEl(null)
     }
 
+    
+
+//<MenuItem onClick={() => <FilterDialog openDialog={setPopupIsOpen} closeDialog={closePopup}/>}>
     return (
         <Grid item>
             <Button
@@ -60,6 +66,12 @@ const DropdownColumn = ({ columnId, boardId }) => {
                         <Delete fontSize="default" />
                     </ListItemIcon>
                     <ListItemText primary="Remove" />
+                </MenuItem>
+                <MenuItem onClick={() => console.log("SFsefs")}>
+                    <ListItemIcon>
+                        <SearchIcon fontSize="default" />
+                    </ListItemIcon>
+                    <ListItemText primary="Filter" />
                 </MenuItem>
             </Menu>
             <AlertBox

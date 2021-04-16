@@ -10,6 +10,7 @@ import DropdownColumn from './DropdownColumn'
 import AddTaskDialog from '../task/AddTaskDialog'
 import RenameColumn from './RenameColumn'
 
+
 const Column = ({ column, index }) => {
     const classes = boardPageStyles()
     const {
@@ -36,6 +37,7 @@ const Column = ({ column, index }) => {
                         </Grid>
                         <Grid item container direction='row' alignItems='center' justify='flex-end' classes={{ root: classes.columnButtonGrid }}>
                             <Grid item >
+                                
                                 <Button classes={{ root: classes.columnButton }}>
                                     <AddIcon classes={{ root: classes.columnButtonIcons }} onClick={toggleDialog} />
                                 </Button>
