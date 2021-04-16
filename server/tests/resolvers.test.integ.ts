@@ -15,7 +15,7 @@ import { Query as subTaskQuery } from "../src/graphql/resolvers/subtask-resolver
 import { board1, testColumns, task1 } from "./dummyData";
 import { Mutation as moveTicketFromColumn } from "../src/graphql/resolvers/column-resolvers";
 
-describe("With initial test data in the database, graphql queries", () => {
+/* describe("With initial test data in the database, graphql queries", () => {
   // Reinitialize the database before each test in this describe block
   beforeEach(async () => await initializeDb());
 
@@ -29,13 +29,13 @@ describe("With initial test data in the database, graphql queries", () => {
     // console.log(response.slice().map(project => console.log(project.id)))
     expect(response.slice().length).toEqual(1);
   });
-});
+}); */
 
 describe("mutations", () => {
   // Reinitialize the database before each test in this describe block
   beforeEach(() => initializeDb());
 
-  test("should add project to db", async () => {
+/*   test("should add project to db", async () => {
     const projects = await ProjectQuery.allProjects();
     expect(projects.length).toEqual(1);
     await ProjectMutation.addProject(null, {
@@ -130,13 +130,13 @@ describe("mutations", () => {
     expect(subtask.length).toEqual(7);
   });
 
-
+ */
  
     test('should be able to move a task from column to another', async()=>{
         const sourceColumn1 = await ColumnQuery.columnById(null, columns[9]);
         const destColumn1 = await ColumnQuery.columnById(null, columns[10]);
         expect(tasks[0].columnId).toEqual(columns[9].id)
-        const moveTicket = await ColumnMutation.moveTicketFromColumn(null, {
+        await ColumnMutation.moveTicketFromColumn(null, {
           type: "task",
           ticketId: tasks[0].id,
           sourceColumnId: sourceColumn1.dataValues.id,
