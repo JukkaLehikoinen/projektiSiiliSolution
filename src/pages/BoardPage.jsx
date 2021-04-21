@@ -43,8 +43,11 @@ const BoardPage = ({ id, eventId }) => {
     const handleUserChange = (event) => {
         if (event === null) {
             setUser()
+            window.localStorage.setItem("user", "")
         } else {
             setUser(event.value)
+            window.localStorage.setItem("user", event.value)
+            //return event.value
         }
         console.log(event)
     }

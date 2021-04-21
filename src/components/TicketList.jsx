@@ -3,23 +3,43 @@ import { Grid } from '@material-ui/core'
 import Task from './task/Task'
 import Subtask from './subtask/Subtask'
 
-const TicketList = ({
-    ticketOrder, tasks, subtasks, columnId, boardId,
-}) => {
-    const ticketsInOrder = ticketOrder.map((obj) => {
-        let foundTicket
-        if (obj.type === 'task') {
-            foundTicket = tasks.find((task) => task.id === obj.ticketId)
-            foundTicket = { ...foundTicket, type: 'task' }
-        } else if (obj.type === 'subtask') {
-            foundTicket = subtasks.find((subtask) => subtask.id === obj.ticketId)
-            foundTicket = { ...foundTicket, type: 'subtask' }
-        }
-        return foundTicket
-    })
+// const TicketList = ({
+//     ticketOrder, tasks, subtasks, columnId, boardId,
+// }) => {
+//     const ticketsInOrder = ticketOrder.map((obj) => {
+//         let foundTicket
+//         if (obj.type === 'task') {
+//             foundTicket = tasks.find((task) => task.id === obj.ticketId)
+//             foundTicket = { ...foundTicket, type: 'task' }
+//         } else if (obj.type === 'subtask') {
+//             foundTicket = subtasks.find((subtask) => subtask.id === obj.ticketId)
+//             foundTicket = { ...foundTicket, type: 'subtask' }
+//         }
+//         return foundTicket
+//     })
+    
+    const TicketList = ({
+        ticketOrder, tasks, subtasks, columnId, boardId,
+    }) => {
+        const ticketsInOrder = ticketOrder.map((obj) => {
+            const user = window.localStorage.getItem("user")
+            console.log(user)
+            let foundTicket
+            if (obj.type === 'task') {
+                foundTicket = tasks.find((task) => task.id === obj.ticketId)
+                foundTicket = { ...foundTicket, type: 'task' }
+            } else if (obj.type === 'subtask') {
+                foundTicket = subtasks.find((subtask) => subtask.id === obj.ticketId)
+                foundTicket = { ...foundTicket, type: 'subtask' }
+            }
+            return foundTicket
+        })
+
+        
     return (
         <Grid container direction="column" alignItems='center' spacing={2}>
             {ticketsInOrder.map((ticket, index) => {
+                
                 let component
                 if (ticket.type === 'task') {
                     component = (

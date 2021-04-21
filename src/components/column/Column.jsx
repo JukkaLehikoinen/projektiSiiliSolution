@@ -19,6 +19,8 @@ const Column = ({ column, index }) => {
     const [dialogStatus, setDialogStatus] = useState(false)
     const toggleDialog = () => setDialogStatus(!dialogStatus)
 
+    
+
     return (
         <Draggable draggableId={column.id} index={index}>
             {(provided) => (
