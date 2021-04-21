@@ -36,6 +36,7 @@ type Mutation {
 type Subscription {
   swimlaneMoved(boardId: ID!, eventId: ID!): SwimlaneMovedPayload!
   boardAdded(projectId: ID!, eventId: ID!): BoardAddedPayload!
+  boardDeleted(projectId: ID!, eventId: ID!): BoardAddedPayload!
 }
 
 type SwimlaneMovedPayload {

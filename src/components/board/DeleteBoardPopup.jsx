@@ -1,25 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import useDeleteUser from '../../graphql/user/hooks/useDeleteUser'
 import useDeleteBoard from '../../graphql/board/hooks/useDeleteBoard'
-
 
 export default function DeleteUserPopup(props) {
     const { open, handleClose, board } = props
     const [deleteBoard] = useDeleteBoard()
-
-     const handleSave = () => {
-           deleteBoard({
+    
+     const handleSave = async () => {
+         await deleteBoard({
                variables: {
                     id: board.id,
                     name: board.name,
                     projectId: window.localStorage.getItem("projectId"),
                  },
-            })     
+            })
+            window.location.reload(false);
        handleClose()
     }
   
