@@ -25,6 +25,10 @@ type SwimlaneOrderObject {
 }
 
 type Mutation {
+  deleteBoard(id: ID!, name: String!): Board!
+}
+
+type Mutation {
   addBoard(name: String!, prettyId: String!, eventId: ID!, projectId: ID!): Board!
   moveSwimlane(boardId: ID!, affectedSwimlanes: [newSwimlaneOrderInput]!, swimlaneOrder: [ID!]!, eventId: ID!): ID
 }
@@ -32,6 +36,7 @@ type Mutation {
 type Subscription {
   swimlaneMoved(boardId: ID!, eventId: ID!): SwimlaneMovedPayload!
   boardAdded(projectId: ID!, eventId: ID!): BoardAddedPayload!
+  boardDeleted(projectId: ID!, eventId: ID!): BoardAddedPayload!
 }
 
 type SwimlaneMovedPayload {
