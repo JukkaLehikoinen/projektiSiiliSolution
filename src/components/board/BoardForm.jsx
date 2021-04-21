@@ -8,63 +8,60 @@ import {
   Button,
 } from "@material-ui/core";
 import useDeleteBoard from "../../graphql/board/hooks/useDeleteBoard";
-import useAllBoards from "../../graphql/board/hooks/useAllBoards";
+import allBoardsByProject from "../../graphql/project/hooks/useBoardsByProjectId";
 import bubbleSort from "../bubblesort";
 import { boardPageStyles } from "../../styles/styles";
+import DeleteBoardPopup from './DeleteBoardPopup'
 
 const NewBoardForm = ({ setOpen, open }) => {
   const [deleteBoard] = useDeleteBoard();
-  const allBoards = useAllBoards();
-  const removingBoards = useState([]);
-  const [options, setOptions] = useState("SAVE");
-  const [del, setDel] = useState([]);
+ 
+  const [board, setBoard] = useState()
+  const allBoardById = allBoardsByProject(window.localStorage.getItem("projectId"));
+  const [popupIsOpen, setPopupIsOpen] = React.useState(false)
+  const [popp, setPopp] = useState(false)
+  const closePopup = () => setPopupIsOpen(false)
 
-  if (allBoards.loading) return null;
+  const popup = async (board) => {
+    setPopp(true)
+    setPopupIsOpen(true)
+    setBoard(board)
+}
 
-  const projectId = window.localStorage.getItem("projectId");
-
+  
+  if (allBoardById.loading) return null;
+  
   const handleClose = () => {
-    setOpen(false);
-  };
+    setOpen(false)
+}
+
 
   const handleSave = (id, board) => {
-    setOptions("OK");
-    for (let i = 0; i < removingBoards.length; i++) {
+  /*   for (let i = 0; i < removingBoards.length; i++) {
       deleteBoard({
         variables: {
           id: removingBoards[i].id,
           name: removingBoards[i].name,
         },
       });
-    }
+    } */
   };
 
   const ok = () => {
     setOpen(false);
   };
 
-  const boards = allBoards.data.allBoards.filter(
-    (board) => board.projectId === projectId
-  );
-  let deleteBoards = bubbleSort(boards);
+  const boards = allBoardById.data.boardsByProjectId
+  let deleteBoards = boards;
   const boardsList = (boards) => {
     deleteBoards = boards;
     return (
       <div>
         <table>
           <tbody>
-            {removingBoards.length > 0
-              ? del.map((board, index) => (
+            {deleteBoards.map((board, index) => (
                   <tr key={index}>
-                    <td onClick={() => deleteBoardFunction(board, index)}>
-                      {board.name}{" "}
-                    </td>
-                  </tr>
-                ))
-              : deleteBoards.map((board, index) => (
-                  <tr key={index}>
-                    <td onClick={() => deleteBoardFunction(board, index)}>
-                      {board.name}{" "}
+                     <td onClick={() => popup(board)}><Button size="small" color="secondary" ></Button> {board.name}{" "}
                     </td>
                   </tr>
                 ))}
@@ -73,13 +70,7 @@ const NewBoardForm = ({ setOpen, open }) => {
       </div>
     );
   };
-  const deleteBoardFunction = async (board, index) => {
-    let delName = removingBoards.filter((uzer) => uzer.id === board.id);
-    if (delName.length === 0) {
-      removingBoards.push(board);
-    }
-    setDel(await deleteBoards.filter((board, i) => index !== i));
-  };
+  
   return (
     <div>
       <Dialog
@@ -90,32 +81,17 @@ const NewBoardForm = ({ setOpen, open }) => {
         <DialogTitle id="form-dialog-title">Board</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {options === "SAVE" ? "Select removal board" : "Remaining boards"}
+            Select removal board
           </DialogContentText>
-          {removingBoards.length > 0
-            ? boardsList(del)
-            : boardsList(deleteBoards)}
-        </DialogContent>
-        <DialogActions>
-          {options === "SAVE" ? (
-            <Button onClick={handleClose} color="primary">
-              CANCEL
-            </Button>
-          ) : (
-            <p></p>
-          )}
-          {options === "SAVE" ? (
-            <Button onClick={handleSave} color="primary">
-              SAVE
-            </Button>
-          ) : (
-            <Button onClick={ok} color="primary">
-              OK
-            </Button>
-          )}
-        </DialogActions>
-      </Dialog>
-    </div>
+          {boardsList(deleteBoards)}
+          </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">OK</Button>
+                </DialogActions>
+            </Dialog>
+            {popp === true ? <DeleteBoardPopup open={popupIsOpen} handleClose={closePopup} board={board}  /> : <div></div>}
+        </div>
+
   );
 };
 export default NewBoardForm;

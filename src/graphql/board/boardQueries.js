@@ -113,8 +113,8 @@ export const BOARD_ADDED = gql`
   }
 `;
 export const DELETE_BOARD = gql`
-  mutation deleteBoard($name: String!, $projectId: ID!) {
-    deleteBoard(name: $name, projectId: $projectId) {
+  mutation deleteBoard($id: ID!, $name: String!) {
+    deleteBoard(id: $id, name: $name) {
       id
       name
     }
