@@ -10,24 +10,30 @@ import { projectPageStyles } from '../styles/styles'
 import '../styles.css'
 import useProjectSubscriptions from '../graphql/subscriptions/useProjectSubscriptions'
 import { useHistory } from "react-router-dom";
+import BoardForm from "../components/board/BoardForm";
 
 const ProjectPage = ({ id, eventId }) => {
-    const queryResult = useProjectById(id)
-    const [open, setOpen] = useState(false)
-    const [openUserForm, setUserFormOpen] = useState(false)
-    const [openUserDialog, setUserDialogOpen] = useState(false)
-    const classes = projectPageStyles()
-    const history = useHistory();
-    const handleClickOpen = () => {
-        setOpen(true)
-    }
+    const queryResult = useProjectById(id);
+  const [open, setOpen] = useState(false);
+  const [openBoardDialog, setBoardDialogOpen] = useState(false);
+  const [openUserForm, setUserFormOpen] = useState(false);
+  const [openUserDialog, setUserDialogOpen] = useState(false);
+  const classes = projectPageStyles();
+  const history = useHistory();
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClickOpenBoardDialog = () => {
+    setBoardDialogOpen(true);
+  };
+  const handleClickOpenUser = () => {
+    setUserFormOpen(true);
+  };
+  const handleClickOpenUserDialog = () => {
+    setUserDialogOpen(true);
+  };
 
-    const handleClickOpenUser = () => {
-        setUserFormOpen(true)
-    }
-    const handleClickOpenUserDialog = () => {
-        setUserDialogOpen(true)
-    }
+    
 
     useProjectSubscriptions(id, eventId)
 
@@ -64,6 +70,10 @@ const ProjectPage = ({ id, eventId }) => {
             spacing={7}
         >
             {open && <NewBoardForm setOpen={setOpen} open={open} projectId={id} />}
+        {openBoardDialog && (
+          <BoardForm setOpen={setBoardDialogOpen} open={openBoardDialog} />
+        )}
+
             {openUserForm && <NewUserForm setOpen={setUserFormOpen} open={openUserForm} />}
             {openUserDialog && <UserForm setOpen={setUserDialogOpen} open={openUserDialog} />}
             <Grid item classes={{ root: classes.title }}>
@@ -81,6 +91,16 @@ const ProjectPage = ({ id, eventId }) => {
                         Add Board
                     </Button>
                 </Grid>
+
+                <Grid item>
+            <Button
+              onClick={handleClickOpenBoardDialog}
+              classes={{ root: classes.addNewButton }}>
+                  Delete Board
+            </Button>
+            </Grid>
+
+
                 <Grid item>
                     <Button onClick={handleClickOpenUser} classes={{ root: classes.addNewButton }}>
                         Add User
