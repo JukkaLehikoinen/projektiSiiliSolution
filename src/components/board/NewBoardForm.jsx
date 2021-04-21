@@ -26,6 +26,7 @@ const NewBoardForm = ({ setOpen, open, projectId }) => {
     const closeDialog = () => {
         setName('')
         setPrettyId('')
+        window.location.reload(false);
         setOpen(false)
     }
 

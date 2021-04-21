@@ -45,8 +45,9 @@ export const expressApp = (serverType: ServerType): express.Application => {
         app.use(require("cors")());
     }
     app.use(bodyParser.json())
-
-    app.use('/graphql', bodyParser.json())
+    if (serverType === ServerType.httpServer) {
+        app.use('/graphql', bodyParser.json())
+    }
     if (serverType === ServerType.wsServer) {
         app.use('/subscriptions', bodyParser.json())
 
