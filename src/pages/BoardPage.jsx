@@ -30,8 +30,8 @@ const BoardPage = ({ id, eventId }) => {
     const projectId = window.localStorage.getItem('projectId')
     //const colorQuery = useAllColors()
     const [user, setUser] = useState("")
-    
-    
+
+
 
     if (queryResult.loading) return null
     const board = queryResult.data.boardById
@@ -40,8 +40,13 @@ const BoardPage = ({ id, eventId }) => {
         toggleView(view === 'kanban' ? 'swimlane' : 'kanban')
     }
 
-    const handleUserChange =(event)=>{
-        setUser(event.value)
+    const handleUserChange = (event) => {
+        if (event === null) {
+            setUser()
+        } else {
+            setUser(event.value)
+        }
+        console.log(event)
     }
     console.log(user)
 
@@ -109,7 +114,7 @@ const BoardPage = ({ id, eventId }) => {
                             id="taskSelectColor"
                             options={modifiedUserData}
                             isClearable={true}
-                            // handleUserChange={}
+                        // handleUserChange={}
                         //styles={colourStyles}
                         />
                     </Grid>
