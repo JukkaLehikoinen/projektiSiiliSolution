@@ -19,9 +19,6 @@ const NewBoardForm = ({ setOpen, open }) => {
   const [popp, setPopp] = useState(false)
   const closePopup = () => setPopupIsOpen(false)
 
-  useEffect(() => {
-    console.log(allBoardById)
-  }, [allBoardById.loading])
   if (allBoardById.loading) return null;
 
   const popup = async (board) => {
