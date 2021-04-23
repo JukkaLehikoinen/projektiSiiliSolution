@@ -74,12 +74,13 @@ const BoardPage = ({ id, eventId }) => {
             //window.localStorage.setItem("user", "")
         } else {
             setColor(event.value)
+            console.log(color)
             //window.localStorage.setItem("user", event.value)
             //return event.value
         }
-        console.log(event)
+        //console.log(event)
     }
-    console.log(color)
+    
 
     let userList = [];
     userQuery.data.allUsers.filter((user) => !user.userName.includes(' (Removed user)')).map((user) => {
@@ -88,19 +89,25 @@ const BoardPage = ({ id, eventId }) => {
         }
     });
 
-    
+    let length;
     let colors = epicColorQuery.data.allEpicColors.filter((color) => color.boardId === id) 
         if (colors.length === 0) {
+            length=0;
             colors=colorQuery.data.allColors
         }
     
-    console.log(colors)
         const allEpicColors = colors.map((color) => {
-            const newColor = {value: color.id, label: color.color}
+            let option;
+            if (length===0) {
+                option = color.color
+            } else {
+                option = color.name
+            }
+            const newColor = {value: color.id, label: option}
             return newColor
         })
     
-    console.log(allEpicColors)
+    //console.log(allEpicColors)
 
     let alphabeticalOrder = bubbleSort(userList);
     const modifiedUserData = alphabeticalOrder.map((user) => {
@@ -138,7 +145,7 @@ const BoardPage = ({ id, eventId }) => {
                             className="selectField"
                             closeMenuOnSelect={false}
                             placeholder="Select color"
-                            defaultValue={allEpicColors[0]}
+                            //defaultValue={allEpicColors[0]}
                             //components={animatedComponents}
                             //isMulti
                             onChange={handleColorChange}
