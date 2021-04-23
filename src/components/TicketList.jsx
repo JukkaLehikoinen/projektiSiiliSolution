@@ -24,6 +24,9 @@ import Subtask from './subtask/Subtask'
         const ticketsInOrder = ticketOrder.map((obj) => {
             const user = window.localStorage.getItem("user")
             console.log(user)
+            console.log(typeof(tasks))
+            console.log(tasks)
+            console.log(tasks.includes(user))
             let foundTicket
             if (obj.type === 'task') {
                 foundTicket = tasks.find((task) => task.id === obj.ticketId)
@@ -32,6 +35,7 @@ import Subtask from './subtask/Subtask'
                 foundTicket = subtasks.find((subtask) => subtask.id === obj.ticketId)
                 foundTicket = { ...foundTicket, type: 'subtask' }
             }
+            //window.localStorage.clear()
             return foundTicket
         })
 

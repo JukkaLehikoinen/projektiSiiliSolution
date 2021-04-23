@@ -47,11 +47,10 @@ const BoardPage = ({ id, eventId }) => {
         } else {
             setUser(event.value)
             window.localStorage.setItem("user", event.value)
-            //return event.value
         }
-        console.log(event)
+       // console.log(event)
     }
-    console.log(user)
+    //console.log(user)
 
     let userList = [];
     userQuery.data.allUsers.filter((user) => !user.userName.includes(' (Removed user)')).map((user) => {
@@ -110,7 +109,7 @@ const BoardPage = ({ id, eventId }) => {
                             className="selectField"
                             closeMenuOnSelect={false}
                             placeholder="Select user"
-                            //defaultValue={null}
+                            defaultValue={null}
                             //components={animatedComponents}
                             //isMulti
                             onChange={handleUserChange}
