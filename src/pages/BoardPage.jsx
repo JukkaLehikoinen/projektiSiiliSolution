@@ -14,7 +14,9 @@ import useBoardSubscriptions from '../graphql/subscriptions/useBoardSubscription
 import { client } from '../apollo'
 import Select from 'react-select'
 import useAllUsers from '../graphql/user/hooks/useAllUsers'
+import useAllEpicColors from '../graphql/colorboards/hooks/useAllEpicColors'
 import bubbleSort from '../components/bubblesort'
+import useAllColors from '../graphql/task/hooks/useAllColors'
 //import useAllColors from '../../graphql/task/hooks/useAllColors'
 
 const BoardPage = ({ id, eventId }) => {
@@ -28,13 +30,15 @@ const BoardPage = ({ id, eventId }) => {
     const queryResult = useBoardById(id)
     useBoardSubscriptions(id, eventId)
     const userQuery = useAllUsers()
+    const epicColorQuery = useAllEpicColors()
     const projectId = window.localStorage.getItem('projectId')
-    //const colorQuery = useAllColors()
+    const colorQuery = useAllColors()
     const [user, setUser] = useState("")
+    const [color, setColor] = useState("")
 
 
 
-    if (queryResult.loading) {
+    if (queryResult.loading || colorQuery.loading || userQuery.loading ||epicColorQuery.loading) {
         return <div 
                 style={{
                     display: "flex",
@@ -51,7 +55,6 @@ const BoardPage = ({ id, eventId }) => {
     const switchView = () => {
         toggleView(view === 'kanban' ? 'swimlane' : 'kanban')
     }
-
     const handleUserChange = (event) => {
         if (event === null) {
             setUser()
@@ -65,12 +68,39 @@ const BoardPage = ({ id, eventId }) => {
     }
     console.log(user)
 
+    const handleColorChange = (event) => {
+        if (event === null) {
+            setColor()
+            //window.localStorage.setItem("user", "")
+        } else {
+            setColor(event.value)
+            //window.localStorage.setItem("user", event.value)
+            //return event.value
+        }
+        console.log(event)
+    }
+    console.log(color)
+
     let userList = [];
     userQuery.data.allUsers.filter((user) => !user.userName.includes(' (Removed user)')).map((user) => {
         if (user.projectId === projectId) {
             userList.push(user)
         }
     });
+
+    
+    let colors = epicColorQuery.data.allEpicColors.filter((color) => color.boardId === id) 
+        if (colors.length === 0) {
+            colors=colorQuery.data.allColors
+        }
+    
+    console.log(colors)
+        const allEpicColors = colors.map((color) => {
+            const newColor = {value: color.id, label: color.color}
+            return newColor
+        })
+    
+    console.log(allEpicColors)
 
     let alphabeticalOrder = bubbleSort(userList);
     const modifiedUserData = alphabeticalOrder.map((user) => {
@@ -108,12 +138,13 @@ const BoardPage = ({ id, eventId }) => {
                             className="selectField"
                             closeMenuOnSelect={false}
                             placeholder="Select color"
-                            //defaultValue={chosenColorsData}
+                            defaultValue={allEpicColors[0]}
                             //components={animatedComponents}
                             //isMulti
-                            //onChange={handleColorsChange}
-                            id="taskSelectColor"
-                        //options={modifiedColorOptions}
+                            onChange={handleColorChange}
+                            //id="taskSelectColor"
+                            options={allEpicColors}
+                            isClearable={true}
                         //styles={colourStyles}
                         />
                     </Grid>
