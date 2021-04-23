@@ -66,16 +66,17 @@ const BoardPage = ({ id, eventId }) => {
         }
         console.log(event)
     }
-    console.log(user)
+    //console.log(user)
 
     const handleColorChange = (event) => {
         if (event === null) {
             setColor()
-            //window.localStorage.setItem("user", "")
+            window.localStorage.setItem("epic", "")
         } else {
             setColor(event.value)
             console.log(color)
-            //window.localStorage.setItem("user", event.value)
+            window.localStorage.setItem("epic", event.value)
+            window.location.reload(false);
             //return event.value
         }
         //console.log(event)
@@ -143,7 +144,7 @@ const BoardPage = ({ id, eventId }) => {
                     <Grid item xs={2}>
                         <Select
                             className="selectField"
-                            closeMenuOnSelect={false}
+                            closeMenuOnSelect={true}
                             placeholder="Select color"
                             //defaultValue={allEpicColors[0]}
                             //components={animatedComponents}

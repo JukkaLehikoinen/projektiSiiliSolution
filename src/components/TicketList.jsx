@@ -18,6 +18,7 @@ import Subtask from './subtask/Subtask'
 //         return foundTicket
 //     })
     
+    const epic = window.localStorage.getItem("epic")
     const TicketList = ({
         ticketOrder, tasks, subtasks, columnId, boardId,
     }) => {
@@ -34,11 +35,30 @@ import Subtask from './subtask/Subtask'
             }
             return foundTicket
         })
+            let filteredTasks = [];
+            ticketsInOrder.map((ticket) => {
+
+                if (ticket.colors.length > 1) {
+                    ticket.colors.map((color) =>{
+                        if (color.id === epic) {
+                            console.log('moniväriset', ticket.id)
+                            filteredTasks.push(ticket)
+                        }
+                        
+                    })
+                } else {
+                    if (ticket.colors[0].id === epic) {
+                        console.log('yksiväriset', ticket.id)
+                        filteredTasks.push(ticket)
+                    }
+                }
+            })
+            
 
         
     return (
         <Grid container direction="column" alignItems='center' spacing={2}>
-            {ticketsInOrder.map((ticket, index) => {
+            {filteredTasks.map((ticket, index) => {
                 
                 let component
                 if (ticket.type === 'task') {
