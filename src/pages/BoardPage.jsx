@@ -73,9 +73,14 @@ const BoardPage = ({ id, eventId }) => {
             setColor()
             window.localStorage.setItem("epic", "")
         } else {
+            if (event.value === 'ALL') {
+                window.localStorage.setItem("epic", "ALL")
+                setColor()
+            } else {
             setColor(event.value)
-            console.log(color)
+            console.log(event.value)
             window.localStorage.setItem("epic", event.value)
+            }
             window.location.reload(false);
             //return event.value
         }
@@ -98,17 +103,19 @@ const BoardPage = ({ id, eventId }) => {
         }
     
         const allEpicColors = colors.map((color) => {
-            let option;
+            let labelOption;
+            let valueOption;
             if (length===0) {
-                option = color.color
+                valueOption = color.id
+                labelOption = color.color
             } else {
-                option = color.name
+                valueOption = color.colorId
+                labelOption = color.name
             }
-            const newColor = {value: color.id, label: option}
-            return newColor
+            const newColor = {value: valueOption, label: labelOption}
+            return  newColor
         })
-    
-    //console.log(allEpicColors)
+        allEpicColors.push({value: 'ALL', label: 'ALL'})
 
     let alphabeticalOrder = bubbleSort(userList);
     const modifiedUserData = alphabeticalOrder.map((user) => {
@@ -144,7 +151,7 @@ const BoardPage = ({ id, eventId }) => {
                     <Grid item xs={2}>
                         <Select
                             className="selectField"
-                            closeMenuOnSelect={true}
+                            closeMenuOnSelect={false}
                             placeholder="Select color"
                             //defaultValue={allEpicColors[0]}
                             //components={animatedComponents}
@@ -152,7 +159,7 @@ const BoardPage = ({ id, eventId }) => {
                             onChange={handleColorChange}
                             //id="taskSelectColor"
                             options={allEpicColors}
-                            isClearable={true}
+                            isClearable={false}
                         //styles={colourStyles}
                         />
                     </Grid>

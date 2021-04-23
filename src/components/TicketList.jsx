@@ -24,7 +24,7 @@ import Subtask from './subtask/Subtask'
     }) => {
         const ticketsInOrder = ticketOrder.map((obj) => {
             const user = window.localStorage.getItem("user")
-            console.log(user)
+            //console.log(user)
             let foundTicket
             if (obj.type === 'task') {
                 foundTicket = tasks.find((task) => task.id === obj.ticketId)
@@ -35,7 +35,9 @@ import Subtask from './subtask/Subtask'
             }
             return foundTicket
         })
+            //console.log('epic', epic)
             let filteredTasks = [];
+            if (epic !== 'ALL') {
             ticketsInOrder.map((ticket) => {
 
                 if (ticket.colors.length > 1) {
@@ -53,6 +55,9 @@ import Subtask from './subtask/Subtask'
                     }
                 }
             })
+        } else {
+            filteredTasks = ticketsInOrder;
+        }
             
 
         
