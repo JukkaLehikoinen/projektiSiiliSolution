@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {
     Grid, FormControlLabel, Switch, Button
 } from '@material-ui/core'
+import LoadingSpinner from '../components/LoadingSpinner'
 import Board from '../components/board/Board'
 import SwimlaneView from '../components/swimlane/SwimlaneView'
 import { boardPageStyles } from '../styles/styles'
@@ -33,7 +34,18 @@ const BoardPage = ({ id, eventId }) => {
 
 
 
-    if (queryResult.loading) return null
+    if (queryResult.loading) {
+        return <div 
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginTop: '20%',
+                    color: "#FF8E53"
+                }}>
+                <LoadingSpinner/>
+            </div>
+    }
     const board = queryResult.data.boardById
 
     const switchView = () => {
