@@ -34,21 +34,21 @@ const BoardPage = ({ id, eventId }) => {
     const projectId = window.localStorage.getItem('projectId')
     const colorQuery = useAllColors()
     const [user, setUser] = useState("")
-    const [color, setColor] = useState("")
+    const [color, setColor] = useState([])
 
 
 
-    if (queryResult.loading || colorQuery.loading || userQuery.loading ||epicColorQuery.loading) {
-        return <div 
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    marginTop: '20%',
-                    color: "#FF8E53"
-                }}>
-                <LoadingSpinner/>
-            </div>
+    if (queryResult.loading || colorQuery.loading || userQuery.loading || epicColorQuery.loading) {
+        return <div
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: '20%',
+                color: "#FF8E53"
+            }}>
+            <LoadingSpinner />
+        </div>
     }
     const board = queryResult.data.boardById
 
@@ -70,23 +70,19 @@ const BoardPage = ({ id, eventId }) => {
 
     const handleColorChange = (event) => {
         if (event === null) {
-            setColor()
-            window.localStorage.setItem("epic", "")
+            console.log(event)
+            setColor(event)
+            window.localStorage.setItem("epic", [''])
         } else {
-            if (event.value === 'ALL') {
-                window.localStorage.setItem("epic", "ALL")
-                setColor()
-            } else {
-            setColor(event.value)
-            console.log(event.value)
-            window.localStorage.setItem("epic", event.value)
-            }
-            window.location.reload(false);
-            //return event.value
+            setColor(event)
+            const colors = event.map((event) => {
+
+                console.log(event.value)
+                return event.value
+            })
+            window.localStorage.setItem("epic", JSON.stringify(colors))
         }
-        //console.log(event)
     }
-    
 
     let userList = [];
     userQuery.data.allUsers.filter((user) => !user.userName.includes(' (Removed user)')).map((user) => {
@@ -96,26 +92,26 @@ const BoardPage = ({ id, eventId }) => {
     });
 
     let length;
-    let colors = epicColorQuery.data.allEpicColors.filter((color) => color.boardId === id) 
-        if (colors.length === 0) {
-            length=0;
-            colors=colorQuery.data.allColors
+    let colors = epicColorQuery.data.allEpicColors.filter((color) => color.boardId === id)
+    if (colors.length === 0) {
+        length = 0;
+        colors = colorQuery.data.allColors
+    }
+
+    const allEpicColors = colors.map((color) => {
+        let labelOption;
+        let valueOption;
+        if (length === 0) {
+            valueOption = color.id
+            labelOption = color.color
+        } else {
+            valueOption = color.colorId
+            labelOption = color.name
         }
-    
-        const allEpicColors = colors.map((color) => {
-            let labelOption;
-            let valueOption;
-            if (length===0) {
-                valueOption = color.id
-                labelOption = color.color
-            } else {
-                valueOption = color.colorId
-                labelOption = color.name
-            }
-            const newColor = {value: valueOption, label: labelOption}
-            return  newColor
-        })
-        allEpicColors.push({value: 'ALL', label: 'ALL'})
+        const newColor = { value: valueOption, label: labelOption }
+        return newColor
+    })
+    //allEpicColors.push({value: 'ALL', label: 'ALL'})
 
     let alphabeticalOrder = bubbleSort(userList);
     const modifiedUserData = alphabeticalOrder.map((user) => {
@@ -153,13 +149,13 @@ const BoardPage = ({ id, eventId }) => {
                             className="selectField"
                             closeMenuOnSelect={false}
                             placeholder="Select color"
-                            //defaultValue={allEpicColors[0]}
+                            //defaultValue={allEpicColors[9]}
                             //components={animatedComponents}
-                            //isMulti
+                            isMulti
                             onChange={handleColorChange}
                             //id="taskSelectColor"
                             options={allEpicColors}
-                            isClearable={false}
+                            isClearable={true}
                         //styles={colourStyles}
                         />
                     </Grid>

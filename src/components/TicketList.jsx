@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Grid } from '@material-ui/core'
 import Task from './task/Task'
 import Subtask from './subtask/Subtask'
@@ -17,10 +17,11 @@ import Subtask from './subtask/Subtask'
 //         }
 //         return foundTicket
 //     })
-    
-    const epic = window.localStorage.getItem("epic")
+ 
+
+    //const epic = window.localStorage.getItem("epic")
     const TicketList = ({
-        ticketOrder, tasks, subtasks, columnId, boardId,
+        ticketOrder, tasks, subtasks, columnId, boardId, epic
     }) => {
         const ticketsInOrder = ticketOrder.map((obj) => {
             const user = window.localStorage.getItem("user")
@@ -34,30 +35,41 @@ import Subtask from './subtask/Subtask'
                 foundTicket = { ...foundTicket, type: 'subtask' }
             }
             return foundTicket
-        })
+        })        
+        let filteredTasks = [];
+            if (epic.length > 0) {
             //console.log('epic', epic)
-            let filteredTasks = [];
-            if (epic !== 'ALL') {
+            const epicColors = JSON.parse(epic)
+            epicColors.map((epic) => {
             ticketsInOrder.map((ticket) => {
 
                 if (ticket.colors.length > 1) {
                     ticket.colors.map((color) =>{
                         if (color.id === epic) {
-                            console.log('moniväriset', ticket.id)
-                            filteredTasks.push(ticket)
+                                 let same = false;                   
+                            filteredTasks.map((task) => {
+                                if (task.id === ticket.id) {
+                                    same = true
+                                }
+                            })
+                            if (!same) {
+                                filteredTasks.push(ticket)  
+                            } 
                         }
-                        
                     })
                 } else {
                     if (ticket.colors[0].id === epic) {
-                        console.log('yksiväriset', ticket.id)
+                        //console.log(ticket.title)
+                        //console.log(epic)
+                        //console.log('yksiväriset', ticket.title)
                         filteredTasks.push(ticket)
                     }
                 }
             })
-        } else {
-            filteredTasks = ticketsInOrder;
-        }
+        })
+    } else {
+        filteredTasks = ticketsInOrder
+    }
             
 
         

@@ -18,8 +18,7 @@ const Column = ({ column, index }) => {
     } = column
     const [dialogStatus, setDialogStatus] = useState(false)
     const toggleDialog = () => setDialogStatus(!dialogStatus)
-
-    
+        
 
     return (
         <Draggable draggableId={column.id} index={index}>
@@ -66,6 +65,7 @@ const Column = ({ column, index }) => {
                                     ticketOrder={ticketOrder}
                                     columnId={column.id}
                                     boardId={board.id}
+                                    epic={window.localStorage.getItem("epic")}
                                 />
                                 {provided.placeholder}
                             </Grid>
