@@ -954,6 +954,24 @@ export class BoardService {
         return deletedUser
     }
 
+    async deleteBoard(id: string, name: string) {
+        let deleteBoard;
+        try {
+            deleteBoard = await Board.findByPk(id)
+            await Board.destroy({
+                where: {
+                    id: id,
+                    name: name,
+                },
+            })
+
+        }
+        catch (e) {
+            console.error(e)
+        }
+        return deleteBoard
+    }
+
                 
     async allEpicColors() {
         let epicColorsFromDB
