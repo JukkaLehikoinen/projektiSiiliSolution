@@ -43,8 +43,26 @@ const schema = {
   },
 
   Mutation: {
-    async deleteBoard(root, args) {
+    /* async deleteBoard(root, args) {
       return dataSources.boardService.deleteBoard(args.id, args.name);
+    },
+*/
+    async deleteBoard(root, { id, projectId, eventId }) {
+      let deletedBoard;
+      try {
+        deletedBoard = await dataSources.boardService.deleteBoard(id);
+        await pubsub.publish(BOARD_REMOVED, {
+          projectId,
+          eventId,
+          boardRemoved: {
+            removeType: "DELETED",
+            removeInfo: { boardId: id, projectId },
+          },
+        });
+      } catch (e) {
+        console.log(e);
+      }
+      return deletedBoard;
     },
 
     async addBoard(root, { name, prettyId, eventId, projectId }) {
