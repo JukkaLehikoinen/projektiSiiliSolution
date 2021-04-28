@@ -56,20 +56,22 @@ const BoardPage = ({ id, eventId }) => {
         toggleView(view === 'kanban' ? 'swimlane' : 'kanban')
     }
     const handleUserChange = (event) => {
-        if (event === null) {
-            setUser()
-            window.localStorage.setItem("user", "")
+        if (event === null || event.length == 0) {
+            setUser(event)
+            window.localStorage.setItem("user", [''])
         } else {
-            setUser(event.value)
-            window.localStorage.setItem("user", event.value)
-            //return event.value
+            setUser(event)
+            const users = event.map((event) => {
+                return event.value
+            })
+            window.localStorage.setItem("user", JSON.stringify(users))
         }
-        console.log(event)
+       // console.log(event)
     }
     //console.log(user)
 
     const handleColorChange = (event) => {
-        if (event.length == 0) {
+        if (event === null || event.length === 0) {
             setColor(event)
             window.localStorage.setItem("epic", [''])
         } else {
@@ -163,7 +165,7 @@ const BoardPage = ({ id, eventId }) => {
                             placeholder="Select user"
                             //defaultValue={null}
                             //components={animatedComponents}
-                            //isMulti
+                            isMulti
                             onChange={handleUserChange}
                             id="taskSelectColor"
                             options={modifiedUserData}

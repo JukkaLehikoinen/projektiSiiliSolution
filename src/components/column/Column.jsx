@@ -66,6 +66,7 @@ const Column = ({ column, index }) => {
                                     columnId={column.id}
                                     boardId={board.id}
                                     epic={window.localStorage.getItem("epic")}
+                                    userStorage={window.localStorage.getItem("user")}
                                 />
                                 {provided.placeholder}
                             </Grid>

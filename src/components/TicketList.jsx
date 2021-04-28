@@ -18,14 +18,10 @@ import Subtask from './subtask/Subtask'
 //         return foundTicket
 //     })
  
-
-    //const epic = window.localStorage.getItem("epic")
     const TicketList = ({
-        ticketOrder, tasks, subtasks, columnId, boardId, epic
+        ticketOrder, tasks, subtasks, columnId, boardId, epic, userStorage
     }) => {
         const ticketsInOrder = ticketOrder.map((obj) => {
-            const user = window.localStorage.getItem("user")
-            //console.log(user)
             let foundTicket
             if (obj.type === 'task') {
                 foundTicket = tasks.find((task) => task.id === obj.ticketId)
@@ -36,9 +32,46 @@ import Subtask from './subtask/Subtask'
             }
             return foundTicket
         })        
+
+
         let filteredTasks = [];
+        if (userStorage.length > 0) {
+            const selectedUsers = JSON.parse(userStorage)
+            selectedUsers.map((user) => {
+            ticketsInOrder.map((ticket) => {
+                if (ticket.members.length > 0) {
+                    ticket.members.map((members) =>{
+                        if (members.id === user) {
+                                 let same = false;                   
+                            filteredTasks.map((task) => {
+                                if (task.id === ticket.id) {
+                                    same = true
+                                }
+                            })
+                            if (!same) {
+                                filteredTasks.push(ticket)  
+                            } 
+                        }
+                    })
+                }
+                if (ticket.owner !== null) {
+                    if (ticket.owner.id === user) {
+                        let same = false;                   
+                        filteredTasks.map((task) => {
+                            if (task.id === ticket.id) {
+                                same = true
+                            }
+                        })
+                        if (!same) {
+                            filteredTasks.push(ticket)  
+                        } 
+                    }
+                }
+            })
+        })
+    }
+
             if (epic.length > 0) {
-            //console.log('epic', epic)
             const epicColors = JSON.parse(epic)
             epicColors.map((epic) => {
             ticketsInOrder.map((ticket) => {
@@ -59,18 +92,24 @@ import Subtask from './subtask/Subtask'
                     })
                 } else {
                     if (ticket.colors[0].id === epic) {
-                        //console.log(ticket.title)
-                        //console.log(epic)
-                        //console.log('yksiväriset', ticket.title)
-                        filteredTasks.push(ticket)
+                        let same = false;                   
+                        filteredTasks.map((task) => {
+                            if (task.id === ticket.id) {
+                                same = true
+                            }
+                        })
+                        if (!same) {
+                            filteredTasks.push(ticket)  
+                        } 
                     }
                 }
             })
         })
-    } else {
+    }
+     
+    if (filteredTasks.length < 1) {
         filteredTasks = ticketsInOrder
     }
-            
 
         
     return (
