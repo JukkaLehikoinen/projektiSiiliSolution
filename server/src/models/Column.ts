@@ -31,6 +31,7 @@ Column.init({
     primaryKey: true,
   },
   name: STRING,
+  deletedAt: STRING,
   orderNumber: INTEGER,
   boardId: {
     type: UUID,
