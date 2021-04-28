@@ -47,7 +47,7 @@ const schema = {
       return dataSources.boardService.deleteBoard(args.id, args.name);
     },
 */
-    async deleteBoard(root, { id, projectId, eventId }) {
+    async deleteBoard(root, { id, name, projectId, eventId }) {
       let deletedBoard;
       try {
         deletedBoard = await dataSources.boardService.deleteBoard(id);
@@ -99,7 +99,7 @@ const schema = {
 
       return id;
     },
-    restoreBordById(root, { id }) {
+    restoreBoardById(root, { id }) {
       return dataSources.boardService.restoreBoardById(id);
     },
 

@@ -47,7 +47,7 @@ export class BoardService {
 
     try {
       boardsFromDb = await Board.findAll({
-        where: { projectId },
+        where: { projectId, deletedAt: null },
       });
     } catch (e) {
       console.error(e);
@@ -1098,7 +1098,7 @@ export class BoardService {
     }
     return deletedUser;
   }
-
+  /*
   async deleteBoard(id: string, name: string) {
     let deleteBoard;
     try {
@@ -1113,6 +1113,17 @@ export class BoardService {
       console.error(e);
     }
     return deleteBoard;
+  }
+*/
+  async deleteBoard(boardId: any) {
+    try {
+      await Board.destroy({
+        where: { id: boardId },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    return boardId;
   }
 
   async archiveBoardById(boardId: any) {
