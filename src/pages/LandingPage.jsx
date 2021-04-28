@@ -10,11 +10,16 @@ import LoadingSpinner from '../components/LoadingSpinner'
 const LandingPage = () => {
     const queryResult = useAllProjects()
     const [open, setOpen] = useState(false)
+    const [projectDialogOpen, setProjectDialogOpen] = useState(false)
     const classes = projectPageStyles()
 
     const handleClickOpen = () => {
         setOpen(true)
     }
+
+    const handleClickOpenProjectDialog = () => {
+        setProjectDialogOpen(true);
+      };
 
     if (queryResult.loading) {
 
@@ -86,6 +91,13 @@ const LandingPage = () => {
                 <Grid item>
                     <Button onClick={handleClickOpen} classes={{ root: classes.addNewButton }} id="addButton">
                         Add Project
+                    </Button>
+                </Grid>
+                <Grid item>
+                    <Button
+                        onClick={handleClickOpenProjectDialog}
+                        classes={{ root: classes.addNewButton }}>
+                        Delete Project
                     </Button>
                 </Grid>
             </Grid>
