@@ -18,6 +18,7 @@ import useAllEpicColors from '../graphql/colorboards/hooks/useAllEpicColors'
 import bubbleSort from '../components/bubblesort'
 import useAllColors from '../graphql/task/hooks/useAllColors'
 //import useAllColors from '../../graphql/task/hooks/useAllColors'
+import ErrorPage from './ErrorPage'
 
 const BoardPage = ({ id, eventId }) => {
     useEffect(() => () => {
@@ -50,6 +51,12 @@ const BoardPage = ({ id, eventId }) => {
             <LoadingSpinner />
         </div>
     }
+
+    if (queryResult.error) {
+        console.log(queryResult.error)
+        return <ErrorPage/>
+    }
+
     const board = queryResult.data.boardById
 
     const switchView = () => {

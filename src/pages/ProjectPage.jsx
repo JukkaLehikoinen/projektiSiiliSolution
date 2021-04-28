@@ -11,6 +11,7 @@ import '../styles.css'
 import useProjectSubscriptions from '../graphql/subscriptions/useProjectSubscriptions'
 import { useHistory } from "react-router-dom";
 import BoardForm from "../components/board/BoardForm";
+import ErrorPage from './ErrorPage'
 
 const ProjectPage = ({ id, eventId }) => {
     const queryResult = useProjectById(id);
@@ -49,6 +50,12 @@ const ProjectPage = ({ id, eventId }) => {
                 <LoadingSpinner/>
         </div>
     }
+
+    if (queryResult.error) {
+        console.log(queryResult.error)
+        return <ErrorPage/>
+    }
+
     const boardsInOrder = queryResult.data.projectById.boards.slice().sort((a, b) => a.orderNumber - b.orderNumber)
     const projectName = queryResult.data.projectById.name
     const projectId = queryResult.data.projectById.id
