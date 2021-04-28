@@ -112,6 +112,7 @@ export const BOARD_ADDED = gql`
     }
   }
 `;
+
 export const DELETE_BOARD = gql`
   mutation deleteBoard(
     $id: ID!
