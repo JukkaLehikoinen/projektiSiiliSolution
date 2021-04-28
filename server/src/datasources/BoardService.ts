@@ -93,7 +93,7 @@ export class BoardService {
     async getColumnsByBoardId(boardId: any) {
         let columnsByBoardIdFromDb
         try {
-            columnsByBoardIdFromDb = await Column.findAll({ where: { boardId } })
+            columnsByBoardIdFromDb = await Column.findAll({ where: { boardId, deletedAt: null } })
         } catch (e) {
             console.error(e)
         }
@@ -138,10 +138,13 @@ export class BoardService {
     }
 
     async deleteColumnById(id: any) {
+       let deleteColumn
         try {
-            await Column.destroy({
-                where: { id },
-            })
+            deleteColumn = await Column.findByPk(id)
+            if (deleteColumn) {
+                deleteColumn.setDataValue("deletedAt", new Date().toISOString())
+                await deleteColumn.save() 
+            }
         } catch (e) {
             console.error(e)
         }
@@ -215,7 +218,7 @@ export class BoardService {
     async getSubtasksByTaskId(taskId: any) {
         let subtasksFromDb
         try {
-            subtasksFromDb = await Subtask.findAll({ where: { taskId } })
+            subtasksFromDb = await Subtask.findAll({ where: { taskId, deletedAt: null} })
         } catch (e) {
             console.error(e)
         }
@@ -460,7 +463,7 @@ export class BoardService {
         try {
             const columns = await Column.findAll({
                 attributes: ['id'],
-                where: { boardId },
+                where: { boardId, deletedAt: null },
                 order: dbConfig.Sequelize.literal('orderNumber ASC'),
             })
             arrayOfIds = columns.map((column) => column.id)
@@ -964,7 +967,6 @@ export class BoardService {
                     name: name,
                 },
             })
-
         }
         catch (e) {
             console.error(e)
