@@ -23,10 +23,10 @@ export default function DeleteUserPopup(props) {
   };
 
   let message;
-  if (props.board.count < 1) {
-    message = "This board has 0 tickets";
+  if (props.board.count == null) {
+    message = "This board has 0 tickets.";
   } else if (props.board.count == 1) {
-    message = "This board has 1 ticket";
+    message = "This board has 1 ticket.";
   } else {
     message = `There are ${props.board.ticketCount} tickets in this board.`;
   }
