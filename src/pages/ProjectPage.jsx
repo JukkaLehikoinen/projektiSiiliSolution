@@ -34,6 +34,7 @@ const ProjectPage = ({ id, eventId }) => {
   };
 
   window.localStorage.setItem("epic", "")
+  window.localStorage.setItem("user", "")
 
     useProjectSubscriptions(id, eventId)
 
