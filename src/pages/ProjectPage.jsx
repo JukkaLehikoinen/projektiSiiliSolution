@@ -33,7 +33,7 @@ const ProjectPage = ({ id, eventId }) => {
     setUserDialogOpen(true);
   };
 
-    
+  window.localStorage.setItem("epic", "")
 
     useProjectSubscriptions(id, eventId)
 
