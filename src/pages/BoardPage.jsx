@@ -69,15 +69,12 @@ const BoardPage = ({ id, eventId }) => {
     //console.log(user)
 
     const handleColorChange = (event) => {
-        if (event === null) {
-            console.log(event)
+        if (event.length == 0) {
             setColor(event)
             window.localStorage.setItem("epic", [''])
         } else {
             setColor(event)
             const colors = event.map((event) => {
-
-                console.log(event.value)
                 return event.value
             })
             window.localStorage.setItem("epic", JSON.stringify(colors))
