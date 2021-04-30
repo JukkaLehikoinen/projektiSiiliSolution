@@ -19,6 +19,7 @@ type Task {
 type Query {
   taskById(id: ID!): Task!
   allColors: [Color!]!
+  allTasks: [Task!]!
 }
 
 type Mutation {

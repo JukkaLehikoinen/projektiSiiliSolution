@@ -17,7 +17,7 @@ import {dbConfig} from "../database";
 
 export class BoardService {
     initialize() { }
-
+    
     async getProjects() {
         let projectsFromDb
         try {
@@ -28,6 +28,28 @@ export class BoardService {
             console.error(e)
         }
         return projectsFromDb
+    }
+
+    async allColumns() {
+        let columsFromDB
+        try {
+            columsFromDB = await Column.findAll()
+            console.log(columsFromDB)
+        } catch (e) {
+            console.error(e)
+        }
+        return columsFromDB
+    }
+
+    async getAllTasks() {
+        let tasksFromDB
+        try {
+            tasksFromDB = await Task.findAll({where: { deletedAt: null }})
+            console.log(tasksFromDB)
+        } catch (e) {
+            console.error(e)
+        }
+        return tasksFromDB
     }
 
     async getProjectById(projectId: any) {

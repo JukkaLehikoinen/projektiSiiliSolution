@@ -13,6 +13,17 @@ export const ADD_COLUMN = gql`
     }
 `
 
+export const ALL_COLUMNS = gql`
+    query {
+        allColumns {
+            id
+            name
+            boardId
+            deletedAt
+        }
+    }
+`
+
 export const MOVE_COLUMN = gql`
     mutation moveColumn($orderArray: [ID!]!, $boardId: ID!) {
         moveColumn(boardId: $boardId, newColumnOrder: $orderArray)

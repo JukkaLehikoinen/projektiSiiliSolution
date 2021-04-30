@@ -22,10 +22,13 @@ type Column {
   tasks: [Task!]!
   subtasks: [Subtask!]!
   ticketOrder: [TicketOrderObject!]!
+  boardId: String
+  deletedAt: String
 }
 
 type Query {
   columnById(id: ID!): Column!
+  allColumns: [Column!]
 }
 
 type Mutation {

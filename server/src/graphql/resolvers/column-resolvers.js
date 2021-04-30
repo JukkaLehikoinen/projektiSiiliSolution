@@ -13,6 +13,9 @@ const schema = {
         columnById(root, args) {
             return dataSources.boardService.getColumnById(args.id)
         },
+        allColumns() {
+            return dataSources.boardService.allColumns()
+        },
     },
 
     Subscription: {

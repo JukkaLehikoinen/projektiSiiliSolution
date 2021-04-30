@@ -1,5 +1,25 @@
 import { gql } from '@apollo/client'
 
+export const ALL_TASKS = gql`
+    query {
+        allTasks {
+            id
+            title
+            size
+            owner{
+                id
+            }
+            members{
+                id
+            }
+            description
+            board {
+                id
+            }
+        }
+    }
+`
+
 export const TASK_BY_ID = gql`
     query taskById($taskId: ID!) {
         taskById(id: $taskId) {

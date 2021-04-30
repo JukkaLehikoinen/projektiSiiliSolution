@@ -14,6 +14,9 @@ const schema = {
         allColors() {
             return dataSources.boardService.getColors()
         },
+        allTasks() {
+            return dataSources.boardService.getAllTasks()
+        },
     },
 
     Subscription: {

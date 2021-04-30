@@ -6,6 +6,7 @@ import '../styles.css'
 import useAllProjects from '../graphql/project/hooks/useAllProjects'
 import NewProjectForm from '../components/project/NewProjectForm'
 import LoadingSpinner from '../components/LoadingSpinner'
+import ProjectForm from "../components/project/ProjectForm";
 
 const LandingPage = () => {
     const queryResult = useAllProjects()
@@ -99,6 +100,9 @@ const LandingPage = () => {
                         classes={{ root: classes.addNewButton }}>
                         Delete Project
                     </Button>
+                    {projectDialogOpen && (
+                    <ProjectForm setOpen={setProjectDialogOpen} open={projectDialogOpen} />
+        )}
                 </Grid>
             </Grid>
             <Grid
