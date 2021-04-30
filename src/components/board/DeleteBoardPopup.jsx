@@ -5,12 +5,12 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useArchiveBoard from "../../graphql/board/hooks/useArchiveBoard";
+import { removeBoardFromCache } from '../../cacheService/cacheUpdates'
 
-export default function DeleteUserPopup(props) {
+export default function DeleteBoardPopup(props) {
   const { open, handleClose, board } = props;
   const [deleteBoard] = useArchiveBoard();
   const eventId = window.localStorage.getItem('eventId')
-
   const handleSave = async () => {
     await deleteBoard({
       variables: {
@@ -19,7 +19,7 @@ export default function DeleteUserPopup(props) {
         projectId: window.localStorage.getItem("projectId"),
       },
     });
-    window.location.reload(false);
+    removeBoardFromCache(board.id, window.localStorage.getItem("projectId"))
     handleClose();
   };
 
