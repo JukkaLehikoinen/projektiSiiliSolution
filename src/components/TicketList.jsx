@@ -90,7 +90,7 @@ import Subtask from './subtask/Subtask'
                             } 
                         }
                     })
-                } else {
+                } else if (ticket.colors.length == 1) {
                     if (ticket.colors[0].id === epic) {
                         let same = false;                   
                         filteredTasks.map((task) => {
