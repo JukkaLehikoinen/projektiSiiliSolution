@@ -41,7 +41,7 @@ type Mutation {
     swimlaneOrder: [ID!]!
     eventId: ID!
   ): ID
-  archiveBoardById(id: ID!, projectId: ID!, eventId: ID!): ID
+  archiveBoardById(boardId: ID!, projectId: ID!, eventId: ID!): ID
   restoreBoardById(id: ID!): Board
 }
 

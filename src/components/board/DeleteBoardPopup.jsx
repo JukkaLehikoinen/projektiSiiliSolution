@@ -9,12 +9,13 @@ import useArchiveBoard from "../../graphql/board/hooks/useArchiveBoard";
 export default function DeleteUserPopup(props) {
   const { open, handleClose, board } = props;
   const [deleteBoard] = useArchiveBoard();
+  const eventId = window.localStorage.getItem('eventId')
 
   const handleSave = async () => {
     await deleteBoard({
       variables: {
-        id: board.id,
-        name: board.name,
+        boardId: board.id,
+        eventId: eventId,
         projectId: window.localStorage.getItem("projectId"),
       },
     });
