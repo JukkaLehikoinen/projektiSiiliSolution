@@ -52,6 +52,18 @@ export class BoardService {
         return tasksFromDB
     }
 
+    async getAllSubTasks() {
+        let subTasksFromDB
+        try {
+            subTasksFromDB = await Subtask.findAll({where: { deletedAt: null }})
+            console.log(subTasksFromDB)
+        } catch (e) {
+            console.error(e)
+        }
+        return subTasksFromDB
+    }
+
+
     async getProjectById(projectId: any) {
         let projectFromDb
         try {

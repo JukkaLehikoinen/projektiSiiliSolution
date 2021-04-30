@@ -16,6 +16,9 @@ export const ALL_TASKS = gql`
             board {
                 id
             }
+            column {
+                id
+            }
         }
     }
 `

@@ -1,5 +1,27 @@
 import { gql } from '@apollo/client'
 
+export const ALL_SUBTASKS = gql`
+    query {
+        allSubTasks {
+            id
+            name
+            size
+            owner{
+                id
+            }
+            board {
+                id
+            }
+            column {
+                id
+            }
+            task {
+                id
+            }
+        }
+    }
+`
+
 export const ADD_SUBTASK = gql`
     mutation createSubtask($taskId: ID!, $columnId: ID!, $boardId: ID!, $name: String, $content: String!, $size: Float, $ownerId: ID, $memberIds: [ID!], $colorIds: [ID!], $ticketOrder: [TicketOrderInput!], $eventId: ID!) {
         addSubtaskForTask(taskId: $taskId, columnId: $columnId, boardId: $boardId, name: $name, content: $content, size: $size, ownerId: $ownerId, memberIds: $memberIds, colorIds: $colorIds, ticketOrder: $ticketOrder, eventId: $eventId) {
