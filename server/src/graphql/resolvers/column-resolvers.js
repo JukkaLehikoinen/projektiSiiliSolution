@@ -85,6 +85,22 @@ const schema = {
             return editedColumn
         },
 
+        async archiveColumnFromProjectDeletion(root, { id }) {
+            let deletedColumnId
+            try {
+                deletedColumnId = await dataSources.boardService.archiveColumnFromProjectDeletion(id)
+                await pubsub.publish(COLUMN_DELETED, {
+                    columnDeleted: {
+                        removeType: 'DELETED',
+                        removeInfo: { id},
+                    },
+                })
+            } catch (e) {
+                console.log(e)
+            }
+            return deletedColumnId
+        },
+
         async deleteColumnById(root, { id, boardId, eventId }) {
             let deletedColumnId
             try {

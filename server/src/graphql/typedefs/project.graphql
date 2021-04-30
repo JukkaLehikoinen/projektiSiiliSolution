@@ -11,6 +11,8 @@ type Query {
     allProjects: [Project!]!
 }
 
+
 type Mutation {
      addProject(name: String!): Project!
+     archiveProjectFromProjectDeletion(id: ID!): ID
 }

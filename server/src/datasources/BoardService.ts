@@ -1,5 +1,5 @@
 import Project from "../models/Project";
-import {v4 as uuid} from "uuid";
+import { v4 as uuid } from "uuid";
 import Board from "../models/Board";
 import Column from "../models/Column";
 import Story from "../models/Story";
@@ -13,16 +13,32 @@ import UserStory from "../models/UserStory";
 import User from "../models/User";
 import UserTask from "../models/UserTask";
 import UserSubtask from "../models/UserSubtask";
-import {dbConfig} from "../database";
+import { dbConfig } from "../database";
 
 export class BoardService {
     initialize() { }
-    
+
+
+
+    async archiveProjectFromProjectDeletion(id: any) {
+        let deleteProject;
+        try {
+            deleteProject = await Project.findByPk(id)
+            if (deleteProject) {
+                deleteProject.setDataValue("deletedAt", new Date().toISOString())
+                await deleteProject.save()
+            }
+        } catch (e) {
+            console.error(e)
+        }
+        return id
+    }
+
     async getProjects() {
         let projectsFromDb
         try {
             console.log("projectsFromDb")
-            projectsFromDb = await Project.findAll()
+            projectsFromDb = await Project.findAll({ where: { deletedAt: null } })
             console.log(projectsFromDb)
         } catch (e) {
             console.error(e)
@@ -44,7 +60,7 @@ export class BoardService {
     async getAllTasks() {
         let tasksFromDB
         try {
-            tasksFromDB = await Task.findAll({where: { deletedAt: null }})
+            tasksFromDB = await Task.findAll({ where: { deletedAt: null } })
             console.log(tasksFromDB)
         } catch (e) {
             console.error(e)
@@ -55,7 +71,7 @@ export class BoardService {
     async getAllSubTasks() {
         let subTasksFromDB
         try {
-            subTasksFromDB = await Subtask.findAll({where: { deletedAt: null }})
+            subTasksFromDB = await Subtask.findAll({ where: { deletedAt: null } })
             console.log(subTasksFromDB)
         } catch (e) {
             console.error(e)
@@ -81,7 +97,7 @@ export class BoardService {
 
         try {
             boardsFromDb = await Board.findAll({
-                where: { projectId }
+                where: { projectId, deletedAt: null }
             })
         } catch (e) {
             console.error(e)
@@ -171,13 +187,27 @@ export class BoardService {
         return column
     }
 
+    async archiveBoardFromProjectDeletion(id: any) {
+        let deleteBoard;
+        try {
+            deleteBoard = await Board.findByPk(id)
+            if (deleteBoard) {
+                deleteBoard.setDataValue("deletedAt", new Date().toISOString())
+                await deleteBoard.save()
+            }
+        } catch (e) {
+            console.error(e)
+        }
+        return id
+    }
+
     async deleteColumnById(id: any) {
-       let deleteColumn
+        let deleteColumn
         try {
             deleteColumn = await Column.findByPk(id)
             if (deleteColumn) {
                 deleteColumn.setDataValue("deletedAt", new Date().toISOString())
-                await deleteColumn.save() 
+                await deleteColumn.save()
             }
         } catch (e) {
             console.error(e)
@@ -252,7 +282,7 @@ export class BoardService {
     async getSubtasksByTaskId(taskId: any) {
         let subtasksFromDb
         try {
-            subtasksFromDb = await Subtask.findAll({ where: { taskId, deletedAt: null} })
+            subtasksFromDb = await Subtask.findAll({ where: { taskId, deletedAt: null } })
         } catch (e) {
             console.error(e)
         }
@@ -839,6 +869,19 @@ export class BoardService {
         return subtaskId
     }
 
+    async archiveSubtaskFromProjectDeletion(subtaskId: any) {
+        try {
+            const subtask = await Subtask.findByPk(subtaskId)
+            if (subtask) {
+                subtask.deletedAt = new Date()
+                await subtask.save()
+            }
+        } catch (e) {
+            console.error(e)
+        }
+        return subtaskId
+    }
+
     async archiveSubtaskById(subtaskId: any) {
         try {
             const subtask = await Subtask.findByPk(subtaskId)
@@ -991,6 +1034,20 @@ export class BoardService {
         return deletedUser
     }
 
+
+    async archiveColumnFromProjectDeletion(id: string) {
+        try {
+            const deleteColumn = await Column.findByPk(id)
+            if (deleteColumn) {
+                deleteColumn.setDataValue("deletedAt", new Date().toISOString())
+                await deleteColumn.save()
+            }
+        } catch (e) {
+            console.error(e)
+        }
+        return id
+    }
+
     async deleteBoard(id: string, name: string) {
         let deleteBoard;
         try {
@@ -1008,7 +1065,7 @@ export class BoardService {
         return deleteBoard
     }
 
-                
+
     async allEpicColors() {
         let epicColorsFromDB
         try {
@@ -1038,7 +1095,7 @@ export class BoardService {
                         boardId: boardId,
                         name: name,
                     })
-            }
+                }
             } else {
                 return await ColorBoard.create({
                     colorId: colorId,
@@ -1086,6 +1143,19 @@ export class BoardService {
             console.log(e)
         }
         return updatedStory
+    }
+
+    async archiveTaskFromProjectDeletion(taskId: any) {
+        try {
+            const task = await Task.findByPk(taskId)
+            if (task) {
+                task.deletedAt = new Date()
+                await task.save()
+            }
+        } catch (e) {
+            console.error(e)
+        }
+        return taskId
     }
 
     async archiveTaskById(taskId: any) {

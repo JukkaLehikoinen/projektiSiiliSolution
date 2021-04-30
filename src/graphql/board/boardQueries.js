@@ -129,3 +129,9 @@ export const ALL_BOARDS = gql`
     }
   }
 `;
+
+export const ARCHIVE_BOARD_FROM_PROJECT_DELETION = gql`
+    mutation archiveBoardFromProjectDeletion($id: ID!) {
+      archiveBoardFromProjectDeletion(id: $id)
+    }
+`

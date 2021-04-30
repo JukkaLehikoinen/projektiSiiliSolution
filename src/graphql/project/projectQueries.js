@@ -13,6 +13,12 @@ export const PROJECT_BY_ID = gql`
         }
     }
 `
+export const ARCHIVE_PROJECT_FROM_PROJECT_DELETION = gql`
+    mutation archiveProjectFromProjectDeletion($id: ID!) {
+      archiveProjectFromProjectDeletion(id: $id)
+    }
+`
+
 export const BOARDS_BY_PROJECT_ID = gql`
     query boardsByProjectId($projectId: ID!) {
         boardsByProjectId(id: $projectId) {

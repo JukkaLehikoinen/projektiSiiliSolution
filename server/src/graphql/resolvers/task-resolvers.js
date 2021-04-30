@@ -94,6 +94,22 @@ const schema = {
             }
             return deletedTaskId
         },
+        async archiveTaskFromProjectDeletion(root, {
+            id
+        }) {
+            try {
+                await dataSources.boardService.archiveTaskFromProjectDeletion(id)
+                await pubsub.publish(TASK_REMOVED, {
+                    taskRemoved: {
+                        removeType: 'ARCHIVED',
+                        removeInfo: { taskId: id},
+                    },
+                })
+            } catch (e) {
+                console.log(e)
+            }
+            return id
+        },
         async archiveTaskById(root, {
             id, columnId, boardId, eventId,
         }) {

@@ -10,12 +10,15 @@ const schema = {
         },
         allProjects() {
             return dataSources.boardService.getProjects().catch(e => console.log(e))
-        }
+        },
     },
     Mutation: {
         async addProject(root, { name }) {
             return dataSources.boardService.addProject(name)
         },
+        async archiveProjectFromProjectDeletion(root, args) {
+            return dataSources.boardService.archiveProjectFromProjectDeletion(args.id)
+        }
     },
     Project: {
         boards(root) {

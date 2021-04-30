@@ -31,6 +31,7 @@ type Mutation {
   addMemberForSubtask(id: ID!, userId: ID!): Task
   deleteSubtaskById(id: ID!, columnId: ID!, boardId: ID!, eventId: ID!): ID
   archiveSubtaskById(id: ID!, columnId: ID!, boardId: ID!, eventId: ID!): ID
+  archiveSubtaskFromProjectDeletion(id: ID!): ID
 }
 
 type Subscription {

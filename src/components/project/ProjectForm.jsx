@@ -29,7 +29,6 @@ const NewBoardForm = ({ setOpen, open }) => {
   const handleClose = () => {
     setOpen(false)
   }
-console.log(allProjects.data.allProjects)
   const projects = allProjects.data.allProjects
   let deleteprojects = projects;
   const projectsList = (projects) => {

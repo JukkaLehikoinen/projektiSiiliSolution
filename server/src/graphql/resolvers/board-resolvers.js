@@ -35,6 +35,10 @@ const schema = {
             return dataSources.boardService.deleteBoard(args.id, args.name)
         },
 
+        async archiveBoardFromProjectDeletion(root,args) {
+            return dataSources.boardService.archiveBoardFromProjectDeletion(args.id)
+        },
+
         async addBoard(root, {
             name, prettyId, eventId, projectId,
         }) {

@@ -42,6 +42,7 @@ Board.init({
     allowNull: false,
   },
   ticketCount: INTEGER,
+  deletedAt: STRING,
   name: {
     type: STRING,
     allowNull: false,

@@ -35,6 +35,13 @@ export const DELETE_COLUMN = gql`
         deleteColumnById(id: $columnId, boardId: $boardId, eventId: $eventId)
     }
 `
+
+export const ARCHIVE_COLUMN_FROM_PROJECT_DELETION = gql`
+    mutation archiveColumnFromProjectDeletion($id: ID!) {
+        archiveColumnFromProjectDeletion(id: $id)
+    }
+`
+
 export const EDIT_COLUMN = gql`
     mutation editColumn($columnId: ID!, $columnName: String!, $boardId: ID!, $eventId: ID!) {
         editColumnById(id: $columnId, name: $columnName, boardId: $boardId, eventId: $eventId ) {

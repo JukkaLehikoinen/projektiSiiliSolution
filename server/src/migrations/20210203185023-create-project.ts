@@ -23,6 +23,10 @@ export const up: Migration = async ({ context: sequelize }) => {
       allowNull: false,
       type: DataTypes.DATE
     },
+    deletedAt: {
+      allowNull: true,
+      type: DataTypes.STRING
+    },
     // boardId: {
     //   type: DataTypes.UUID,
     //   references: { model: 'Boards', key: 'id' }

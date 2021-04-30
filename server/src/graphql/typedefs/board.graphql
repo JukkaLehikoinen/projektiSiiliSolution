@@ -31,6 +31,7 @@ type Mutation {
 type Mutation {
   addBoard(name: String!, prettyId: String!, eventId: ID!, projectId: ID!): Board!
   moveSwimlane(boardId: ID!, affectedSwimlanes: [newSwimlaneOrderInput]!, swimlaneOrder: [ID!]!, eventId: ID!): ID
+  archiveBoardFromProjectDeletion(id: ID!): ID
 }
 
 type Subscription {

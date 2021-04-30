@@ -23,6 +23,7 @@ Project.init(
         type: STRING,
         allowNull: false
       },
+      deletedAt: STRING,
       orderNumber: {
         type: INTEGER,
         allowNull: false
@@ -33,7 +34,8 @@ Project.init(
       modelName: 'Project',
       timestamps: true,
       paranoid: false,
-    }
+    },
+    
 )
 
 

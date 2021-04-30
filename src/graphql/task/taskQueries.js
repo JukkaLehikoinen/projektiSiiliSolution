@@ -108,6 +108,12 @@ export const EDIT_TASK = gql`
         }
     }
 `
+export const ARCHIVE_TASK_FROM_PROJECT_DELETION = gql`
+    mutation archiveTaskFromProjectDeletion($taskId: ID!) {
+        archiveTaskFromProjectDeletion(id: $taskId)
+    }
+`
+
 export const ARCHIVE_TASK = gql`
     mutation archiveTask($taskId: ID!, $columnId: ID!, $boardId: ID!, $eventId: ID!) {
         archiveTaskById(id: $taskId, columnId: $columnId, boardId: $boardId, eventId: $eventId)

@@ -29,6 +29,7 @@ type Mutation {
   archiveTaskById(id: ID!, columnId: ID!, boardId:ID!, eventId: ID!): ID
   restoreTaskById(id: ID!): Task
   addMemberForTask(id: ID!, userId: ID!): Task
+  archiveTaskFromProjectDeletion(id: ID!): ID
 }
 
 type Subscription {

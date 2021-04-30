@@ -75,6 +75,26 @@ const schema = {
             return deletedSubtask
         },
 
+        async archiveSubtaskFromProjectDeletion(root, {
+            id
+        }) {
+            let archivedSubtask
+            try {
+                archivedSubtask = await dataSources.boardService.archiveSubtaskFromProjectDeletion(id)
+                await pubsub.publish(SUBTASK_REMOVED, {
+                    subtaskRemoved: {
+                        removeType: 'ARCHIVED',
+                        removeInfo: {
+                            subtaskId: id
+                        },
+                    },
+                })
+            } catch (e) {
+                console.log(e)
+            }
+            return archivedSubtask
+        },
+
         async archiveSubtaskById(root, {
             id, columnId, boardId, eventId,
         }) {
