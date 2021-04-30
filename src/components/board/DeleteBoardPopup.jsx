@@ -24,9 +24,9 @@ export default function DeleteBoardPopup(props) {
   };
 
   let message;
-  if (props.board.count == null) {
+  if (props.board.ticketCount == null) {
     message = "This board has 0 tickets.";
-  } else if (props.board.count === 1) {
+  } else if (props.board.ticketCount === 1) {
     message = "This board has 1 ticket.";
   } else {
     message = `There are ${props.board.ticketCount} tickets in this board.`;
