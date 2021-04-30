@@ -9,12 +9,14 @@ import { TICKETORDER } from '../../graphql/fragments'
 import AlertBox from '../AlertBox'
 import { boardPageStyles } from '../../styles/styles'
 
+
 const DropdownColumn = ({ columnId, boardId }) => {
     const [anchorEl, setAnchorEl] = useState(null)
     const [action, setAction] = useState(null)
     const [alertDialogStatus, setAlertDialogStatus] = useState(false)
     const classes = boardPageStyles()
     const client = useApolloClient()
+    
 
     const { ticketOrder } = client.readFragment({
         id: `Column:${columnId}`,
@@ -34,6 +36,9 @@ const DropdownColumn = ({ columnId, boardId }) => {
         setAnchorEl(null)
     }
 
+    
+
+//<MenuItem onClick={() => <FilterDialog openDialog={setPopupIsOpen} closeDialog={closePopup}/>}>
     return (
         <Grid item>
             <Button

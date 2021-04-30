@@ -10,6 +10,7 @@ import DropdownColumn from './DropdownColumn'
 import AddTaskDialog from '../task/AddTaskDialog'
 import RenameColumn from './RenameColumn'
 
+
 const Column = ({ column, index }) => {
     const classes = boardPageStyles()
     const {
@@ -17,6 +18,7 @@ const Column = ({ column, index }) => {
     } = column
     const [dialogStatus, setDialogStatus] = useState(false)
     const toggleDialog = () => setDialogStatus(!dialogStatus)
+        
 
     return (
         <Draggable draggableId={column.id} index={index}>
@@ -36,6 +38,7 @@ const Column = ({ column, index }) => {
                         </Grid>
                         <Grid item container direction='row' alignItems='center' justify='flex-end' classes={{ root: classes.columnButtonGrid }}>
                             <Grid item >
+                                
                                 <Button classes={{ root: classes.columnButton }}>
                                     <AddIcon classes={{ root: classes.columnButtonIcons }} onClick={toggleDialog} />
                                 </Button>
@@ -62,6 +65,8 @@ const Column = ({ column, index }) => {
                                     ticketOrder={ticketOrder}
                                     columnId={column.id}
                                     boardId={board.id}
+                                    epic={window.localStorage.getItem("epic")}
+                                    userStorage={window.localStorage.getItem("user")}
                                 />
                                 {provided.placeholder}
                             </Grid>
