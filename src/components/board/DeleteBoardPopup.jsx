@@ -4,11 +4,11 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import useDeleteBoard from "../../graphql/board/hooks/useDeleteBoard";
+import useArchiveBoard from "../../graphql/board/hooks/useArchiveBoard";
 
 export default function DeleteUserPopup(props) {
   const { open, handleClose, board } = props;
-  const [deleteBoard] = useDeleteBoard();
+  const [deleteBoard] = useArchiveBoard();
 
   const handleSave = async () => {
     await deleteBoard({
@@ -25,7 +25,7 @@ export default function DeleteUserPopup(props) {
   let message;
   if (props.board.count == null) {
     message = "This board has 0 tickets.";
-  } else if (props.board.count == 1) {
+  } else if (props.board.count === 1) {
     message = "This board has 1 ticket.";
   } else {
     message = `There are ${props.board.ticketCount} tickets in this board.`;
