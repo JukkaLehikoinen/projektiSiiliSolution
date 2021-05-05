@@ -5,7 +5,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useArchiveBoard from "../../graphql/board/hooks/useArchiveBoard";
-import { removeBoardFromCache } from '../../cacheService/cacheUpdates'
+import { removeBoardFromCache } from '../../cacheService/cacheUpdates';
 
 export default function DeleteBoardPopup(props) {
   const { open, handleClose, board } = props;
