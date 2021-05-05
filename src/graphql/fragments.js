@@ -10,6 +10,13 @@ export const PROJECTS_BOARDS = gql`
     }
 `
 
+export const PROJECTS = gql`
+    fragment projects on Project{
+        id  
+    }
+`
+
+
 export const TICKETORDER_AND_TASKS = gql`
     fragment ticketOrderAndTasks on Column {
         ticketOrder

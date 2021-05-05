@@ -13,6 +13,36 @@ type Query {
 
 
 type Mutation {
-     addProject(name: String!): Project!
-     archiveProjectFromProjectDeletion(id: ID!): ID
+     addProject(name: String!, eventId: ID!): Project!
+     archiveProjectById(id: ID!, eventId: ID!): ID
 }
+
+type Subscription {
+    projectRemoved(id: ID!, eventId: ID!): ProjectRemovedPayload!
+    projectAdded(projectId: ID!, eventId: ID!): ProjectAddedPayload!
+}
+
+type ProjectRemovedPayload {
+  removeType: RemoveType!
+  removeInfo: RemoveInfo!
+}
+
+type ProjectAddedPayload {
+  mutationType: MutationType!
+  project: Project!
+}
+
+enum MutationType {
+  CREATED
+}
+
+type RemoveInfo {
+  id: ID!
+}
+
+enum RemoveType {
+  DELETED
+  ARCHIVED
+}
+
+

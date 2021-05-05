@@ -18,6 +18,9 @@ import useDeleteColumn from '../../graphql/column/hooks/useArchiveColumnFromProj
 import useDeleteTask from '../../graphql/task/hooks/useArchiveTaskFromProjectDeletion'
 import useDeleteSubTask from '../../graphql/subtask/hooks/useArchiveSubtaskFromProjectDeletion'
 import useDeleteUser from '../../graphql/user/hooks/useDeleteUser'
+import useArchiveProject from "../../graphql/project/hooks/useArchiveProject";
+import { removeProjectFromCache } from '../../cacheService/cacheUpdates'
+
 
 export default function DeleteProjectPopup(props) {
   const { open, handleClose, project } = props
@@ -28,7 +31,8 @@ export default function DeleteProjectPopup(props) {
   const tasksQuery = useAllTasks()
   const subTasksQuery = useAllSubtasks()
   const userQuery = useAllUsers()
-  const [deleteProject] = useDeleteProject(project.id)
+  const [deleteProject] = useArchiveProject();
+  // const [deleteProject] = useDeleteProject(project.id)
   const [deleteBoard] = useDeleteBoard()
   const [deleteColumns] = useDeleteColumn()
   const [deleteTask] = useDeleteTask()
@@ -195,10 +199,12 @@ export default function DeleteProjectPopup(props) {
     }
     deleteProject({
       variables: {
-        id: project.id
+        id: project.id,
+        eventId: window.localStorage.getItem("eventId")
       }
     })
-    window.location.reload(false);
+    //window.location.reload(false);
+    removeProjectFromCache(project.id, window.localStorage.getItem("eventId"))
     handleClose()
 
   }

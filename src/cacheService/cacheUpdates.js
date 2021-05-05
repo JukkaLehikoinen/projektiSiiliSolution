@@ -13,7 +13,43 @@ import {
     SWIMLANE_ORDER_NUMBER,
     PROJECTS_BOARDS,
     COLUMNORDER_AND_COLUMNS,
+    PROJECTS
 } from '../graphql/fragments'
+
+export const getAllProjects = (addedBoard, projectId) => {
+    const projectIdForCache = `Project:${projectId}`
+    const { projects } = client.readFragment({
+        id: projectIdForCache,
+        fragment: PROJECTS,
+    })
+    const newProjects = projects.concat(addedBoard)
+    client.writeFragment({
+        id: projectIdForCache,
+        fragment: PROJECTS,
+        data: {
+            projects: newProjects,
+        },
+    })
+}
+
+
+export const removeProjectFromCache = (projectId) => {
+    const projectIdForCache = `Project:${projectId}`;
+    const { projects } = client.readFragment({
+      id: projectIdForCache,
+      fragment: PROJECTS,
+    });
+    const newProjects = projects.filter((project) => project.id !== projectId);
+    client.writeFragment({
+      id: projectIdForCache,
+      fragment: PROJECTS,
+      data: {
+        projects: newProjects,
+      },
+    });
+    client.cache.evict({ id: projectIdForCache });
+  };
+  
 
 export const addNewColumn = (addedColumn) => {
     const boardIdForCache = `Board:${addedColumn.board.id}`

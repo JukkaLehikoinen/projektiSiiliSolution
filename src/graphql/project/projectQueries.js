@@ -19,6 +19,26 @@ export const ARCHIVE_PROJECT_FROM_PROJECT_DELETION = gql`
     }
 `
 
+export const PROJECT_REMOVED = gql`
+  subscription projectRemoved($id: ID!, $eventId: ID!) {
+    boardRemoved(id: $id, eventId: $eventId) {
+      removeType
+      removeInfo {
+        id
+      }
+    }
+  }
+`;
+
+export const ARCHIVE_PROJECT = gql`
+  mutation archiveProject($id: ID!, $eventId: ID!) {
+    archiveProjectById(id: $id, eventId: $eventId)
+  }
+`;
+
+
+
+
 export const BOARDS_BY_PROJECT_ID = gql`
     query boardsByProjectId($projectId: ID!) {
         boardsByProjectId(id: $projectId) {
@@ -45,3 +65,17 @@ export const ADD_PROJECT = gql`
         }
     }
 `
+
+export const PROJECT_ADDED = gql`
+  subscription projectAdded($projectId: ID!, $eventId: ID!) {
+    projectAdded(projectId: $projectId, eventId: $eventId) {
+      mutationType
+      project {
+        id
+        name
+        orderNumber
+      }
+    }
+  }
+`;
+

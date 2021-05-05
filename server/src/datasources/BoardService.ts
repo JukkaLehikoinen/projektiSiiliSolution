@@ -20,7 +20,7 @@ export class BoardService {
 
 
 
-    async archiveProjectFromProjectDeletion(id: any) {
+    async archiveProjectById(id: any) {
         let deleteProject;
         try {
             deleteProject = await Project.findByPk(id)
