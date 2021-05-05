@@ -19,7 +19,7 @@ export default function DeleteBoardPopup(props) {
         projectId: window.localStorage.getItem("projectId"),
       },
     });
-    removeBoardFromCache(board.id, window.localStorage.getItem("projectId"))
+    removeBoardFromCache(board.id , window.localStorage.getItem("projectId"))
     handleClose();
   };
 
