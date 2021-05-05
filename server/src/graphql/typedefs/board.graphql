@@ -42,7 +42,7 @@ type Mutation {
     eventId: ID!
   ): ID
   archiveBoardById(boardId: ID!, projectId: ID!, eventId: ID!): ID
-  restoreBoardById(id: ID!): Board
+  restoreBoardById(boardId: ID!): Board
 }
 
 type Subscription {
@@ -81,4 +81,3 @@ enum RemoveType {
   DELETED
   ARCHIVED
 }
-
