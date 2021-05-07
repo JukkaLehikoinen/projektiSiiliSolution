@@ -15,6 +15,7 @@ import {
   PROJECTS_PROJECTS,
   COLUMNORDER_AND_COLUMNS,
 } from "../graphql/fragments";
+import { ALL_PROJECTS } from "../graphql/project/projectQueries";
 
 export const addNewColumn = (addedColumn) => {
   const boardIdForCache = `Board:${addedColumn.board.id}`;
@@ -107,12 +108,11 @@ export const removeBoardFromCache = (boardId, projectId) => {
 export const removeProjectFromCache = (projectId) => {
   const projectToBeDeleted = `Project:${projectId}`;
   const projectIdForCache = `Project:${projectId}`;
-  const { projects } = client.readFragment({
-    id: projectIdForCache,
-    fragment: PROJECTS_PROJECTS,
-  });
-  console.log(projects)
-  const newprojects = projects.filter((project) => project.id !== projectId);
+  
+  const reQuery = client.readQuery({
+    query: ALL_PROJECTS,
+  })
+  const newprojects = reQuery.allProjects.filter((project) => project.id !== projectId);
   client.writeFragment({
     id: projectIdForCache,
     fragment: PROJECTS_PROJECTS,
