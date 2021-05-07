@@ -138,7 +138,7 @@ export const BOARD_REMOVED = gql`
 
 export const ARCHIVE_BOARD = gql`
   mutation archiveBoard($boardId: ID!, $projectId: ID!, $eventId: ID!) {
-    archiveBoardById(id: $boardId, projectId: $projectId, eventId: $eventId)
+    archiveBoardById(boardId: $boardId, projectId: $projectId, eventId: $eventId)
   }
 `;
 

@@ -82,22 +82,22 @@ const schema = {
       return addedBoard;
     },
 
-    async archiveBoardById(root, { id, projectId, eventId }) {
+    async archiveBoardById(root, { boardId, projectId, eventId }) {
       try {
-        await dataSources.boardService.archiveBoardById(id);
+        await dataSources.boardService.archiveBoardById(boardId);
         await pubsub.publish(BOARD_REMOVED, {
           projectId,
           eventId,
           boardRemoved: {
             removeType: "ARCHIVED",
-            removeInfo: { boardId: id, projectId },
+            removeInfo: { boardId: boardId, projectId },
           },
         });
       } catch (e) {
         console.log(e);
       }
 
-      return id;
+      return boardId;
     },
     restoreBoardById(root, { id }) {
       return dataSources.boardService.restoreBoardById(id);
