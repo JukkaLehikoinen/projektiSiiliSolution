@@ -28,3 +28,4 @@ const useProjectSubscriptions = (id, eventId) => {
   });
 };
 export default useProjectSubscriptions;
+
