@@ -29,10 +29,6 @@ export const up: Migration = async ({ context: sequelize }) => {
       allowNull: false,
       type: DataTypes.DATE
     },
-    deletedAt: {
-      allowNull: true,
-      type: DataTypes.STRING
-    },
   });
 };
 

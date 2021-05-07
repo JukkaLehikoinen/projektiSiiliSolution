@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Grid, Button } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { projectPageStyles } from '../styles/styles'
@@ -7,6 +7,7 @@ import useAllProjects from '../graphql/project/hooks/useAllProjects'
 import NewProjectForm from '../components/project/NewProjectForm'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ProjectForm from "../components/project/ProjectForm";
+// import useLandingSubs from '../graphql/subscriptions/useLandingSubs'
 
 const LandingPage = () => {
     const queryResult = useAllProjects()
@@ -21,8 +22,9 @@ const LandingPage = () => {
     const handleClickOpenProjectDialog = () => {
         setProjectDialogOpen(true);
       };
-
+     // useLandingSubs(queryResult);        
     if (queryResult.loading) {
+        
 
         return <div
             style={{
@@ -68,6 +70,7 @@ const LandingPage = () => {
     }
 
     const projectsInOrder = queryResult.data.allProjects.slice().sort((a, b) => a.orderNumber - b.orderNumber)
+    
 
     return (
         <Grid

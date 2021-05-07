@@ -10,6 +10,7 @@ import {
 import useAllProjects from '../../graphql/project/hooks/useAllProjects'
 import Delete from "@material-ui/icons/DeleteOutlined";
 import DeleteProjectPopup from './DeleteProjectPopup'
+import useProjectSubscriptions from '../../graphql/subscriptions/useLandingSubscriptions'
 
 const NewBoardForm = ({ setOpen, open }) => {
   const [project, setProject] = useState()
@@ -17,6 +18,8 @@ const NewBoardForm = ({ setOpen, open }) => {
   const [popupIsOpen, setPopupIsOpen] = useState(false)
   const [popp, setPopp] = useState(false)
   const closePopup = () => setPopupIsOpen(false)
+
+  useProjectSubscriptions(window.localStorage.getItem('projectId'), window.localStorage.getItem('eventId'))
 
   if (allProjects.loading) return null;
 

@@ -1,28 +1,5 @@
 import { gql } from '@apollo/client'
 
-export const ALL_TASKS = gql`
-    query {
-        allTasks {
-            id
-            title
-            size
-            owner{
-                id
-            }
-            members{
-                id
-            }
-            description
-            board {
-                id
-            }
-            column {
-                id
-            }
-        }
-    }
-`
-
 export const TASK_BY_ID = gql`
     query taskById($taskId: ID!) {
         taskById(id: $taskId) {
@@ -108,12 +85,6 @@ export const EDIT_TASK = gql`
         }
     }
 `
-export const ARCHIVE_TASK_FROM_PROJECT_DELETION = gql`
-    mutation archiveTaskFromProjectDeletion($taskId: ID!) {
-        archiveTaskFromProjectDeletion(id: $taskId)
-    }
-`
-
 export const ARCHIVE_TASK = gql`
     mutation archiveTask($taskId: ID!, $columnId: ID!, $boardId: ID!, $eventId: ID!) {
         archiveTaskById(id: $taskId, columnId: $columnId, boardId: $boardId, eventId: $eventId)

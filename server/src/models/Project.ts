@@ -1,10 +1,11 @@
-import {BuildOptions, Model, STRING, INTEGER, UUID} from 'sequelize';
+import {BuildOptions, Model, STRING, INTEGER, UUID, DATE} from 'sequelize';
 import { dbConfig as sequelize } from "../database";
 
 class Project extends Model {
   public id!: string;
   public name!: string;
   public orderNumber!: number;
+  public deletedAt!: Date;
     static associate(models: any) {
         Project.hasMany(models.Board, {
             foreignKey: 'boardId'
@@ -23,19 +24,18 @@ Project.init(
         type: STRING,
         allowNull: false
       },
-      deletedAt: STRING,
       orderNumber: {
         type: INTEGER,
         allowNull: false
-      }
+      },
+      deletedAt: DATE,
     },
     {
       sequelize,
       modelName: 'Project',
       timestamps: true,
       paranoid: false,
-    },
-    
+    }
 )
 
 

@@ -19,7 +19,6 @@ type Task {
 type Query {
   taskById(id: ID!): Task!
   allColors: [Color!]!
-  allTasks: [Task!]!
 }
 
 type Mutation {
@@ -29,7 +28,6 @@ type Mutation {
   archiveTaskById(id: ID!, columnId: ID!, boardId:ID!, eventId: ID!): ID
   restoreTaskById(id: ID!): Task
   addMemberForTask(id: ID!, userId: ID!): Task
-  archiveTaskFromProjectDeletion(id: ID!): ID
 }
 
 type Subscription {

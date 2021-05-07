@@ -1,12 +1,10 @@
 import { useMutation } from '@apollo/client'
 import { ADD_PROJECT } from '../projectQueries'
-import { getAllProjects } from '../../../cacheService/cacheUpdates'
+import { ALL_PROJECTS } from '../projectQueries'
 
 const useAddProject = () => {
     const retVal = useMutation(ADD_PROJECT, {
-        update: async (cache, response) => {
-            getAllProjects(response.data.addProject)
-        }
+        refetchQueries: [{ query: ALL_PROJECTS }],
     })
     return retVal
 }

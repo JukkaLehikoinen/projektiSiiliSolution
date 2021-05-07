@@ -1,4 +1,4 @@
-import { BuildOptions, Model, STRING, INTEGER, UUID } from 'sequelize';
+import { BuildOptions, Model, STRING, INTEGER, UUID, DATE } from "sequelize";
 import { dbConfig as sequelize } from "../database";
 import Project from "./Project";
 import User from "./User";
@@ -11,70 +11,74 @@ class Board extends Model {
   public orderNumber!: number;
   public projectId!: string;
   public creatorId!: string;
+  public deletedAt!: Date;
   static associate(models: any) {
     Board.hasMany(models.Column, {
-      foreignKey: 'boardId',
-    })
+      foreignKey: "boardId",
+    });
     // Board has one creator user
     Board.belongsTo(models.User, {
-      foreignKey: 'creatorId',
-    })
+      foreignKey: "creatorId",
+    });
     Board.hasMany(models.Story, {
-      foreignKey: 'boardId',
-    })
+      foreignKey: "boardId",
+    });
     Board.hasMany(models.Task, {
-      foreignKey: 'boardId',
-    })
+      foreignKey: "boardId",
+    });
     Board.belongsTo(models.Project, {
-      foreignKey: 'projectId'
-    })
+      foreignKey: "projectId",
+    });
   }
 }
 
-Board.init({
-  id: {
-    type: UUID,
-    allowNull: false,
-    primaryKey: true,
+Board.init(
+  {
+    id: {
+      type: UUID,
+      allowNull: false,
+      primaryKey: true,
+    },
+    prettyId: {
+      type: STRING,
+      allowNull: false,
+    },
+    ticketCount: INTEGER,
+    name: {
+      type: STRING,
+      allowNull: false,
+    },
+    orderNumber: {
+      type: INTEGER,
+      allowNull: false,
+    },
+    projectId: {
+      type: UUID,
+      references: {
+        model: Project,
+        key: "id",
+      },
+    },
+    creatorId: {
+      type: UUID,
+      references: {
+        model: User,
+        key: "id",
+      },
+    },
+    deletedAt: DATE,
   },
-  prettyId: {
-    type: STRING,
-    allowNull: false,
-  },
-  ticketCount: INTEGER,
-  deletedAt: STRING,
-  name: {
-    type: STRING,
-    allowNull: false,
-  },
-  orderNumber: {
-    type: INTEGER,
-    allowNull: false,
-  },
-  projectId: {
-    type: UUID,
-    references: {
-      model: Project,
-      key: 'id',
-    }
-  },
-  creatorId: {
-    type: UUID,
-    references: {
-      model: User,
-      key: 'id',
-    }
+  {
+    sequelize,
+    modelName: "Board",
   }
-}, {
-  sequelize,
-  modelName: 'Board',
-});
+);
 
 export type BoardModelStatic = typeof Model & {
-  new (values?: Record<string, unknown>, options?: BuildOptions): Board
-}
+  new (values?: Record<string, unknown>, options?: BuildOptions): Board;
+};
 
-export default Board as BoardModelStatic
+export default Board as BoardModelStatic;
 
 /*
 module.exports = (sequelize, DataTypes) => {

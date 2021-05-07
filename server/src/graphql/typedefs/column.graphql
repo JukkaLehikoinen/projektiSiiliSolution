@@ -22,13 +22,10 @@ type Column {
   tasks: [Task!]!
   subtasks: [Subtask!]!
   ticketOrder: [TicketOrderObject!]!
-  boardId: String
-  deletedAt: String
 }
 
 type Query {
   columnById(id: ID!): Column!
-  allColumns: [Column!]
 }
 
 type Mutation {
@@ -38,7 +35,6 @@ type Mutation {
   moveTicketInColumn(newOrder: [TicketOrderInput!]!, columnId: ID!, boardId: ID!): Column
   moveTicketFromColumn(type: String!, ticketId: ID!, sourceColumnId: ID!, destColumnId: ID!, sourceTicketOrder: [TicketOrderInput!]!, destTicketOrder: [TicketOrderInput!]!, eventId: ID!): [Column!]
   moveColumn(boardId: ID!, newColumnOrder: [ID!]!): ID!
-  archiveColumnFromProjectDeletion(id: ID!): ID
 }
 
 type Subscription {

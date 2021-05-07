@@ -112,12 +112,33 @@ export const BOARD_ADDED = gql`
     }
   }
 `;
+
 export const DELETE_BOARD = gql`
-  mutation deleteBoard($id: ID!, $name: String!) {
-    deleteBoard(id: $id, name: $name) {
-      id
-      name
+  mutation deleteBoard(
+    $id: ID!
+    $name: String!
+    $projectId: ID!
+    $eventId: ID!
+  ) {
+    deleteBoard(id: $id, name: $name, projectId: $projectId, eventId: $eventId)
+  }
+`;
+
+export const BOARD_REMOVED = gql`
+  subscription boardRemoved($projectId: ID!, $eventId: ID!) {
+    boardRemoved(projectId: $projectId, eventId: $eventId) {
+      removeType
+      removeInfo {
+        boardId
+        projectId
+      }
     }
+  }
+`;
+
+export const ARCHIVE_BOARD = gql`
+  mutation archiveBoard($boardId: ID!, $projectId: ID!, $eventId: ID!) {
+    archiveBoardById(boardId: $boardId, projectId: $projectId, eventId: $eventId)
   }
 `;
 
@@ -129,9 +150,3 @@ export const ALL_BOARDS = gql`
     }
   }
 `;
-
-export const ARCHIVE_BOARD_FROM_PROJECT_DELETION = gql`
-    mutation archiveBoardFromProjectDeletion($id: ID!) {
-      archiveBoardFromProjectDeletion(id: $id)
-    }
-`
