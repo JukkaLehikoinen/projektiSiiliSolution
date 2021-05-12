@@ -3,104 +3,126 @@ import { Grid } from '@material-ui/core'
 import Task from './task/Task'
 import Subtask from './subtask/Subtask'
 
-    const TicketList = ({
-        ticketOrder, tasks, subtasks, columnId, boardId, epic, userStorage
-    }) => {
-        const ticketsInOrder = ticketOrder.map((obj) => {
-            let foundTicket
-            if (obj.type === 'task') {
-                foundTicket = tasks.find((task) => task.id === obj.ticketId)
-                foundTicket = { ...foundTicket, type: 'task' }
-            } else if (obj.type === 'subtask') {
-                foundTicket = subtasks.find((subtask) => subtask.id === obj.ticketId)
-                foundTicket = { ...foundTicket, type: 'subtask' }
-            }
-            return foundTicket
-        })        
+// const TicketList = ({
+//     ticketOrder, tasks, subtasks, columnId, boardId,
+// }) => {
+//     const ticketsInOrder = ticketOrder.map((obj) => {
+//         let foundTicket
+//         if (obj.type === 'task') {
+//             foundTicket = tasks.find((task) => task.id === obj.ticketId)
+//             foundTicket = { ...foundTicket, type: 'task' }
+//         } else if (obj.type === 'subtask') {
+//             foundTicket = subtasks.find((subtask) => subtask.id === obj.ticketId)
+//             foundTicket = { ...foundTicket, type: 'subtask' }
+//         }
+//         return foundTicket
+//     })
 
+const TicketList = ({
+    ticketOrder, tasks, subtasks, columnId, boardId, user, color
+}) => {
+    const ticketsInOrder = ticketOrder.map((obj) => {
+        let foundTicket
+        if (obj.type === 'task') {
+            foundTicket = tasks.find((task) => task.id === obj.ticketId)
+            foundTicket = { ...foundTicket, type: 'task' }
+        } else if (obj.type === 'subtask') {
+            foundTicket = subtasks.find((subtask) => subtask.id === obj.ticketId)
+            foundTicket = { ...foundTicket, type: 'subtask' }
+        }
+        return foundTicket
+    })
 
-        let filteredTasks = [];
-        if (userStorage.length > 0) {
-            const selectedUsers = JSON.parse(userStorage)
-            selectedUsers.map((user) => {
-            ticketsInOrder.map((ticket) => {
-                if (ticket.members.length > 0) {
-                    ticket.members.map((members) =>{
-                        if (members.id === user) {
-                                 let same = false;                   
-                            filteredTasks.map((task) => {
+    let filteredTasks = ticketsInOrder;
+    let all = {}  //{users: userStorage, colors:epic}
+    const userzz = () => {
+
+        if (user !== null && user.length > 0) {
+            let filterdUsers = []
+            all = { ...all, users: user }
+            filteredTasks.map((ticket) => {
+                all.users.map((user) => {
+                    if (ticket.owner !== null) {
+                        if (user.value === ticket.owner.id && ticket.column.id === columnId) {
+                            let same = false;
+                            filterdUsers.map((task) => {
                                 if (task.id === ticket.id) {
                                     same = true
                                 }
                             })
                             if (!same) {
-                                filteredTasks.push(ticket)  
-                            } 
-                        }
-                    })
-                }
-                if (ticket.owner !== null) {
-                    if (ticket.owner.id === user) {
-                        let same = false;                   
-                        filteredTasks.map((task) => {
-                            if (task.id === ticket.id) {
-                                same = true
+                                filterdUsers.push(ticket)
                             }
-                        })
-                        if (!same) {
-                            filteredTasks.push(ticket)  
-                        } 
+                            console.log(filterdUsers)
+                        }
                     }
-                }
-            })
-        })
-    }
-
-            if (epic.length > 0) {
-            const epicColors = JSON.parse(epic)
-            epicColors.map((epic) => {
-            ticketsInOrder.map((ticket) => {
-
-                if (ticket.colors.length > 1) {
-                    ticket.colors.map((color) =>{
-                        if (color.id === epic) {
-                                 let same = false;                   
-                            filteredTasks.map((task) => {
-                                if (task.id === ticket.id) {
-                                    same = true
+                    if (ticket.members !== null) {
+                        ticket.members.map((member) => {
+                            if (user.value === member.id) {
+                                let same = false;
+                                filterdUsers.map((task) => {
+                                    if (task.id === ticket.id) {
+                                        same = true
+                                    }
+                                })
+                                if (!same) {
+                                    filterdUsers.push(ticket)
                                 }
-                            })
-                            if (!same) {
-                                filteredTasks.push(ticket)  
-                            } 
-                        }
-                    })
-                } else {
-                    if (ticket.colors[0].id === epic) {
-                        let same = false;                   
-                        filteredTasks.map((task) => {
+                            }
+                        })
+                    }
+                })
+            })
+            filteredTasks = filterdUsers
+        }
+    }
+
+    userzz()
+
+    const colors = () => {
+        if (color !== null && color.length > 0) {
+            console.log(color)
+            let epix = [];
+            all = { ...all, colors: color }
+            filteredTasks.map((ticket) => {
+                all.colors.map((epica) => {
+                    if (ticket.colors.length === 1 && epica.value === ticket.colors[0].id) {
+                        let same = false;
+                        epix.map((task) => {
                             if (task.id === ticket.id) {
                                 same = true
                             }
                         })
                         if (!same) {
-                            filteredTasks.push(ticket)  
-                        } 
+                            epix.push(ticket)
+                        }
+                    } else {
+                        ticket.colors.map((colors) => {
+                            if (colors.id === epica.value) {
+                                let same = false;
+                                epix.map((task) => {
+                                    if (task.id === ticket.id) {
+                                        same = true
+                                    }
+                                })
+                                if (!same) {
+                                    epix.push(ticket)
+                                }
+                            }
+                        })
                     }
-                }
+                })
             })
-        })
+            filteredTasks = epix;
+        }
     }
-     
-    if (filteredTasks.length < 1) {
-        filteredTasks = ticketsInOrder
-    }
+    colors()
 
-        
+
     return (
         <Grid container direction="column" alignItems='center' spacing={2}>
             {filteredTasks.map((ticket, index) => {
-                
+
                 let component
                 if (ticket.type === 'task') {
                     component = (
