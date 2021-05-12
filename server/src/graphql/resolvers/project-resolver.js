@@ -1,4 +1,8 @@
-import { dataSources } from '../../datasources'
+import { pubsub } from "../subs";
+import { dataSources } from "../../datasources";
+import { withFilter } from "graphql-subscriptions";
+
+const PROJECT_REMOVED = "PROJECT_REMOVED";
 
 const schema = {
     Query: {
@@ -12,10 +16,38 @@ const schema = {
             return dataSources.boardService.getProjects().catch(e => console.log(e))
         }
     },
+
+    Subscription: {
+        projectRemoved: {
+          subscribe: withFilter(
+            () => pubsub.asyncIterator(PROJECT_REMOVED),
+            (payload, args) =>
+              args.projectId === payload.projectId &&
+              args.eventId !== payload.eventId
+          ),
+        },
+      },
+    
     Mutation: {
         async addProject(root, { name }) {
             return dataSources.boardService.addProject(name)
         },
+        async archiveProjectById(root, { projectId, eventId }) {
+            try {
+              await dataSources.boardService.archiveProjectById(projectId);
+              await pubsub.publish(PROJECT_REMOVED, {
+                eventId,
+                projectRemoved: {
+                  removeType: "ARCHIVED",
+                  removeInfo: { projectId: projectId },
+                },
+              });
+            } catch (e) {
+              console.log(e);
+            }
+      
+            return projectId;
+          },
     },
     Project: {
         boards(root) {

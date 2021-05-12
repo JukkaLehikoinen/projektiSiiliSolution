@@ -65,8 +65,6 @@ const Column = ({ column, index, color, user, searchTerm }) => {
                                     ticketOrder={ticketOrder}
                                     columnId={column.id}
                                     boardId={board.id}
-                                    epic={window.localStorage.getItem("epic")}
-                                    userStorage={window.localStorage.getItem("user")}
                                     color={color}
                                     user={user}
                                     column = {column}

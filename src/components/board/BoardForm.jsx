@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -9,7 +9,6 @@ import {
 } from "@material-ui/core";
 import allBoardsByProject from "../../graphql/project/hooks/useBoardsByProjectId";
 import Delete from "@material-ui/icons/DeleteOutlined";
-import { boardPageStyles } from "../../styles/styles";
 import DeleteBoardPopup from "./DeleteBoardPopup";
 
 const NewBoardForm = ({ setOpen, open }) => {

@@ -19,7 +19,7 @@ import Subtask from './subtask/Subtask'
 //     })
 
 const TicketList = ({
-    ticketOrder, tasks, subtasks, columnId, boardId, epic, userStorage, column, searchTerm
+    ticketOrder, tasks, subtasks, columnId, boardId, user, color, searchTerm
 }) => {
     const ticketsInOrder = ticketOrder.map((obj) => {
         let foundTicket
@@ -32,81 +32,93 @@ const TicketList = ({
         }
         return foundTicket
     })
-    console.log("column.tasks.title",column.tasks[0].title)
+    //console.log("column.tasks.title",column.tasks[0].title)
     let filteredTasks = ticketsInOrder;
     let all = {}  //{users: userStorage, colors:epic}
-    
     const userzz = () => {
-       // console.log(userStorage)
-        let filterdUsers = []
-        userStorage = JSON.parse(userStorage)
-        all = { ...all, users: userStorage }
-        filteredTasks.map((ticket) => {
-            all.users.map((user) => {
-                
-                if (ticket.owner !== null) {
-                    if (user === ticket.owner.id && ticket.column.id === columnId) {
-                        let same = false;                   
-                        filterdUsers.map((task) => {
+
+        if (user !== null && user.length > 0) {
+            let filterdUsers = []
+            all = { ...all, users: user }
+            filteredTasks.map((ticket) => {
+                all.users.map((user) => {
+                    if (ticket.owner !== null) {
+                        if (user.value === ticket.owner.id && ticket.column.id === columnId) {
+                            let same = false;
+                            filterdUsers.map((task) => {
+                                if (task.id === ticket.id) {
+                                    same = true
+                                }
+                            })
+                            if (!same) {
+                                filterdUsers.push(ticket)
+                            }
+                            console.log(filterdUsers)
+                        }
+                    }
+                    if (ticket.members !== null) {
+                        ticket.members.map((member) => {
+                            if (user.value === member.id) {
+                                let same = false;
+                                filterdUsers.map((task) => {
+                                    if (task.id === ticket.id) {
+                                        same = true
+                                    }
+                                })
+                                if (!same) {
+                                    filterdUsers.push(ticket)
+                                }
+                            }
+                        })
+                    }
+                })
+            })
+            filteredTasks = filterdUsers
+        }
+    }
+
+    userzz()
+
+    const colors = () => {
+        if (color !== null && color.length > 0) {
+            console.log(color)
+            let epix = [];
+            all = { ...all, colors: color }
+            filteredTasks.map((ticket) => {
+                all.colors.map((epica) => {
+                    if (ticket.colors.length === 1 && epica.value === ticket.colors[0].id) {
+                        let same = false;
+                        epix.map((task) => {
                             if (task.id === ticket.id) {
                                 same = true
                             }
                         })
                         if (!same) {
-                            filterdUsers.push(ticket)        
-                        } 
-
-                    }
-                }
-            })
-        })
-        filteredTasks = filterdUsers
-    }
-
-    if (userStorage) {
-        userzz()
-    }
-
-    const colors = () => {
-        let epix = [];
-        epic = JSON.parse(epic);
-        all = { ...all, colors: epic }
-        filteredTasks.map((ticket) => {
-            all.colors.map((epica) => {
-                if (ticket.colors.length === 1 && epica === ticket.colors[0].id) {
-                    let same = false;                   
-                    epix.map((task) => {
-                                if (task.id === ticket.id) {
-                                    same = true
-                                }
-                            })
-                            if (!same) {
-                                epix.push(ticket)  
-                            } 
-                } else {
-                    ticket.colors.map((colors) => {
-                        if (colors.id === epica) {
-                            let same = false;                   
-                            epix.map((task) => {
-                                if (task.id === ticket.id) {
-                                    same = true
-                                }
-                            })
-                            if (!same) {
-                                epix.push(ticket)  
-                            } 
-    
+                            epix.push(ticket)
                         }
-                    })
-                }
+                    } else {
+                        ticket.colors.map((colors) => {
+                            if (colors.id === epica.value) {
+                                let same = false;
+                                epix.map((task) => {
+                                    if (task.id === ticket.id) {
+                                        same = true
+                                    }
+                                })
+                                if (!same) {
+                                    epix.push(ticket)
+                                }
+                            }
+                        })
+                    }
+                })
             })
-        })
-        filteredTasks = epix;
+            filteredTasks = epix;
+        }
     }
 
-    if (epic) {
-       colors()
-    }
+    colors()
+
     console.log(searchTerm)
     //console.log(ticketsInOrder)
     // const taskNameArray = () =>{
@@ -121,6 +133,8 @@ const TicketList = ({
         
     // }
     // taskNameArray()
+    
+
 
     return (
         <Grid container direction="column" alignItems='center' spacing={2}>
