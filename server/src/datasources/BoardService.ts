@@ -1,5 +1,5 @@
 import Project from "../models/Project";
-import {v4 as uuid} from "uuid";
+import { v4 as uuid } from "uuid";
 import Board from "../models/Board";
 import Column from "../models/Column";
 import Story from "../models/Story";
@@ -7,1105 +7,1302 @@ import Task from "../models/Task";
 import Subtask from "../models/Subtask";
 import ColorTask from "../models/ColorTask";
 import Color from "../models/Color";
-import ColorBoard from "../models/ColorBoard"
+import ColorBoard from "../models/ColorBoard";
 import ColorSubtask from "../models/ColorSubtask";
 import UserStory from "../models/UserStory";
 import User from "../models/User";
 import UserTask from "../models/UserTask";
 import UserSubtask from "../models/UserSubtask";
-import {dbConfig} from "../database";
+import { dbConfig } from "../database";
 
 export class BoardService {
-    initialize() { }
+  initialize() {}
 
-    async getProjects() {
-        let projectsFromDb
-        try {
-            console.log("projectsFromDb")
-            projectsFromDb = await Project.findAll()
-            console.log(projectsFromDb)
-        } catch (e) {
-            console.error(e)
-        }
-        return projectsFromDb
+  async archiveProjectById(projectId: any) {
+    try {
+      const project = await Project.findByPk(projectId);
+      if (project) {
+        project.deletedAt = new Date();
+        await project.save();
+      }
+    } catch (e) {
+      console.log(e);
     }
+    return projectId;
+  }
 
-    async getProjectById(projectId: any) {
-        let projectFromDb
-        try {
-            console.log(projectId)
-            projectFromDb = await Project.findByPk(projectId)
-        } catch (e) {
-            console.log(e)
-        }
-        return projectFromDb
+  async getProjects() {
+    let projectsFromDb;
+    try {
+      console.log("projectsFromDb");
+      projectsFromDb = await Project.findAll({where: {deletedAt: null}});
+      console.log(projectsFromDb);
+    } catch (e) {
+      console.error(e);
     }
+    return projectsFromDb;
+  }
 
-    async getBoardsByProjectId(projectId: any) {
-        let boardsFromDb
-        console.log("projectId: ", projectId)
-
-        try {
-            boardsFromDb = await Board.findAll({
-                where: { projectId }
-            })
-        } catch (e) {
-            console.error(e)
-        }
-        return boardsFromDb
+  async getProjectById(projectId: any) {
+    let projectFromDb;
+    try {
+      console.log(projectId);
+      projectFromDb = await Project.findByPk(projectId);
+    } catch (e) {
+      console.log(e);
     }
+    return projectFromDb;
+  }
 
-    async addProject(projectName: any) {
-        let addedProject
-        try {
-            const largestOrderNumber: number = await Project.max('orderNumber')
-            addedProject = await Project.create({
-                id: uuid(),
-                name: projectName,
-                orderNumber: largestOrderNumber + 1,
-            })
-        } catch (e) {
-            console.error(e)
-        }
-        return addedProject
+  async getBoardsByProjectId(projectId: any) {
+    let boardsFromDb;
+    console.log("projectId: ", projectId);
+
+    try {
+      boardsFromDb = await Board.findAll({
+        where: { projectId, deletedAt: null },
+      });
+    } catch (e) {
+      console.error(e);
     }
+    return boardsFromDb;
+  }
 
-    async getBoardById(boardId: any) {
-        let boardFromDb
-        try {
-            boardFromDb = await Board.findByPk(boardId)
-        } catch (e) {
-            console.error(e)
-        }
-        return boardFromDb
+  async addProject(projectName: any) {
+    let addedProject;
+    try {
+      const largestOrderNumber: number = await Project.max("orderNumber");
+      addedProject = await Project.create({
+        id: uuid(),
+        name: projectName,
+        orderNumber: largestOrderNumber + 1,
+      });
+    } catch (e) {
+      console.error(e);
     }
+    return addedProject;
+  }
 
-    async getBoards() {
-        let boardFromDb
-        try {
-            boardFromDb = await Board.findAll()
-        } catch (e) {
-            console.error(e)
-        }
-        return boardFromDb
+  async getBoardById(boardId: any) {
+    let boardFromDb;
+    try {
+      boardFromDb = await Board.findByPk(boardId);
+    } catch (e) {
+      console.error(e);
     }
+    return boardFromDb;
+  }
 
-    async getColumnsByBoardId(boardId: any) {
-        let columnsByBoardIdFromDb
-        try {
-            columnsByBoardIdFromDb = await Column.findAll({ where: { boardId } })
-        } catch (e) {
-            console.error(e)
-        }
-        return columnsByBoardIdFromDb
+  async getBoards() {
+    let boardFromDb;
+    try {
+      boardFromDb = await Board.findAll();
+    } catch (e) {
+      console.error(e);
     }
+    return boardFromDb;
+  }
 
-    async getColumnBoardByColumnId(columnId: any) {
-        let boardFromDb
-        try {
-            const columnFromDb = await Column.findByPk(columnId)
-            if (columnFromDb) {
-                boardFromDb = await Board.findByPk(columnFromDb.boardId)
-            }
-        } catch (e) {
-            console.error(e)
-        }
-        return boardFromDb
+  async getColumnsByBoardId(boardId: any) {
+    let columnsByBoardIdFromDb;
+    try {
+      columnsByBoardIdFromDb = await Column.findAll({ where: { boardId } });
+    } catch (e) {
+      console.error(e);
     }
+    return columnsByBoardIdFromDb;
+  }
 
-    async getColumnById(columnId: any) {
-        let columnFromDb
-        try {
-            columnFromDb = await Column.findByPk(columnId)
-        } catch (e) {
-            console.error(e)
-        }
-        return columnFromDb
+  async getColumnBoardByColumnId(columnId: any) {
+    let boardFromDb;
+    try {
+      const columnFromDb = await Column.findByPk(columnId);
+      if (columnFromDb) {
+        boardFromDb = await Board.findByPk(columnFromDb.boardId);
+      }
+    } catch (e) {
+      console.error(e);
     }
+    return boardFromDb;
+  }
 
-    async editColumnById(columnId: any, name: any) {
-        let column
-        try {
-            column = await Column.findByPk(columnId)
-            if (column) {
-                column.name = name
-                await column.save()
-            }
-        } catch (e) {
-            console.error(e)
-        }
-        return column
+  async getColumnById(columnId: any) {
+    let columnFromDb;
+    try {
+      columnFromDb = await Column.findByPk(columnId);
+    } catch (e) {
+      console.error(e);
     }
+    return columnFromDb;
+  }
 
-    async deleteColumnById(id: any) {
-        try {
-            await Column.destroy({
-                where: { id },
-            })
-        } catch (e) {
-            console.error(e)
-        }
-        return id
+  async editColumnById(columnId: any, name: any) {
+    let column;
+    try {
+      column = await Column.findByPk(columnId);
+      if (column) {
+        column.name = name;
+        await column.save();
+      }
+    } catch (e) {
+      console.error(e);
     }
+    return column;
+  }
 
-    async getStoriesByColumnId(columnId: any) {
-        let storiesFromDb
-        try {
-            storiesFromDb = await Story.findAll({ where: { columnId, deletedAt: null } })
-        } catch (e) {
-            console.error(e)
-        }
-        return storiesFromDb
+  async deleteColumnById(id: any) {
+    try {
+      await Column.destroy({
+        where: { id },
+      });
+    } catch (e) {
+      console.error(e);
     }
+    return id;
+  }
 
-    async getTasksByColumnId(columnId: any) {
-        let tasksFromDb
-        try {
-            tasksFromDb = await Task.findAll({ where: { columnId, deletedAt: null } })
-        } catch (e) {
-            console.error(e)
-        }
-        return tasksFromDb
+  async getStoriesByColumnId(columnId: any) {
+    let storiesFromDb;
+    try {
+      storiesFromDb = await Story.findAll({
+        where: { columnId, deletedAt: null },
+      });
+    } catch (e) {
+      console.error(e);
     }
+    return storiesFromDb;
+  }
 
-    async getSubtasksByColumnId(columnId: any) {
-        let subtasksFromDb
-        try {
-            subtasksFromDb = await Subtask.findAll(
-                { where: { columnId, deletedAt: null } },
-            )
-
-            console.log('subtasksFromDb: ', subtasksFromDb)
-        } catch (e) {
-            console.error(e)
-        }
-        return subtasksFromDb
+  async getTasksByColumnId(columnId: any) {
+    let tasksFromDb;
+    try {
+      tasksFromDb = await Task.findAll({
+        where: { columnId, deletedAt: null },
+      });
+    } catch (e) {
+      console.error(e);
     }
+    return tasksFromDb;
+  }
 
-    async getStoryById(storyId: any) {
-        let storyFromDb
-        try {
-            storyFromDb = await Story.findByPk(storyId)
-        } catch (e) {
-            console.error(e)
-        }
-        return storyFromDb
+  async getSubtasksByColumnId(columnId: any) {
+    let subtasksFromDb;
+    try {
+      subtasksFromDb = await Subtask.findAll({
+        where: { columnId, deletedAt: null },
+      });
+
+      console.log("subtasksFromDb: ", subtasksFromDb);
+    } catch (e) {
+      console.error(e);
     }
+    return subtasksFromDb;
+  }
 
-    async getTaskById(taskId: any) {
-        let taskFromDb
-        try {
-            taskFromDb = await Task.findByPk(taskId)
-        } catch (e) {
-            console.error(e)
-        }
-        return taskFromDb
+  async getStoryById(storyId: any) {
+    let storyFromDb;
+    try {
+      storyFromDb = await Story.findByPk(storyId);
+    } catch (e) {
+      console.error(e);
     }
+    return storyFromDb;
+  }
 
-    async getUserById(userId: any) {
-        let userFromDb
-        try {
-            userFromDb = await User.findByPk(userId)
-        } catch (e) {
-            console.log(e)
-        }
-        return userFromDb
+  async getTaskById(taskId: any) {
+    let taskFromDb;
+    try {
+      taskFromDb = await Task.findByPk(taskId);
+    } catch (e) {
+      console.error(e);
     }
+    return taskFromDb;
+  }
 
-    async getSubtasksByTaskId(taskId: any) {
-        let subtasksFromDb
-        try {
-            subtasksFromDb = await Subtask.findAll({ where: { taskId } })
-        } catch (e) {
-            console.error(e)
-        }
-        return subtasksFromDb
+  async getUserById(userId: any) {
+    let userFromDb;
+    try {
+      userFromDb = await User.findByPk(userId);
+    } catch (e) {
+      console.log(e);
     }
+    return userFromDb;
+  }
 
-    async getColorsByTaskId(taskId: any) {
-        let rowsFromDb
-        let colors
-        try {
-            rowsFromDb = await ColorTask.findAll({ where: { taskId }, attributes: ['colorId'] })
-            const arrayOfIds = rowsFromDb.map((r) => r.colorId)
-            colors = await Promise.all(
-                arrayOfIds.map(async (id) => {
-                    const color = await Color.findByPk(id)
-                    return color
-                })
-            )
-        } catch (e) {
-            console.log(e)
-        }
-        return colors
+  async getSubtasksByTaskId(taskId: any) {
+    let subtasksFromDb;
+    try {
+      subtasksFromDb = await Subtask.findAll({ where: { taskId } });
+    } catch (e) {
+      console.error(e);
     }
+    return subtasksFromDb;
+  }
 
-    async getColorsBySubtaskId(subtaskId: any) {
-        let rowsFromDb
-        let colors
-        try {
-            rowsFromDb = await ColorSubtask.findAll({ where: { subtaskId }, attributes: ['colorId'] })
-            const arrayOfIds = rowsFromDb.map((r) => r.colorId)
-            colors = await Promise.all(
-                arrayOfIds.map(async (id) => {
-                    const color = await Color.findByPk(id)
-                    return color
-                })
-            )
-        } catch (e) {
-            console.log(e)
-        }
-        return colors
+  async getColorsByTaskId(taskId: any) {
+    let rowsFromDb;
+    let colors;
+    try {
+      rowsFromDb = await ColorTask.findAll({
+        where: { taskId },
+        attributes: ["colorId"],
+      });
+      const arrayOfIds = rowsFromDb.map((r) => r.colorId);
+      colors = await Promise.all(
+        arrayOfIds.map(async (id) => {
+          const color = await Color.findByPk(id);
+          return color;
+        })
+      );
+    } catch (e) {
+      console.log(e);
     }
+    return colors;
+  }
 
-    async getMembersByStoryId(storyId: any) {
-        let rowsFromDb
-        let members
-        try {
-            rowsFromDb = await UserStory.findAll({ where: { storyId }, attributes: ['userId'] })
-            const arrayOfIds = rowsFromDb.map((r) => r.userId)
-            members = await Promise.all(
-                arrayOfIds.map(async (id) => {
-                    const user = await User.findByPk(id)
-                    return user
-                }),
-            )
-        } catch (e) {
-            console.error(e)
-        }
-        return members
+  async getColorsBySubtaskId(subtaskId: any) {
+    let rowsFromDb;
+    let colors;
+    try {
+      rowsFromDb = await ColorSubtask.findAll({
+        where: { subtaskId },
+        attributes: ["colorId"],
+      });
+      const arrayOfIds = rowsFromDb.map((r) => r.colorId);
+      colors = await Promise.all(
+        arrayOfIds.map(async (id) => {
+          const color = await Color.findByPk(id);
+          return color;
+        })
+      );
+    } catch (e) {
+      console.log(e);
     }
+    return colors;
+  }
 
-    async getMembersByTaskId(taskId: any) {
-        let rowsFromDb
-        let members
-        try {
-            rowsFromDb = await UserTask.findAll({ where: { taskId }, attributes: ['userId'] })
-            const arrayOfIds = rowsFromDb.map((r) => r.userId)
-            members = await Promise.all(
-                arrayOfIds.map(async (id) => {
-                    const user = await User.findByPk(id)
-                    return user
-                }),
-            )
-        } catch (e) {
-            console.error(e)
-        }
-        return members
+  async getMembersByStoryId(storyId: any) {
+    let rowsFromDb;
+    let members;
+    try {
+      rowsFromDb = await UserStory.findAll({
+        where: { storyId },
+        attributes: ["userId"],
+      });
+      const arrayOfIds = rowsFromDb.map((r) => r.userId);
+      members = await Promise.all(
+        arrayOfIds.map(async (id) => {
+          const user = await User.findByPk(id);
+          return user;
+        })
+      );
+    } catch (e) {
+      console.error(e);
     }
+    return members;
+  }
 
-    async getMembersBySubtaskId(subtaskId: any) {
-        let rowsFromDb
-        let members
-        try {
-            rowsFromDb = await UserSubtask.findAll({ where: { subtaskId }, attributes: ['userId'] })
-            const arrayOfIds = rowsFromDb.map((r) => r.userId)
-            members = await Promise.all(
-                arrayOfIds.map(async (id) => {
-                    const user = await User.findByPk(id)
-                    return user
-                }),
-            )
-        } catch (e) {
-            console.error(e)
-        }
-        return members
+  async getMembersByTaskId(taskId: any) {
+    let rowsFromDb;
+    let members;
+    try {
+      rowsFromDb = await UserTask.findAll({
+        where: { taskId },
+        attributes: ["userId"],
+      });
+      const arrayOfIds = rowsFromDb.map((r) => r.userId);
+      members = await Promise.all(
+        arrayOfIds.map(async (id) => {
+          const user = await User.findByPk(id);
+          return user;
+        })
+      );
+    } catch (e) {
+      console.error(e);
     }
+    return members;
+  }
 
-    async editStoryById(storyId: any, title: any, size: any, ownerId: any, oldMemberIds: any, newMemberIds: any, description: any) {
-        // Logic for figuring out who was deleted and who was added as a new member for the story
-        const removedMemberIds = oldMemberIds.filter((id: any) => !newMemberIds.includes(id))
-        const addedMembers = newMemberIds.filter((id: any) => !oldMemberIds.includes(id))
-        let story: any
-        try {
-            story = await Story.findByPk(storyId)
-            story.title = title
-            story.size = size
-            story.ownerId = ownerId
-            story.description = description
-            await story.save()
-            // Updating userstories junction table
-            await Promise.all(addedMembers.map(async (userId: any) => {
-                await this.addMemberForStory(story.id, userId)
-            }))
-            await Promise.all(removedMemberIds.map(async (userId: any) => {
-                await UserStory.destroy({
-                    where: {
-                        userId,
-                        storyId: story.id,
-                    },
-                })
-            }))
-        } catch (e) {
-            console.error(e)
-        }
-        return story
+  async getMembersBySubtaskId(subtaskId: any) {
+    let rowsFromDb;
+    let members;
+    try {
+      rowsFromDb = await UserSubtask.findAll({
+        where: { subtaskId },
+        attributes: ["userId"],
+      });
+      const arrayOfIds = rowsFromDb.map((r) => r.userId);
+      members = await Promise.all(
+        arrayOfIds.map(async (id) => {
+          const user = await User.findByPk(id);
+          return user;
+        })
+      );
+    } catch (e) {
+      console.error(e);
     }
+    return members;
+  }
 
-    async editTaskById(taskId: any, title: any, size: any, ownerId: any, oldMemberIds: any, newMemberIds: any, oldColorIds: any, newColorIds: any, description: any) {
-        // Logic for figuring out who was deleted and who was added as a new member for the task
-        const removedMemberIds = oldMemberIds.filter((id: any) => !newMemberIds.includes(id))
-        const addedMembers = newMemberIds.filter((id: any) => !oldMemberIds.includes(id))
-        const removedColorIds = oldColorIds.filter((id: any) => !newColorIds.includes(id))
-        const addedColors = newColorIds.filter((id: any) => !oldColorIds.includes(id))
-        let task: any
-
-        try {
-            task = await Task.findByPk(taskId)
-            task.title = title
-            task.size = size
-            task.ownerId = ownerId
-            task.description = description
-            await task.save()
-            // Updating usertasks junction table
-            await Promise.all(addedMembers.map(async (userId: any) => {
-                await this.addMemberForTask(task.id, userId)
-            }))
-            await Promise.all(removedMemberIds.map(async (userId: any) => {
-                await UserTask.destroy({
-                    where: {
-                        userId,
-                        taskId: task.id,
-                    },
-                })
-            }))
-            await Promise.all(addedColors.map(async (colorId: any) => {
-                await this.addColorForTask(task.id, colorId)
-            }))
-            await Promise.all(removedColorIds.map(async (colorId: any) => {
-                await ColorTask.destroy({
-                    where: {
-                        colorId,
-                        taskId: task.id
-                    }
-                })
-            }))
-        } catch (e) {
-            console.error(e)
-        }
-        return task
+  async editStoryById(
+    storyId: any,
+    title: any,
+    size: any,
+    ownerId: any,
+    oldMemberIds: any,
+    newMemberIds: any,
+    description: any
+  ) {
+    // Logic for figuring out who was deleted and who was added as a new member for the story
+    const removedMemberIds = oldMemberIds.filter(
+      (id: any) => !newMemberIds.includes(id)
+    );
+    const addedMembers = newMemberIds.filter(
+      (id: any) => !oldMemberIds.includes(id)
+    );
+    let story: any;
+    try {
+      story = await Story.findByPk(storyId);
+      story.title = title;
+      story.size = size;
+      story.ownerId = ownerId;
+      story.description = description;
+      await story.save();
+      // Updating userstories junction table
+      await Promise.all(
+        addedMembers.map(async (userId: any) => {
+          await this.addMemberForStory(story.id, userId);
+        })
+      );
+      await Promise.all(
+        removedMemberIds.map(async (userId: any) => {
+          await UserStory.destroy({
+            where: {
+              userId,
+              storyId: story.id,
+            },
+          });
+        })
+      );
+    } catch (e) {
+      console.error(e);
     }
+    return story;
+  }
 
-    async editSubtaskById(id: any, name: any, content: any, size: any, ownerId: any, oldMemberIds: any, newMemberIds: any, oldColorIds: any, newColorIds: any) {
-        // Logic for figuring out who was deleted and who was added as a new member for the subtask
-        const removedMemberIds = oldMemberIds.filter((id: any) => !newMemberIds.includes(id))
-        const addedMembers = newMemberIds.filter((id: any) => !oldMemberIds.includes(id))
-        const removedColorIds = oldColorIds.filter((id: any) => !newColorIds.includes(id))
-        const addedColors = newColorIds.filter((id: any) => !oldColorIds.includes(id))
-        let subtask: any
-        try {
-            subtask = await Subtask.findByPk(id)
-            subtask.name = name
-            subtask.content = content
-            subtask.size = size
-            subtask.ownerId = ownerId
-            await subtask.save()
-            // Updating userSubtasks junction table
-            await Promise.all(addedMembers.map(async (userId: any) => {
-                await this.addMemberForSubtask(subtask.id, userId)
-            }))
-            await Promise.all(removedMemberIds.map(async (userId: any) => {
-                await UserSubtask.destroy({
-                    where: {
-                        userId,
-                        subtaskId: subtask.id,
-                    },
-                })
-            }))
-            await Promise.all(addedColors.map(async (colorId: any) => {
-                await this.addColorForSubtask(subtask.id, colorId)
-            }))
-            await Promise.all(removedColorIds.map(async (colorId: any) => {
-                await ColorSubtask.destroy({
-                    where: {
-                        colorId,
-                        subtaskId: subtask.id,
-                    },
-                })
-            }))
-        } catch (e) {
-            console.error(e)
-        }
-        return subtask
+  async editTaskById(
+    taskId: any,
+    title: any,
+    size: any,
+    ownerId: any,
+    oldMemberIds: any,
+    newMemberIds: any,
+    oldColorIds: any,
+    newColorIds: any,
+    description: any
+  ) {
+    // Logic for figuring out who was deleted and who was added as a new member for the task
+    const removedMemberIds = oldMemberIds.filter(
+      (id: any) => !newMemberIds.includes(id)
+    );
+    const addedMembers = newMemberIds.filter(
+      (id: any) => !oldMemberIds.includes(id)
+    );
+    const removedColorIds = oldColorIds.filter(
+      (id: any) => !newColorIds.includes(id)
+    );
+    const addedColors = newColorIds.filter(
+      (id: any) => !oldColorIds.includes(id)
+    );
+    let task: any;
+
+    try {
+      task = await Task.findByPk(taskId);
+      task.title = title;
+      task.size = size;
+      task.ownerId = ownerId;
+      task.description = description;
+      await task.save();
+      // Updating usertasks junction table
+      await Promise.all(
+        addedMembers.map(async (userId: any) => {
+          await this.addMemberForTask(task.id, userId);
+        })
+      );
+      await Promise.all(
+        removedMemberIds.map(async (userId: any) => {
+          await UserTask.destroy({
+            where: {
+              userId,
+              taskId: task.id,
+            },
+          });
+        })
+      );
+      await Promise.all(
+        addedColors.map(async (colorId: any) => {
+          await this.addColorForTask(task.id, colorId);
+        })
+      );
+      await Promise.all(
+        removedColorIds.map(async (colorId: any) => {
+          await ColorTask.destroy({
+            where: {
+              colorId,
+              taskId: task.id,
+            },
+          });
+        })
+      );
+    } catch (e) {
+      console.error(e);
     }
+    return task;
+  }
 
-    async deleteStoryById(storyId: any) {
-        try {
-            await Story.destroy({
-                where: { id: storyId },
-            })
-        } catch (e) {
-            console.error(e)
-        }
-        return storyId
+  async editSubtaskById(
+    id: any,
+    name: any,
+    content: any,
+    size: any,
+    ownerId: any,
+    oldMemberIds: any,
+    newMemberIds: any,
+    oldColorIds: any,
+    newColorIds: any
+  ) {
+    // Logic for figuring out who was deleted and who was added as a new member for the subtask
+    const removedMemberIds = oldMemberIds.filter(
+      (id: any) => !newMemberIds.includes(id)
+    );
+    const addedMembers = newMemberIds.filter(
+      (id: any) => !oldMemberIds.includes(id)
+    );
+    const removedColorIds = oldColorIds.filter(
+      (id: any) => !newColorIds.includes(id)
+    );
+    const addedColors = newColorIds.filter(
+      (id: any) => !oldColorIds.includes(id)
+    );
+    let subtask: any;
+    try {
+      subtask = await Subtask.findByPk(id);
+      subtask.name = name;
+      subtask.content = content;
+      subtask.size = size;
+      subtask.ownerId = ownerId;
+      await subtask.save();
+      // Updating userSubtasks junction table
+      await Promise.all(
+        addedMembers.map(async (userId: any) => {
+          await this.addMemberForSubtask(subtask.id, userId);
+        })
+      );
+      await Promise.all(
+        removedMemberIds.map(async (userId: any) => {
+          await UserSubtask.destroy({
+            where: {
+              userId,
+              subtaskId: subtask.id,
+            },
+          });
+        })
+      );
+      await Promise.all(
+        addedColors.map(async (colorId: any) => {
+          await this.addColorForSubtask(subtask.id, colorId);
+        })
+      );
+      await Promise.all(
+        removedColorIds.map(async (colorId: any) => {
+          await ColorSubtask.destroy({
+            where: {
+              colorId,
+              subtaskId: subtask.id,
+            },
+          });
+        })
+      );
+    } catch (e) {
+      console.error(e);
     }
+    return subtask;
+  }
 
-    async deleteTaskById(taskId: any) {
-        try {
-            await Task.destroy({
-                where: { id: taskId },
-            })
-        } catch (e) {
-            console.error(e)
-        }
-        return taskId
+  async deleteStoryById(storyId: any) {
+    try {
+      await Story.destroy({
+        where: { id: storyId },
+      });
+    } catch (e) {
+      console.error(e);
     }
+    return storyId;
+  }
 
-    /*
+  async deleteTaskById(taskId: any) {
+    try {
+      await Task.destroy({
+        where: { id: taskId },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    return taskId;
+  }
+
+  /*
     Gets the order of columns in certain board, returns an array of columnIds in the correct order.
     This field is for keeping track of the order in which the columns are displayed in the board
     */
-    async getColumnOrderOfBoard(boardId: any) {
-        let arrayOfIds
-        try {
-            const columns = await Column.findAll({
-                attributes: ['id'],
-                where: { boardId },
-                order: dbConfig.Sequelize.literal('orderNumber ASC'),
-            })
-            arrayOfIds = columns.map((column) => column.id)
-        } catch (e) {
-            console.error(e)
-        }
-        return arrayOfIds
+  async getColumnOrderOfBoard(boardId: any) {
+    let arrayOfIds;
+    try {
+      const columns = await Column.findAll({
+        attributes: ["id"],
+        where: { boardId },
+        order: dbConfig.Sequelize.literal("orderNumber ASC"),
+      });
+      arrayOfIds = columns.map((column) => column.id);
+    } catch (e) {
+      console.error(e);
     }
+    return arrayOfIds;
+  }
 
-    async getTicketOrderOfColumn(columnId: any) {
-        let arrayOfObjectsInOrder
-        // TODO: Figure out if this could be done better
-        try {
-            const subtasks = await Subtask.findAll({
-                attributes: ['id', 'columnOrderNumber'],
-                where: { columnId, deletedAt: null },
-            })
-            const arrayOfSubtaskObjects = subtasks.map((subtask) => ({ ticketId: subtask.id, type: 'subtask', columnOrderNumber: subtask.columnOrderNumber }))
+  async getTicketOrderOfColumn(columnId: any) {
+    let arrayOfObjectsInOrder;
+    // TODO: Figure out if this could be done better
+    try {
+      const subtasks = await Subtask.findAll({
+        attributes: ["id", "columnOrderNumber"],
+        where: { columnId, deletedAt: null },
+      });
+      const arrayOfSubtaskObjects = subtasks.map((subtask) => ({
+        ticketId: subtask.id,
+        type: "subtask",
+        columnOrderNumber: subtask.columnOrderNumber,
+      }));
 
-            const tasksFromDb = await Task.findAll({
-                attributes: ['id', 'columnOrderNumber'],
-                where: { columnId, deletedAt: null },
-            })
-            const arrayOfTaskObjects = tasksFromDb.map((task) => ({ ticketId: task.id, type: 'task', columnOrderNumber: task.columnOrderNumber }))
+      const tasksFromDb = await Task.findAll({
+        attributes: ["id", "columnOrderNumber"],
+        where: { columnId, deletedAt: null },
+      });
+      const arrayOfTaskObjects = tasksFromDb.map((task) => ({
+        ticketId: task.id,
+        type: "task",
+        columnOrderNumber: task.columnOrderNumber,
+      }));
 
-            arrayOfObjectsInOrder = arrayOfTaskObjects.concat(arrayOfSubtaskObjects)
-                .sort((a, b) => a.columnOrderNumber - b.columnOrderNumber)
-                .map((obj) => {
-                    const copy: { columnOrderNumber: any; type: string; ticketId: any } = { ...obj }
-                    delete copy.columnOrderNumber
-                    return { ...copy }
-                })
-        } catch (e) {
-            console.error(e)
-        }
-        return arrayOfObjectsInOrder
+      arrayOfObjectsInOrder = arrayOfTaskObjects
+        .concat(arrayOfSubtaskObjects)
+        .sort((a, b) => a.columnOrderNumber - b.columnOrderNumber)
+        .map((obj) => {
+          const copy: {
+            columnOrderNumber: any;
+            type: string;
+            ticketId: any;
+          } = { ...obj };
+          delete copy.columnOrderNumber;
+          return { ...copy };
+        });
+    } catch (e) {
+      console.error(e);
     }
+    return arrayOfObjectsInOrder;
+  }
 
-    async addBoard(boardName: any, prettyId: any, projectId: any) {
-        let addedBoard
-        try {
-            const largestOrderNumber: any = await Board.max('orderNumber', {
-                where: { projectId }
-            })
-            console.log("addBoard projectId: ", projectId)
-            addedBoard = await Board.create({
-                id: uuid(),
-                name: boardName,
-                prettyId,
-                orderNumber: largestOrderNumber + 1,
-                projectId
-            })
+  async addBoard(boardName: any, prettyId: any, projectId: any) {
+    let addedBoard;
+    try {
+      const largestOrderNumber: any = await Board.max("orderNumber", {
+        where: { projectId },
+      });
+      console.log("addBoard projectId: ", projectId);
+      addedBoard = await Board.create({
+        id: uuid(),
+        name: boardName,
+        prettyId,
+        orderNumber: largestOrderNumber + 1,
+        projectId,
+      });
 
-            console.log('Added board: ', addedBoard)
-        } catch (e) {
-            console.error(e)
-        }
-        return addedBoard
+      console.log("Added board: ", addedBoard);
+    } catch (e) {
+      console.error(e);
     }
+    return addedBoard;
+  }
 
-    async addColumnForBoard(boardId: any, columnName: any) {
-        /*
+  async addColumnForBoard(boardId: any, columnName: any) {
+    /*
           At the time of new columns' creation we want to display it as
           the component in the very right of the board,
           hence it is given the biggest orderNumber of the board
         */
-        let addedColumn
-        try {
-            const largestOrderNumber: any = await Column.max('orderNumber', {
-                where: { boardId },
-            })
-            addedColumn = await Column.create({
-                id: uuid(),
-                boardId,
-                name: columnName,
-                orderNumber: largestOrderNumber + 1,
-            })
+    let addedColumn;
+    try {
+      const largestOrderNumber: any = await Column.max("orderNumber", {
+        where: { boardId },
+      });
+      addedColumn = await Column.create({
+        id: uuid(),
+        boardId,
+        name: columnName,
+        orderNumber: largestOrderNumber + 1,
+      });
 
-            console.log("addedColumn: ", addedColumn)
-        } catch (e) {
-            console.error(e)
-        }
-        return addedColumn
+      console.log("addedColumn: ", addedColumn);
+    } catch (e) {
+      console.error(e);
+    }
+    return addedColumn;
+  }
+
+  async findTheLargestOrderNumberOfColumn(columnId: any) {
+    let largestColumnOrderNumberForTask: any;
+    let largestColumnOrderNumberForSubtask: any;
+    try {
+      largestColumnOrderNumberForTask =
+        (await Task.max("columnOrderNumber", {
+          where: {
+            columnId,
+          },
+        })) || 0;
+      largestColumnOrderNumberForSubtask =
+        (await Subtask.max("columnOrderNumber", {
+          where: {
+            columnId,
+          },
+        })) || 0;
+    } catch (e) {
+      console.error(e);
     }
 
-    async findTheLargestOrderNumberOfColumn(columnId: any) {
-        let largestColumnOrderNumberForTask: any
-        let largestColumnOrderNumberForSubtask: any
-        try {
-            largestColumnOrderNumberForTask = await Task.max('columnOrderNumber', {
-                where: {
-                    columnId,
-                },
-            }) || 0
-            largestColumnOrderNumberForSubtask = await Subtask.max('columnOrderNumber', {
-                where: {
-                    columnId,
-                },
-            }) || 0
-        } catch (e) {
-            console.error(e)
-        }
+    const largestColumnOrderNumber = Math.max(
+      largestColumnOrderNumberForTask,
+      largestColumnOrderNumberForSubtask
+    );
+    return largestColumnOrderNumber || 0;
+  }
 
-        const largestColumnOrderNumber = Math.max(
-            largestColumnOrderNumberForTask,
-            largestColumnOrderNumberForSubtask,
-        )
-        return largestColumnOrderNumber || 0
+  async findTheLargestSwimlaneOrderNumberOfBoard(boardId: any) {
+    let largestSwimlaneOrderNumber;
+    try {
+      largestSwimlaneOrderNumber =
+        (await Task.max("swimlaneOrderNumber", {
+          where: {
+            boardId,
+          },
+        })) || 0;
+    } catch (e) {
+      console.log(e);
     }
+    return largestSwimlaneOrderNumber;
+  }
 
-    async findTheLargestSwimlaneOrderNumberOfBoard(boardId: any) {
-        let largestSwimlaneOrderNumber
-        try {
-            largestSwimlaneOrderNumber = await Task.max('swimlaneOrderNumber', {
-                where: {
-                    boardId,
-                },
-            }) || 0
-        } catch (e) {
-            console.log(e)
-        }
-        return largestSwimlaneOrderNumber
+  async addStoryForColumn(
+    boardId: any,
+    columnId: any,
+    title: any,
+    size: any,
+    ownerId: any,
+    memberIds: any,
+    description: any
+  ) {
+    let addedStory: any;
+    try {
+      // const storyBoard = await Board.findByPk(boardId)
+
+      addedStory = await Story.create({
+        id: uuid(),
+        boardId,
+        columnId,
+        title,
+        size,
+        ownerId,
+        memberIds,
+        description,
+      });
+      await Promise.all(
+        memberIds.map(async (memberId: any) => {
+          await this.addMemberForStory(addedStory.id, memberId);
+        })
+      );
+    } catch (e) {
+      console.error(e);
     }
+    return addedStory;
+  }
 
-    async addStoryForColumn(boardId: any, columnId: any, title: any, size: any, ownerId: any, memberIds: any, description: any) {
-        let addedStory: any
-        try {
-            // const storyBoard = await Board.findByPk(boardId)
-
-            addedStory = await Story.create({
-                id: uuid(),
-                boardId,
-                columnId,
-                title,
-                size,
-                ownerId,
-                memberIds,
-                description,
-            })
-            await Promise.all(
-                memberIds.map(async (memberId: any) => {
-                    await this.addMemberForStory(addedStory.id, memberId)
-                }),
-            )
-        } catch (e) {
-            console.error(e)
-        }
-        return addedStory
-    }
-
-    async addTaskForColumn(boardId: any, columnId: any, title: any, size: any, ownerId: any, memberIds: any, colorIds: any, description: any) {
-        /*
+  async addTaskForColumn(
+    boardId: any,
+    columnId: any,
+    title: any,
+    size: any,
+    ownerId: any,
+    memberIds: any,
+    colorIds: any,
+    description: any
+  ) {
+    /*
           At a new tasks' creation we want to display it as the lowermost task in its column,
           hence it is given the biggest columnOrderNumber of the column
           By default new task will be dirssplyed at the bottom of the swimlane view
         */
-        let addedTask: any
-        try {
-            const largestOrderNumber: any = await this.findTheLargestOrderNumberOfColumn(columnId)
-            const largestSwimlaneOrderNumber: any = await this.findTheLargestSwimlaneOrderNumberOfBoard(boardId)
-            const tasksBoard = await Board.findByPk(boardId)
-            if (tasksBoard) {
-                const prettyIdOfBoard = tasksBoard.prettyId
+    let addedTask: any;
+    try {
+      const largestOrderNumber: any = await this.findTheLargestOrderNumberOfColumn(
+        columnId
+      );
+      const largestSwimlaneOrderNumber: any = await this.findTheLargestSwimlaneOrderNumberOfBoard(
+        boardId
+      );
+      const tasksBoard = await Board.findByPk(boardId);
+      if (tasksBoard) {
+        const prettyIdOfBoard = tasksBoard.prettyId;
 
-                tasksBoard.ticketCount += 1
-                const updatedBoard = await tasksBoard.save()
+        tasksBoard.ticketCount += 1;
+        const updatedBoard = await tasksBoard.save();
 
-                addedTask = await Task.create({
-                    id: uuid(),
-                    prettyId: `${prettyIdOfBoard}-${updatedBoard.ticketCount}`,
-                    boardId,
-                    columnId,
-                    title,
-                    size,
-                    ownerId,
-                    description,
-                    columnOrderNumber: largestOrderNumber + 1,
-                    swimlaneOrderNumber: largestSwimlaneOrderNumber + 1,
-                })
-                await Promise.all(
-                    memberIds.map(async (memberId: any) => {
-                        await this.addMemberForTask(addedTask.id, memberId)
-                    }),
-                )
-                await Promise.all(
-                    colorIds.map(async (colorId: any) => {
-                        await this.addColorForTask(addedTask.id, colorId)
-                    })
-                )
-            }
-        } catch (e) {
-            console.error(e)
-        }
-        return addedTask
+        addedTask = await Task.create({
+          id: uuid(),
+          prettyId: `${prettyIdOfBoard}-${updatedBoard.ticketCount}`,
+          boardId,
+          columnId,
+          title,
+          size,
+          ownerId,
+          description,
+          columnOrderNumber: largestOrderNumber + 1,
+          swimlaneOrderNumber: largestSwimlaneOrderNumber + 1,
+        });
+        await Promise.all(
+          memberIds.map(async (memberId: any) => {
+            await this.addMemberForTask(addedTask.id, memberId);
+          })
+        );
+        await Promise.all(
+          colorIds.map(async (colorId: any) => {
+            await this.addColorForTask(addedTask.id, colorId);
+          })
+        );
+      }
+    } catch (e) {
+      console.error(e);
     }
+    return addedTask;
+  }
 
-    async addMemberForStory(storyId: any, userId: any) {
-        let story
-        try {
-            await UserStory.create({
-                userId,
-                storyId,
-            })
-            story = await Story.findByPk(storyId)
-        } catch (e) {
-            console.error(e)
-        }
-        return story
+  async addMemberForStory(storyId: any, userId: any) {
+    let story;
+    try {
+      await UserStory.create({
+        userId,
+        storyId,
+      });
+      story = await Story.findByPk(storyId);
+    } catch (e) {
+      console.error(e);
     }
+    return story;
+  }
 
-    async addMemberForTask(taskId: any, userId: any) {
-        let task
-        try {
-            await UserTask.create({
-                userId,
-                taskId,
-            })
-            task = await Task.findByPk(taskId)
-        } catch (e) {
-            console.error(e)
-        }
-        return task
+  async addMemberForTask(taskId: any, userId: any) {
+    let task;
+    try {
+      await UserTask.create({
+        userId,
+        taskId,
+      });
+      task = await Task.findByPk(taskId);
+    } catch (e) {
+      console.error(e);
     }
+    return task;
+  }
 
-    async addMemberForSubtask(subtaskId: any, userId: any) {
-        let subtask
-        try {
-            await UserSubtask.create({
-                userId,
-                subtaskId,
-            })
-            subtask = await Subtask.findByPk(subtaskId)
-        } catch (e) {
-            console.error(e)
-        }
-        return subtask
+  async addMemberForSubtask(subtaskId: any, userId: any) {
+    let subtask;
+    try {
+      await UserSubtask.create({
+        userId,
+        subtaskId,
+      });
+      subtask = await Subtask.findByPk(subtaskId);
+    } catch (e) {
+      console.error(e);
     }
+    return subtask;
+  }
 
-    async addColorForTask(taskId: any, colorId: any) {
-        let task
-        try {
-            await ColorTask.create({
-                id: uuid(),
-                colorId,
-                taskId
-            })
-            task = await Task.findByPk(taskId)
-        } catch (e) {
-            console.log(e)
-        }
-        return task
+  async addColorForTask(taskId: any, colorId: any) {
+    let task;
+    try {
+      await ColorTask.create({
+        id: uuid(),
+        colorId,
+        taskId,
+      });
+      task = await Task.findByPk(taskId);
+    } catch (e) {
+      console.log(e);
     }
+    return task;
+  }
 
-    async addColorForSubtask(subtaskId: any, colorId: any) {
-        let subtask
-        try {
-            await ColorSubtask.create({
-                id: uuid(),
-                colorId,
-                subtaskId
-            })
-            subtask = await Subtask.findByPk(subtaskId)
-        } catch (e) {
-            console.log(e)
-        }
-        return subtask
+  async addColorForSubtask(subtaskId: any, colorId: any) {
+    let subtask;
+    try {
+      await ColorSubtask.create({
+        id: uuid(),
+        colorId,
+        subtaskId,
+      });
+      subtask = await Subtask.findByPk(subtaskId);
+    } catch (e) {
+      console.log(e);
     }
+    return subtask;
+  }
 
-    async addSubtaskForTask(
-        taskId: any, columnId: any, boardId: any, name: any, content: any, size: any, ownerId: any, memberIds: any, colorIds: any, ticketOrder: any,
-    ) {
-        /*
+  async addSubtaskForTask(
+    taskId: any,
+    columnId: any,
+    boardId: any,
+    name: any,
+    content: any,
+    size: any,
+    ownerId: any,
+    memberIds: any,
+    colorIds: any,
+    ticketOrder: any
+  ) {
+    /*
           At the time of new subtask's creation we want to display it under its parent task
           hence we give it the columnOrderNumber one greater than the task's
           If subtask is created into diffenrent column than the current 'home' of parent task
           the subtask will be placed at the bottom of the column
         */
-        let addedSubtask: any
-        try {
-            const subtasksBoard = await Board.findByPk(boardId)
-            if (subtasksBoard) {
-                const prettyIdOfBoard = subtasksBoard.prettyId
-                console.log("prettyIdOfBoard: ", prettyIdOfBoard)
-                subtasksBoard.ticketCount += 1
-                const updatedBoard = await subtasksBoard.save()
-                console.log("updatedBoard: ", updatedBoard)
-                console.log("updatedBoard.ticketCount: ", updatedBoard.ticketCount)
+    let addedSubtask: any;
+    try {
+      const subtasksBoard = await Board.findByPk(boardId);
+      if (subtasksBoard) {
+        const prettyIdOfBoard = subtasksBoard.prettyId;
+        console.log("prettyIdOfBoard: ", prettyIdOfBoard);
+        subtasksBoard.ticketCount += 1;
+        const updatedBoard = await subtasksBoard.save();
+        console.log("updatedBoard: ", updatedBoard);
+        console.log("updatedBoard.ticketCount: ", updatedBoard.ticketCount);
 
+        addedSubtask = await Subtask.create({
+          id: uuid(),
+          prettyId: `${prettyIdOfBoard}-${updatedBoard.ticketCount}`,
+          name,
+          content,
+          size,
+          taskId,
+          columnId,
+          boardId,
+          ownerId,
+        });
+        const parentTask = await Task.findByPk(taskId, {
+          attributes: ["columnId"],
+        });
 
-                addedSubtask = await Subtask.create({
-                    id: uuid(),
-                    prettyId: `${prettyIdOfBoard}-${updatedBoard.ticketCount}`,
-                    name,
-                    content,
-                    size,
-                    taskId,
-                    columnId,
-                    boardId,
-                    ownerId,
-                })
-                const parentTask = await Task.findByPk(taskId, { attributes: ['columnId'] })
+        const newTicketOrder = Array.from(ticketOrder);
+        // figure out if the created subtask was created into same column than its parent task
+        // If so, give the added subtask an index one greater than the parent task's so that
+        // subtask will appear under parent task
+        if (parentTask && columnId === parentTask.columnId) {
+          const indexOfParentTask = ticketOrder.findIndex(
+            (obj: any) => obj.ticketId === taskId
+          );
+          newTicketOrder.splice(indexOfParentTask + 1, 0, {
+            ticketId: addedSubtask.id,
+            type: "subtask",
+          });
+        } else {
+          newTicketOrder.push({ ticketId: addedSubtask.id, type: "subtask" });
+        }
+        await this.reOrderTicketsOfColumn(newTicketOrder, columnId);
+        await Promise.all(
+          memberIds.map(async (memberId: any) => {
+            await this.addMemberForSubtask(addedSubtask.id, memberId);
+          })
+        );
+        await Promise.all(
+          colorIds.map(async (colorId: any) => {
+            await this.addColorForSubtask(addedSubtask.id, colorId);
+          })
+        );
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return addedSubtask;
+  }
 
-                const newTicketOrder = Array.from(ticketOrder)
-                // figure out if the created subtask was created into same column than its parent task
-                // If so, give the added subtask an index one greater than the parent task's so that
-                // subtask will appear under parent task
-                if (parentTask && columnId === parentTask.columnId) {
-                    const indexOfParentTask = ticketOrder.findIndex((obj: any) => obj.ticketId === taskId)
-                    newTicketOrder.splice(indexOfParentTask + 1, 0, { ticketId: addedSubtask.id, type: 'subtask' })
-                } else {
-                    newTicketOrder.push({ ticketId: addedSubtask.id, type: 'subtask' })
-                }
-                await this.reOrderTicketsOfColumn(newTicketOrder, columnId)
-                await Promise.all(
-                    memberIds.map(async (memberId: any) => {
-                        await this.addMemberForSubtask(addedSubtask.id, memberId)
-                    }),
-                )
-                await Promise.all(
-                    colorIds.map(async (colorId: any) => {
-                        await this.addColorForSubtask(addedSubtask.id, colorId)
-                    }),
-                )
+  async deleteSubtaskById(subtaskId: any) {
+    try {
+      await Subtask.destroy({
+        where: { id: subtaskId },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    return subtaskId;
+  }
+
+  async archiveSubtaskById(subtaskId: any) {
+    try {
+      const subtask = await Subtask.findByPk(subtaskId);
+      if (subtask) {
+        subtask.deletedAt = new Date();
+        await subtask.save();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return subtaskId;
+  }
+
+  async reOrderTicketsOfColumn(newOrderArray: any, columnId: any) {
+    let column;
+    try {
+      await Promise.all(
+        newOrderArray.map(async (obj: any, index: any) => {
+          if (obj.type === "task") {
+            const task = await Task.findByPk(obj.ticketId);
+            if (task) {
+              task.columnOrderNumber = index;
+              await task.save();
             }
-        } catch (e) {
-            console.error(e)
-        }
-        return addedSubtask
-    }
-
-    async deleteSubtaskById(subtaskId: any) {
-        try {
-            await Subtask.destroy({
-                where: { id: subtaskId },
-            })
-        } catch (e) {
-            console.error(e)
-        }
-        return subtaskId
-    }
-
-    async archiveSubtaskById(subtaskId: any) {
-        try {
-            const subtask = await Subtask.findByPk(subtaskId)
+          } else if (obj.type === "subtask") {
+            const subtask = await Subtask.findByPk(obj.ticketId);
             if (subtask) {
-                subtask.deletedAt = new Date()
-                await subtask.save()
+              subtask.columnOrderNumber = index;
+              await subtask.save();
             }
-        } catch (e) {
-            console.error(e)
-        }
-        return subtaskId
+          }
+        })
+      );
+      column = await Column.findByPk(columnId);
+    } catch (e) {
+      console.log(e);
     }
+    return column;
+  }
 
-    async reOrderTicketsOfColumn(newOrderArray: any, columnId: any) {
-        let column
-        try {
-            await Promise.all(newOrderArray.map(async (obj: any, index: any) => {
-                if (obj.type === 'task') {
-                    const task = await Task.findByPk(obj.ticketId)
-                    if (task) {
-                        task.columnOrderNumber = index
-                        await task.save()
-                    }
-                } else if (obj.type === 'subtask') {
-                    const subtask = await Subtask.findByPk(obj.ticketId)
-                    if (subtask) {
-                        subtask.columnOrderNumber = index
-                        await subtask.save()
-                    }
-                }
-            }))
-            column = await Column.findByPk(columnId)
-        } catch (e) {
-            console.log(e)
-        }
-        return column
+  async changeTasksColumnId(taskId: any, columnId: any) {
+    try {
+      const task = await Task.findByPk(taskId);
+      if (task) {
+        task.columnId = columnId;
+        await task.save();
+      }
+    } catch (e) {
+      console.error(e);
     }
+  }
 
-    async changeTasksColumnId(taskId: any, columnId: any) {
-        try {
-            const task = await Task.findByPk(taskId)
-            if (task) {
-                task.columnId = columnId
-                await task.save()
-            }
-        } catch (e) {
-            console.error(e)
-        }
+  async changeSubtasksColumnId(subtaskId: any, columnId: any) {
+    try {
+      const subtask = await Subtask.findByPk(subtaskId);
+      if (subtask) {
+        subtask.columnId = columnId;
+        await subtask.save();
+      }
+    } catch (e) {
+      console.error(e);
     }
+  }
 
-    async changeSubtasksColumnId(subtaskId: any, columnId: any) {
-        try {
-            const subtask = await Subtask.findByPk(subtaskId)
-            if (subtask) {
-                subtask.columnId = columnId
-                await subtask.save()
-            }
-        } catch (e) {
-            console.error(e)
-        }
+  async changeTicketsColumnId(type: any, ticketId: any, columnId: any) {
+    if (type === "task") {
+      await this.changeTasksColumnId(ticketId, columnId);
+    } else if (type === "subtask") {
+      await this.changeSubtasksColumnId(ticketId, columnId);
     }
+  }
 
-    async changeTicketsColumnId(type: any, ticketId: any, columnId: any) {
-        if (type === 'task') {
-            await this.changeTasksColumnId(ticketId, columnId)
-        } else if (type === 'subtask') {
-            await this.changeSubtasksColumnId(ticketId, columnId)
-        }
+  async reOrderColumns(columnOrder: any) {
+    try {
+      await Promise.all(
+        columnOrder.map(async (id: any, index: any) => {
+          const column = await Column.findByPk(id);
+          if (column) {
+            column.orderNumber = index;
+            await column.save();
+          }
+        })
+      );
+    } catch (e) {
+      console.log(e);
     }
+  }
 
-    async reOrderColumns(columnOrder: any) {
-        try {
-            await Promise.all(columnOrder.map(async (id: any, index: any) => {
-                const column = await Column.findByPk(id)
-                if (column) {
-                    column.orderNumber = index
-                    await column.save()
-                }
-            }))
-        } catch (e) {
-            console.log(e)
-        }
+  async reOrderSwimlanes(swimlaneOrder: any) {
+    try {
+      await Promise.all(
+        swimlaneOrder.map(async (id: any, index: any) => {
+          const task = await Task.findByPk(id);
+          if (task) {
+            task.swimlaneOrderNumber = index;
+            await task.save();
+          }
+        })
+      );
+    } catch (e) {
+      console.error(e);
     }
+  }
 
-    async reOrderSwimlanes(swimlaneOrder: any) {
-        try {
-            await Promise.all(swimlaneOrder.map(async (id: any, index: any) => {
-                const task = await Task.findByPk(id)
-                if (task) {
-                    task.swimlaneOrderNumber = index
-                    await task.save()
-                }
-            }))
-        } catch (e) {
-            console.error(e)
-        }
+  async getColors() {
+    let colorsFromDb;
+    try {
+      colorsFromDb = await Color.findAll();
+    } catch (e) {
+      console.log(e);
     }
+    return colorsFromDb;
+  }
 
-    async getColors() {
-        let colorsFromDb
-        try {
-            colorsFromDb = await Color.findAll()
-        } catch (e) {
-            console.log(e)
-        }
-        return colorsFromDb
+  async getUsers() {
+    let usersFromDb;
+    try {
+      usersFromDb = await User.findAll();
+    } catch (e) {
+      console.error(e);
     }
+    return usersFromDb;
+  }
 
-    async getUsers() {
-        let usersFromDb
-        try {
-            usersFromDb = await User.findAll()
-        } catch (e) {
-            console.error(e)
-        }
-        return usersFromDb
+  async addUser(userName: string, projectId: string) {
+    let addedUser;
+    try {
+      addedUser = await User.create({
+        id: uuid(),
+        userName: userName,
+        projectId: projectId,
+      });
+    } catch (e) {
+      console.error(e);
     }
+    return addedUser;
+  }
 
-    async addUser(userName: string, projectId: string) {
-        let addedUser
-        try {
-            addedUser = await User.create({
-                id: uuid(),
-                userName: userName,
-                projectId: projectId
-            })
-        } catch (e) {
-            console.error(e)
+  async deleteUser(id: string, userName: string) {
+    let deletedUser;
+    try {
+      deletedUser = await User.findByPk(id);
+      if (deletedUser) {
+        if (deletedUser.userName.includes(" (Removed user)")) {
+          let length = deletedUser.userName.length;
+
+          deletedUser.userName = deletedUser.userName.substring(0, length - 14);
+        } else {
+          deletedUser.userName = userName + " (Removed user)";
         }
-        return addedUser
+        await deletedUser.save();
+      }
+    } catch (e) {
+      console.error(e);
     }
-
-    async deleteUser(id: string, userName: string) {
-        let deletedUser
-        try {
-            deletedUser = await User.findByPk(id)
-            if (deletedUser) {
-                if (deletedUser.userName.includes(' (Removed user)')) {
-                    let length = deletedUser.userName.length;
-
-                    deletedUser.userName = deletedUser.userName.substring(0, length - 14);
-                } else {
-                    deletedUser.userName = userName + ' (Removed user)'
-                }
-                await deletedUser.save()
-            }
-        } catch (e) {
-            console.error(e)
-        }
-        return deletedUser
+    return deletedUser;
+  }
+  /*
+  async deleteBoard(id: string, name: string) {
+    let deleteBoard;
+    try {
+      deleteBoard = await Board.findByPk(id);
+      await Board.destroy({
+        where: {
+          id: id,
+          name: name,
+        },
+      });
+    } catch (e) {
+      console.error(e);
     }
-
-    async deleteBoard(id: string, name: string) {
-        let deleteBoard;
-        try {
-            deleteBoard = await Board.findByPk(id)
-            await Board.destroy({
-                where: {
-                    id: id,
-                    name: name,
-                },
-            })
-
-        }
-        catch (e) {
-            console.error(e)
-        }
-        return deleteBoard
+    return deleteBoard;
+  }
+*/
+  async deleteBoard(boardId: any) {
+    try {
+      await Board.destroy({
+        where: { id: boardId },
+      });
+    } catch (e) {
+      console.error(e);
     }
+    return boardId;
+  }
 
-                
-    async allEpicColors() {
-        let epicColorsFromDB
-        try {
-            epicColorsFromDB = await ColorBoard.findAll()
-        } catch (e) {
-            console.error(e)
-        }
-        return epicColorsFromDB
+  async archiveBoardById(boardId: any) {
+    try {
+      const board = await Board.findByPk(boardId);
+      if (board) {
+        board.deletedAt = new Date();
+        await board.save();
+      }
+    } catch (e) {
+      console.log(e);
     }
+    return boardId;
+  }
 
-
-    async addEpicColors(colorId: any, boardId: any, name: any) {
-        try {
-            const colors = await ColorBoard.findAll();
-            const board = colors.filter((color) => color.colorId === colorId)
-            const boardColors = board.filter((color) => color.boardId === boardId)
-            if (boardColors.length > 0) {
-                if (boardColors[0].getDataValue("colorId") === colorId && boardColors[0].getDataValue("boardId") === boardId) {
-                    await ColorBoard.destroy({
-                        where: {
-                            colorId: colorId,
-                            boardId: boardId,
-                        },
-                    })
-                    return await ColorBoard.create({
-                        colorId: colorId,
-                        boardId: boardId,
-                        name: name,
-                    })
-            }
-            } else {
-                return await ColorBoard.create({
-                    colorId: colorId,
-                    boardId: boardId,
-                    name: name,
-                })
-            }
-        } catch (e) {
-            console.error(e)
-        }
+  async restoreBoardById(boardId: any) {
+    let updatedBoard;
+    try {
+      const board = await Board.findByPk(boardId);
+      if (board) {
+        board.deletedAt = null as any;
+        updatedBoard = await board.save();
+      }
+    } catch (e) {
+      console.log(e);
     }
+    return updatedBoard;
+  }
 
-    async getOwnerById(ownerId: any) {
-        let owner
-        try {
-            owner = await User.findByPk(ownerId)
-        } catch (e) {
-            console.log(e)
-        }
-        return owner
+  async allEpicColors() {
+    let epicColorsFromDB;
+    try {
+      epicColorsFromDB = await ColorBoard.findAll();
+    } catch (e) {
+      console.error(e);
     }
+    return epicColorsFromDB;
+  }
 
-    async archiveStoryById(storyId: any) {
-        try {
-            const story = await Story.findByPk(storyId)
-            if (story) {
-                story.deletedAt = new Date()
-                await story.save()
-            }
-        } catch (e) {
-            console.log(e)
+  async addEpicColors(colorId: any, boardId: any, name: any) {
+    try {
+      const colors = await ColorBoard.findAll();
+      const board = colors.filter((color) => color.colorId === colorId);
+      const boardColors = board.filter((color) => color.boardId === boardId);
+      if (boardColors.length > 0) {
+        if (
+          boardColors[0].getDataValue("colorId") === colorId &&
+          boardColors[0].getDataValue("boardId") === boardId
+        ) {
+          await ColorBoard.destroy({
+            where: {
+              colorId: colorId,
+              boardId: boardId,
+            },
+          });
+          return await ColorBoard.create({
+            colorId: colorId,
+            boardId: boardId,
+            name: name,
+          });
         }
-        return storyId
+      } else {
+        return await ColorBoard.create({
+          colorId: colorId,
+          boardId: boardId,
+          name: name,
+        });
+      }
+    } catch (e) {
+      console.error(e);
     }
+  }
 
-    async restoreStoryById(storyId: any) {
-        let updatedStory
-        try {
-            const story = await Story.findByPk(storyId)
-            if (story) {
-                story.deletedAt = null as any
-                updatedStory = await story.save()
-            }
-        } catch (e) {
-            console.log(e)
-        }
-        return updatedStory
+  async getOwnerById(ownerId: any) {
+    let owner;
+    try {
+      owner = await User.findByPk(ownerId);
+    } catch (e) {
+      console.log(e);
     }
+    return owner;
+  }
 
-    async archiveTaskById(taskId: any) {
-        try {
-            const task = await Task.findByPk(taskId)
-            if (task) {
-                task.deletedAt = new Date()
-                await task.save()
-            }
-        } catch (e) {
-            console.log(e)
-        }
-        return taskId
+  async archiveStoryById(storyId: any) {
+    try {
+      const story = await Story.findByPk(storyId);
+      if (story) {
+        story.deletedAt = new Date();
+        await story.save();
+      }
+    } catch (e) {
+      console.log(e);
     }
+    return storyId;
+  }
 
-    async restoreTaskById(taskId: any) {
-        let updatedTask
-        try {
-            const task = await Task.findByPk(taskId)
-            if (task) {
-                task.deletedAt = null as any
-                updatedTask = await task.save()
-            }
-        } catch (e) {
-            console.log(e)
-        }
-        return updatedTask
+  async restoreStoryById(storyId: any) {
+    let updatedStory;
+    try {
+      const story = await Story.findByPk(storyId);
+      if (story) {
+        story.deletedAt = null as any;
+        updatedStory = await story.save();
+      }
+    } catch (e) {
+      console.log(e);
     }
+    return updatedStory;
+  }
 
-    async getSwimlaneOrderOfBoard(boardId: any) {
-        let swimlaneOrder
-        try {
-            swimlaneOrder = await Task.findAll({
-                attributes: ['id'],
-                where: { boardId, deletedAt: null },
-                order: dbConfig.Sequelize.literal('swimlaneOrderNumber ASC'),
-            })
-            swimlaneOrder = swimlaneOrder.map((item) => item.id)
-        } catch (e) {
-            console.log(e)
-        }
-        return swimlaneOrder
+  async archiveTaskById(taskId: any) {
+    try {
+      const task = await Task.findByPk(taskId);
+      if (task) {
+        task.deletedAt = new Date();
+        await task.save();
+      }
+    } catch (e) {
+      console.log(e);
     }
+    return taskId;
+  }
 
-    async updateSwimlaneOrderNumbers(boardId: any, newSwimlaneOrder: any) {
-        try {
-            await Promise.all(newSwimlaneOrder.map(async (obj: any) => {
-                const task = await Task.findByPk(obj.id)
-                if (task) {
-                    task.swimlaneOrderNumber = obj.swimlaneOrderNumber
-                    await task.save()
-                }
-            }))
-        } catch (e) {
-            console.log(e)
-        }
-        return boardId
+  async restoreTaskById(taskId: any) {
+    let updatedTask;
+    try {
+      const task = await Task.findByPk(taskId);
+      if (task) {
+        task.deletedAt = null as any;
+        updatedTask = await task.save();
+      }
+    } catch (e) {
+      console.log(e);
     }
+    return updatedTask;
+  }
+
+  async getSwimlaneOrderOfBoard(boardId: any) {
+    let swimlaneOrder;
+    try {
+      swimlaneOrder = await Task.findAll({
+        attributes: ["id"],
+        where: { boardId, deletedAt: null },
+        order: dbConfig.Sequelize.literal("swimlaneOrderNumber ASC"),
+      });
+      swimlaneOrder = swimlaneOrder.map((item) => item.id);
+    } catch (e) {
+      console.log(e);
+    }
+    return swimlaneOrder;
+  }
+
+  async updateSwimlaneOrderNumbers(boardId: any, newSwimlaneOrder: any) {
+    try {
+      await Promise.all(
+        newSwimlaneOrder.map(async (obj: any) => {
+          const task = await Task.findByPk(obj.id);
+          if (task) {
+            task.swimlaneOrderNumber = obj.swimlaneOrderNumber;
+            await task.save();
+          }
+        })
+      );
+    } catch (e) {
+      console.log(e);
+    }
+    return boardId;
+  }
 }
