@@ -19,7 +19,6 @@ const Column = ({ column, index, color, user, searchTerm }) => {
     const [dialogStatus, setDialogStatus] = useState(false)
     const toggleDialog = () => setDialogStatus(!dialogStatus)
         
-    console.log("searchterm",searchTerm)
     return (
         <Draggable draggableId={column.id} index={index}>
             {(provided) => (

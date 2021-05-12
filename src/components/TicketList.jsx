@@ -3,21 +3,6 @@ import { Grid } from '@material-ui/core'
 import Task from './task/Task'
 import Subtask from './subtask/Subtask'
 
-// const TicketList = ({
-//     ticketOrder, tasks, subtasks, columnId, boardId,
-// }) => {
-//     const ticketsInOrder = ticketOrder.map((obj) => {
-//         let foundTicket
-//         if (obj.type === 'task') {
-//             foundTicket = tasks.find((task) => task.id === obj.ticketId)
-//             foundTicket = { ...foundTicket, type: 'task' }
-//         } else if (obj.type === 'subtask') {
-//             foundTicket = subtasks.find((subtask) => subtask.id === obj.ticketId)
-//             foundTicket = { ...foundTicket, type: 'subtask' }
-//         }
-//         return foundTicket
-//     })
-
 const TicketList = ({
     ticketOrder, tasks, subtasks, columnId, boardId, user, color, searchTerm
 }) => {
@@ -32,9 +17,8 @@ const TicketList = ({
         }
         return foundTicket
     })
-    //console.log("column.tasks.title",column.tasks[0].title)
     let filteredTasks = ticketsInOrder;
-    let all = {}  //{users: userStorage, colors:epic}
+    let all = {} 
     const userzz = () => {
 
         if (user !== null && user.length > 0) {
@@ -53,7 +37,6 @@ const TicketList = ({
                             if (!same) {
                                 filterdUsers.push(ticket)
                             }
-                            console.log(filterdUsers)
                         }
                     }
                     if (ticket.members !== null) {
