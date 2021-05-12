@@ -5,11 +5,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import useArchiveProject from "../../graphql/project/hooks/useArchiveProject";
+import useProjectById from '../../graphql/project/hooks/useProjectById'
 import { removeProjectFromCache } from '../../cacheService/cacheUpdates'
 
 export default function DeleteProjectPopup(props) {
   const { open, handleClose, project } = props;
   const [deleteProject] = useArchiveProject();
+  const queryResult = useProjectById(project.id);
   const eventId = window.localStorage.getItem('eventId')
   const handleSave = () => {
     deleteProject({
@@ -22,15 +24,24 @@ export default function DeleteProjectPopup(props) {
     handleClose();
   };
 
- /*  let message;
-  if (props.board.ticketCount == null) {
-    message = "This board has 0 tickets.";
-  } else if (props.board.ticketCount === 1) {
-    message = "This board has 1 ticket.";
-  } else {
-    message = `There are ${props.board.ticketCount} tickets in this board.`;
-  } */
+  if (queryResult.loading) return null
+  console.log(queryResult)
+  let index = 0;
 
+  queryResult.data.projectById.boards.map(() => {
+    index +=1
+  })
+
+  let message;
+  if (queryResult.data.projectById === null) {
+    message = "This project has 0 boards.";
+  } else if (queryResult.data.projectById === 1) {
+    message = "This project has 1 board.";
+  } else {
+    message = `There are ${index} boards in this project.`;
+  }
+
+  console.log(message)
   return (
     <Dialog
       open={open}
@@ -39,8 +50,7 @@ export default function DeleteProjectPopup(props) {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-       {/*  {`${message} Do you want to remove ${props.board.name} from this project?`}{" "} */}
-       {project.name}
+        {`${message} Do you want to remove ${project.name} from this project?`}{" "}
       </DialogTitle>
       <DialogContent></DialogContent>
       <DialogActions>
