@@ -13,7 +13,7 @@ import { onDragEnd } from '../../utils/onDragEnd'
 import SnackbarAlert from '../SnackbarAlert'
 import '../../styles.css'
 
-const Board = ({ board, eventId, color, user }) => {
+const Board = ({ board, eventId, color, user, searchTerm }) => {
     const [moveTicketInColumn] = useMoveTicketInColumn()
     const [moveTicketFromColumn] = useMoveTicketFromColumn()
     const [moveColumn] = useMoveColumn()
@@ -41,7 +41,7 @@ const Board = ({ board, eventId, color, user }) => {
                             ref={provided.innerRef}
                             spacing={2}
                         >
-                            <Grid item><ColumnList columns={columns} columnOrder={columnOrder} boardId={board.id} color={color} user={user} /></Grid>
+                            <Grid item><ColumnList columns={columns} columnOrder={columnOrder} boardId={board.id} searchTerm = {searchTerm} color={color} user={user} /></Grid>
                             {provided.placeholder}
 
                         </Grid>

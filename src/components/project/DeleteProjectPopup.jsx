@@ -25,7 +25,6 @@ export default function DeleteProjectPopup(props) {
   };
 
   if (queryResult.loading) return null
-  console.log(queryResult)
   let index = 0;
 
   queryResult.data.projectById.boards.map(() => {
@@ -41,7 +40,6 @@ export default function DeleteProjectPopup(props) {
     message = `There are ${index} boards in this project.`;
   }
 
-  console.log(message)
   return (
     <Dialog
       open={open}
