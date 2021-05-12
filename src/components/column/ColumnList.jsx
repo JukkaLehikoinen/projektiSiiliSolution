@@ -4,7 +4,7 @@ import Column from './Column'
 import { boardPageStyles } from '../../styles/styles'
 import useAddColumn from '../../graphql/column/hooks/useAddColumn'
 
-const ColumnList = ({ columns, columnOrder, boardId }) => {
+const ColumnList = ({ columns, columnOrder, boardId, color, user, searchTerm }) => {
     const classes = boardPageStyles()
     const [columnName, setColumnName] = useState('')
     const [addColumn] = useAddColumn()
@@ -31,7 +31,7 @@ const ColumnList = ({ columns, columnOrder, boardId }) => {
         <Grid container direction="row" spacing={4} classes={{ root: classes.columnRow }}>
             {newColumnOrder.map((column, index) => (
                 <Grid item key={column.id}>
-                    <Column column={column} index={index} />
+                    <Column column={column} searchTerm = {searchTerm} index={index} color={color} user={user}/>
                 </Grid>
             ))}
             <Grid item classes={{ root: classes.addColumn }}>
