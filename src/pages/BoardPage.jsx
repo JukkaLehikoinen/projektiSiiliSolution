@@ -18,6 +18,8 @@ import useAllEpicColors from '../graphql/colorboards/hooks/useAllEpicColors'
 import bubbleSort from '../components/bubblesort'
 import useAllColors from '../graphql/task/hooks/useAllColors'
 //import useAllColors from '../../graphql/task/hooks/useAllColors'
+import ErrorPage from './ErrorPage'
+import TextField from '@material-ui/core/TextField';
 
 const BoardPage = ({ id, eventId }) => {
     useEffect(() => () => {
@@ -35,6 +37,7 @@ const BoardPage = ({ id, eventId }) => {
     const colorQuery = useAllColors()
     const [user, setUser] = useState("")
     const [color, setColor] = useState([])
+    const [searchTerm, setSearchTerm] = useState("")
 
 
 
@@ -50,37 +53,24 @@ const BoardPage = ({ id, eventId }) => {
             <LoadingSpinner />
         </div>
     }
+
+    if (queryResult.error) {
+        console.log(queryResult.error)
+        return <ErrorPage/>
+    }
+
     const board = queryResult.data.boardById
 
     const switchView = () => {
         toggleView(view === 'kanban' ? 'swimlane' : 'kanban')
     }
     const handleUserChange = (event) => {
-        if (event === null || event.length == 0) {
-            setUser(event)
-            window.localStorage.setItem("user", [''])
-        } else {
-            setUser(event)
-            const users = event.map((event) => {
-                return event.value
-            })
-            window.localStorage.setItem("user", JSON.stringify(users))
-        }
-       // console.log(event)
+        setUser(event)
     }
     //console.log(user)
 
     const handleColorChange = (event) => {
-        if (event === null || event.length === 0) {
-            setColor(event)
-            window.localStorage.setItem("epic", [''])
-        } else {
-            setColor(event)
-            const colors = event.map((event) => {
-                return event.value
-            })
-            window.localStorage.setItem("epic", JSON.stringify(colors))
-        }
+        setColor(event)
     }
 
     let userList = [];
@@ -117,6 +107,14 @@ const BoardPage = ({ id, eventId }) => {
         const newObject = { value: user.id, label: user.userName }
         return newObject
     })
+    //console.log("searchterm",searchTerm)
+    const editSearchTerm = (e) => {
+        setSearchTerm(e.target.value)
+    }
+    //console.log("column task", Column)
+    // const dynamicSearch = () => {
+    //     return tasks.name.filter(name => name.toLowerCase().includes(searchTerm.toLowerCase()))
+    // }
 
     return (
         <Grid
@@ -174,12 +172,13 @@ const BoardPage = ({ id, eventId }) => {
                         //styles={colourStyles}
                         />
                     </Grid>
+                    <Grid item xs={2}>
+                        <TextField type='text' value={searchTerm} onChange={editSearchTerm} placeholder='Search by task name!' />
+                    </Grid>
                 </Grid>
             </Grid>
-
-
             <Grid item>
-                {view === 'kanban' ? <Board board={board} /> : <SwimlaneView board={board} />}
+                {view === 'kanban' ? <Board board={board} color={color} user={user} searchTerm={searchTerm} /> : <SwimlaneView board={board} />}
             </Grid>
         </Grid>
     )

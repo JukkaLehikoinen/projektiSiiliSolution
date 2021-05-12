@@ -18,11 +18,24 @@ import { dbConfig } from "../database";
 export class BoardService {
   initialize() {}
 
+  async archiveProjectById(projectId: any) {
+    try {
+      const project = await Project.findByPk(projectId);
+      if (project) {
+        project.deletedAt = new Date();
+        await project.save();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    return projectId;
+  }
+
   async getProjects() {
     let projectsFromDb;
     try {
       console.log("projectsFromDb");
-      projectsFromDb = await Project.findAll();
+      projectsFromDb = await Project.findAll({where: {deletedAt: null}});
       console.log(projectsFromDb);
     } catch (e) {
       console.error(e);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -23,13 +23,14 @@ export default function DeleteBoardPopup(props) {
     handleClose();
   };
 
+
   let message;
-  if (props.board.ticketCount == null) {
+  if (board.ticketCount == null) {
     message = "This board has 0 tickets.";
-  } else if (props.board.ticketCount === 1) {
+  } else if (board.ticketCount === 1) {
     message = "This board has 1 ticket.";
   } else {
-    message = `There are ${props.board.ticketCount} tickets in this board.`;
+    message = `There are ${board.ticketCount} tickets in this board.`;
   }
 
   return (
@@ -40,7 +41,7 @@ export default function DeleteBoardPopup(props) {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {`${message} Do you want to remove ${props.board.name} from this project?`}{" "}
+        {`${message} Do you want to remove ${board.name} from this project?`}{" "}
       </DialogTitle>
       <DialogContent></DialogContent>
       <DialogActions>
