@@ -40,3 +40,21 @@ export const ADD_PROJECT = gql`
     }
   }
 `;
+
+export const ARCHIVE_PROJECT = gql`
+  mutation archiveProject($projectId: ID!, $eventId: ID!) {
+    archiveProjectById(projectId: $projectId, eventId: $eventId)
+  }
+`;
+
+export const PROJECT_REMOVED = gql`
+  subscription projectRemoved($projectId: ID!, $eventId: ID!) {
+    projectRemoved(projectId: $projectId, eventId: $eventId) {
+      removeType
+      removeInfo {
+        projectId
+      }
+    }
+  }
+`;
+

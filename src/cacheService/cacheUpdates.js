@@ -12,8 +12,10 @@ import {
   SUBTASKS_COLUMN,
   SWIMLANE_ORDER_NUMBER,
   PROJECTS_BOARDS,
+  PROJECTS_PROJECTS,
   COLUMNORDER_AND_COLUMNS,
 } from "../graphql/fragments";
+import { ALL_PROJECTS } from "../graphql/project/projectQueries";
 
 export const addNewColumn = (addedColumn) => {
   const boardIdForCache = `Board:${addedColumn.board.id}`;
@@ -103,6 +105,23 @@ export const removeBoardFromCache = (boardId, projectId) => {
   client.cache.evict({ id: boardToBeDeleted });
 };
 
+export const removeProjectFromCache = (projectId) => {
+  const projectToBeDeleted = `Project:${projectId}`;
+  const projectIdForCache = `Project:${projectId}`;
+  
+  const reQuery = client.readQuery({
+    query: ALL_PROJECTS,
+  })
+  const newprojects = reQuery.allProjects.filter((project) => project.id !== projectId);
+  client.writeFragment({
+    id: projectIdForCache,
+    fragment: PROJECTS_PROJECTS,
+    data: {
+      projects: newprojects,
+    },
+  });
+  client.cache.evict({ id: projectToBeDeleted });
+};
 export const removeTaskFromCache = (taskId, columnId, boardId) => {
   // Deleting task affects column's tasks list, column's ticketOrder list and board's swimlaneOrder list
   // In addition the normalized cache object is deleted itself
