@@ -81,7 +81,6 @@ const TicketList = ({
 
     const colors = () => {
         if (color !== null && color.length > 0) {
-            console.log(color)
             let epix = [];
             all = { ...all, colors: color }
             filteredTasks.map((ticket) => {
@@ -119,21 +118,16 @@ const TicketList = ({
 
     colors()
 
-    console.log(searchTerm)
-    //console.log(ticketsInOrder)
-    // const taskNameArray = () =>{
-    //     console.log("all",all)
-    //     let tasksAndSubTasks = []
-    //     filteredTasks.map((ticket) =>{
-    //         const dynamicSearch = () => {
-    //         return tasks.name.filter(name => name.toLowerCase().includes(searchTerm.toLowerCase()))
-    // }
-    //     })
-        
-        
-    // }
-    // taskNameArray()
-    
+    let tasksAndSubTasks = [];
+    if (searchTerm && searchTerm.length > 2) {
+    for (let i = 0; i < filteredTasks.length; i++) {
+        if (filteredTasks[i].title && filteredTasks[i].title.toLowerCase().includes(searchTerm.toLowerCase()) || filteredTasks[i].name && filteredTasks[i].name.toLowerCase().includes(searchTerm.toLowerCase())) {
+            tasksAndSubTasks.push(filteredTasks[i])
+        }
+    }
+    filteredTasks=tasksAndSubTasks
+    }
+
 
 
     return (
