@@ -11,7 +11,7 @@ import AddTaskDialog from '../task/AddTaskDialog'
 import RenameColumn from './RenameColumn'
 
 
-const Column = ({ column, index }) => {
+const Column = ({ column, index, color, user }) => {
     const classes = boardPageStyles()
     const {
         tasks, ticketOrder, subtasks, board,
@@ -67,6 +67,8 @@ const Column = ({ column, index }) => {
                                     boardId={board.id}
                                     epic={window.localStorage.getItem("epic")}
                                     userStorage={window.localStorage.getItem("user")}
+                                    color={color}
+                                    user={user}
                                 />
                                 {provided.placeholder}
                             </Grid>

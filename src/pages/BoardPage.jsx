@@ -176,10 +176,8 @@ const BoardPage = ({ id, eventId }) => {
                     </Grid>
                 </Grid>
             </Grid>
-
-
             <Grid item>
-                {view === 'kanban' ? <Board board={board} /> : <SwimlaneView board={board} />}
+                {view === 'kanban' ? <Board board={board} color={color} user={user}/> : <SwimlaneView board={board} />}
             </Grid>
         </Grid>
     )
