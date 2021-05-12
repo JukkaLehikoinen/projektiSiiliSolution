@@ -11,7 +11,7 @@ import AddTaskDialog from '../task/AddTaskDialog'
 import RenameColumn from './RenameColumn'
 
 
-const Column = ({ column, index }) => {
+const Column = ({ column, index, color, user, searchTerm }) => {
     const classes = boardPageStyles()
     const {
         tasks, ticketOrder, subtasks, board,
@@ -19,7 +19,6 @@ const Column = ({ column, index }) => {
     const [dialogStatus, setDialogStatus] = useState(false)
     const toggleDialog = () => setDialogStatus(!dialogStatus)
         
-
     return (
         <Draggable draggableId={column.id} index={index}>
             {(provided) => (
@@ -65,8 +64,10 @@ const Column = ({ column, index }) => {
                                     ticketOrder={ticketOrder}
                                     columnId={column.id}
                                     boardId={board.id}
-                                    epic={window.localStorage.getItem("epic")}
-                                    userStorage={window.localStorage.getItem("user")}
+                                    color={color}
+                                    user={user}
+                                    column = {column}
+                                    searchTerm = {searchTerm}
                                 />
                                 {provided.placeholder}
                             </Grid>
