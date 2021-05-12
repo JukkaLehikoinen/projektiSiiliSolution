@@ -48,28 +48,6 @@ const schema = {
     },
   },
 
-  Mutation: {
-    async addColumnForBoard(root, { boardId, columnName, eventId }) {
-      let createdColumn;
-      try {
-        createdColumn = await dataSources.boardService.addColumnForBoard(
-          boardId,
-          columnName
-        );
-        pubsub.publish(COLUMN_MUTATED, {
-          boardId,
-          eventId,
-          columnMutated: {
-            mutationType: "CREATED",
-            column: createdColumn.dataValues,
-          },
-        });
-      } catch (e) {
-        console.error(e);
-      }
-      return createdColumn;
-    },
-
     Mutation: {
         async addColumnForBoard(root, { boardId, columnName, eventId }) {
             let createdColumn
@@ -127,46 +105,46 @@ const schema = {
           return deletedColumnId;
         },
     
-  async moveTicketInColumn(root, { newOrder, columnId, boardId }) {
-    const modifiedColumn = await dataSources.boardService.reOrderTicketsOfColumn(
-      newOrder,
-      columnId
-    );
-    pubsub.publish(TICKET_MOVED_IN_COLUMN, {
-      boardId,
-      ticketMovedInColumn: {
-        newOrder,
-        columnId,
+    
+        async moveTicketInColumn(root, { newOrder, columnId, boardId }) {
+          const modifiedColumn = await dataSources.boardService.reOrderTicketsOfColumn(
+            newOrder,
+            columnId
+          );
+        pubsub.publish(TICKET_MOVED_IN_COLUMN, {
+          boardId,
+          ticketMovedInColumn: {
+            newOrder,
+            columnId,
+          },
+        });
+        return modifiedColumn;
       },
-    });
-    return modifiedColumn;
-  },
 
-  async moveTicketFromColumn(root, {
-    type, ticketId, sourceColumnId, destColumnId, sourceTicketOrder, destTicketOrder, eventId,
-}) {
-    await dataSources.boardService.changeTicketsColumnId(type, ticketId, destColumnId)
-    const sourceColumn = await dataSources.boardService.reOrderTicketsOfColumn(sourceTicketOrder, sourceColumnId)
-    const destColumn = await dataSources.boardService.reOrderTicketsOfColumn(destTicketOrder, destColumnId)
-    await pubsub.publish(TICKET_MOVED_FROM_COLUMN, {
-        boardId: sourceColumn.boardId,
-        eventId,
-        ticketMovedFromColumn: {
-            ticketInfo: { ticketId, type },
-            sourceColumnId,
-            destColumnId,
-            sourceTicketOrder,
-            destTicketOrder,
+        async moveTicketFromColumn(root, {
+          type, ticketId, sourceColumnId, destColumnId, sourceTicketOrder, destTicketOrder, eventId,
+        }) {
+          await dataSources.boardService.changeTicketsColumnId(type, ticketId, destColumnId)
+          const sourceColumn = await dataSources.boardService.reOrderTicketsOfColumn(sourceTicketOrder, sourceColumnId)
+          const destColumn = await dataSources.boardService.reOrderTicketsOfColumn(destTicketOrder, destColumnId)
+          await pubsub.publish(TICKET_MOVED_FROM_COLUMN, {
+              boardId: sourceColumn.boardId,
+              eventId,
+              ticketMovedFromColumn: {
+                  ticketInfo: { ticketId, type },
+                  sourceColumnId,
+                  destColumnId,
+                  sourceTicketOrder,
+                  destTicketOrder,
+              },
+          })
+          return [sourceColumn, destColumn]
         },
-    })
-    return [sourceColumn, destColumn]
-},
-async moveColumn(root, { boardId, newColumnOrder }) {
-    await dataSources.boardService.reOrderColumns(newColumnOrder)
-    return boardId
-},
-},
-
+        async moveColumn(root, { boardId, newColumnOrder }) {
+          await dataSources.boardService.reOrderColumns(newColumnOrder)
+          return boardId
+        },
+    },
 
   Column: {
     board(root) {
@@ -185,6 +163,6 @@ async moveColumn(root, { boardId, newColumnOrder }) {
       return dataSources.boardService.getTicketOrderOfColumn(root.id);
     },
   },
-},
 }
+
 module.exports = schema;

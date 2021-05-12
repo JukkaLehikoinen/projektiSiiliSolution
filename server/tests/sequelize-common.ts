@@ -3,7 +3,6 @@ import Board from "../src/models/Board";
 import Column from "../src/models/Column";
 import Subtask from "../src/models/Subtask";
 import Task from "../src/models/Task";
-//import Story from "../src/models/Story";
 import { dbConfig } from "../src/database";
 import Color from "../src/models/Color";
 import ColorSubtask from "../src/models/ColorSubtask";
