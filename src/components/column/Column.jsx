@@ -18,7 +18,6 @@ const Column = ({ column, index, color, user }) => {
     } = column
     const [dialogStatus, setDialogStatus] = useState(false)
     const toggleDialog = () => setDialogStatus(!dialogStatus)
-        
 
     return (
         <Draggable draggableId={column.id} index={index}>
@@ -65,8 +64,6 @@ const Column = ({ column, index, color, user }) => {
                                     ticketOrder={ticketOrder}
                                     columnId={column.id}
                                     boardId={board.id}
-                                    epic={window.localStorage.getItem("epic")}
-                                    userStorage={window.localStorage.getItem("user")}
                                     color={color}
                                     user={user}
                                 />

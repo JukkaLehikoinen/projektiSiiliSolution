@@ -56,31 +56,12 @@ const BoardPage = ({ id, eventId }) => {
         toggleView(view === 'kanban' ? 'swimlane' : 'kanban')
     }
     const handleUserChange = (event) => {
-        if (event === null || event.length == 0) {
-            setUser(event)
-            window.localStorage.setItem("user", [''])
-        } else {
-            setUser(event)
-            const users = event.map((event) => {
-                return event.value
-            })
-            window.localStorage.setItem("user", JSON.stringify(users))
-        }
-       // console.log(event)
+        setUser(event)
     }
     //console.log(user)
 
     const handleColorChange = (event) => {
-        if (event === null || event.length === 0) {
-            setColor(event)
-            window.localStorage.setItem("epic", [''])
-        } else {
-            setColor(event)
-            const colors = event.map((event) => {
-                return event.value
-            })
-            window.localStorage.setItem("epic", JSON.stringify(colors))
-        }
+        setColor(event)
     }
 
     let userList = [];
