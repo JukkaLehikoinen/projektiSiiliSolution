@@ -9,13 +9,13 @@ import { Mutation as ColumnMutation } from "../src/graphql/resolvers/column-reso
 import { Query as ColumnQuery } from "../src/graphql/resolvers/column-resolvers";
 import { Mutation as TaskMutation } from "../src/graphql/resolvers/task-resolvers";
 import { Query as TaskQuery } from "../src/graphql/resolvers/task-resolvers";
-import { boards, columns, projects, tasks } from "./dummyData";
+import { columns, tasks } from "./dummyData";
 import { Mutation as SubTaskMutation } from "../src/graphql/resolvers/subtask-resolver";
 import { Query as subTaskQuery } from "../src/graphql/resolvers/subtask-resolver";
-import { board1, testColumns, task1 } from "./dummyData";
-import { Mutation as moveTicketFromColumn } from "../src/graphql/resolvers/column-resolvers";
+import { board1 } from "./dummyData";
 
-/* describe("With initial test data in the database, graphql queries", () => {
+
+ describe("With initial test data in the database, graphql queries", () => {
   // Reinitialize the database before each test in this describe block
   beforeEach(async () => await initializeDb());
 
@@ -26,16 +26,15 @@ import { Mutation as moveTicketFromColumn } from "../src/graphql/resolvers/colum
 
   test("allProject query returns all the boards in the database", async () => {
     const response = await ProjectQuery.allProjects();
-    // console.log(response.slice().map(project => console.log(project.id)))
     expect(response.slice().length).toEqual(1);
   });
-}); */
+}); 
 
 describe("mutations", () => {
   // Reinitialize the database before each test in this describe block
   beforeEach(() => initializeDb());
 
-/*   test("should add project to db", async () => {
+  test("should add project to db", async () => {
     const projects = await ProjectQuery.allProjects();
     expect(projects.length).toEqual(1);
     await ProjectMutation.addProject(null, {
@@ -58,7 +57,6 @@ describe("mutations", () => {
 
     const board = await BoardQuery.allBoards();
     const boardId = await BoardQuery.boardById(null, board1);
-    //console.log(`received boardid ${boardId}`)
     expect(board.length).toEqual(5);
   });
 
@@ -109,8 +107,6 @@ describe("mutations", () => {
 
   test("should add subtask to db", async () => {
     const subtasks = await subTaskQuery.allSubtasks();
-    console.log(subtasks);
-    console.log(subtasks.slice().map((tasks) => console.log(tasks.id)));
     expect(subtasks.slice().length).toEqual(6);
     await SubTaskMutation.addSubtaskForTask(null, {
       taskId: "f6209adb-91ca-476b-8269-328a82d05555",
@@ -130,8 +126,6 @@ describe("mutations", () => {
     expect(subtask.length).toEqual(7);
   });
 
- */
- 
     test('should be able to move a task from column to another', async()=>{
         const sourceColumn1 = await ColumnQuery.columnById(null, columns[9]);
         const destColumn1 = await ColumnQuery.columnById(null, columns[10]);
@@ -148,51 +142,7 @@ describe("mutations", () => {
         });
         const changedTasks = await TaskQuery.taskById(null, tasks[0])
         expect(changedTasks.dataValues.columnId).toEqual(columns[10].id);
-      
 
     })
-
-    // test('should delete board from db', async () => {
-    //     const boards = await BoardQuery.allBoards()
-    //     expect(boards.length).toEqual(4)
-    //     await BoardMutation.addBoard(null, {
-    //         name: 'PO:n taulu 2',
-    //         prettyId: 'PO2',
-    //         eventId: '9da1b35f-181a-4397-a5a5-47abced10a66',
-    //         projectId: '9da1b35f-181a-4397-a5a5-47abced10a66'
-    //     })
-
-    //     const board = await BoardQuery.allBoards()
-    //     const boardId = await BoardQuery.boardById(null, board1)
-    //     console.log(`received boardid ${boardId}`)
-    //     expect(board.length).toEqual(5)
-
-    //     const brds = await BoardQuery.allBoards()
-    //     console.log("brds", brds)
-    //     await BoardMutation.deleteBoardById(null, {
-    //         id: brds[4].dataValues.id
-    //     })
-
-    //     const allbrds = await BoardQuery.allBoards()
-    //     expect(allbrds.length).toEqual(4)
-    // })
-
-    // test('should delete project from db', async () => {
-    //     const projects = await ProjectQuery.allProjects()
-    //     expect(projects.length).toEqual(1)
-    //     await ProjectMutation.addProject(null, {
-    //         name: "SiiliWall2",
-    //     })
-        
-    //     const aprojects = await ProjectQuery.allProjects()
-    //     expect(aprojects.length).toEqual(2)
-    //     await ProjectMutation.deleteProjectById(null, {
-    //         id: aprojects[1].dataValues.id
-    //     })
-
-    //     const allprojects = await ProjectQuery.allProjects()
-    //     expect(allprojects.length).toEqual(1)
-    // })
-
 })
-//afterAll(() => afterTests())
+afterAll(() => afterTests())

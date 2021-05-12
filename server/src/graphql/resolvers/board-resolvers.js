@@ -1,6 +1,6 @@
 const { dataSources } = require("../../datasources");
 const { withFilter } = require("graphql-subscriptions");
-const { pubsub } = require("../pubsub");
+const { pubsub } = require("../subs");
 
 const SWIMLANE_MOVED = "SWIMLANE_MOVED";
 const BOARD_ADDED = "BOARD_ADDED";

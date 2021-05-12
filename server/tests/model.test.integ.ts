@@ -53,7 +53,6 @@ describe("dummy project", () => {
 });
 
 describe("dummy board", () => {
-  //beforeAll(() => initializeDb());
   beforeAll(async () => await initializeDb());
 
   test("should return allBoards in the db", async () => {
@@ -146,7 +145,7 @@ describe("dummy board", () => {
       boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
     });
   });
-*/
+  */
 
   test("should return all tasks from column in the asc order", async () => {
     const arrayOfIds = await getTaskOrderOfColumn(
@@ -172,15 +171,12 @@ describe("dummy board", () => {
 });
 
 describe("dummy board", () => {
-  //beforeAll(() => initializeDb());
   beforeAll(async () => await initializeDb());
 
   test("should relate to project", async () => {
     const projectId = await mapProjectBoardsByProjectId(
       "83fa4f89-8ea1-4d1c-9fee-321daa941485"
     );
-    console.log("---------------------------");
-    console.log(projectId);
     expect(projectId).toEqual(["9da1b35f-181a-4397-a5a5-47abced10a66"]);
   });
 });
