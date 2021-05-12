@@ -77,6 +77,15 @@ const schema = {
       });
       return addedBoard;
     },
+    boardAdded: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(BOARD_ADDED),
+        (payload, args) =>
+          args.projectId === payload.projectId &&
+          args.eventId !== payload.eventId
+      ),
+    },
+  },
 
     async archiveBoardById(root, { boardId, projectId, eventId }) {
       try {
@@ -116,7 +125,6 @@ const schema = {
         boardId,
         affectedSwimlanes
       );
-    },
   },
 
   Board: {

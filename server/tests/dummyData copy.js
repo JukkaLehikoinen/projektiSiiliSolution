@@ -6,17 +6,6 @@ const projects = [
     orderNumber: 1,
   },
 ];
-
-const board1 = {
-  id: "83fa4f89-8ea1-4d1c-9fee-321daa941489",
-  prettyId: "PO",
-  name: "PO:n taulu",
-  creatorId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
-  orderNumber: 2,
-  ticketCount: 2,
-  projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
-};
-
 const boards = [
   {
     id: "83fa4f89-8ea1-4d1c-9fee-321daa941485",
@@ -62,49 +51,42 @@ const users = [
     userName: "Paavo",
     passwordHash: "pVfUtAA3",
     email: "dmonteith0@mysql.com",
-    projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
   },
   {
     id: "654df13f-51be-4b25-8f0e-7c2f40a3a81e",
     userName: "Ilpo",
     passwordHash: "JaAcfq",
     email: "dcutchey1@over-blog.com",
-    projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
   },
   {
     id: "8b251e01-0bec-41bf-b756-ba53c76d04e6",
     userName: "Katja",
     passwordHash: "71gDVE6meHB",
     email: "ggwyther2@harvard.edu",
-    projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
   },
   {
     id: "db295a15-0b1d-4e6d-a2bb-da25fe1ecf98",
     userName: "Pauliina",
     passwordHash: "7PwsnfIiyJNt",
     email: "loxnam3@quantcast.com",
-    projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
   },
   {
     id: "1fd5abe7-159e-4224-8a44-7ae3ee902a54",
     userName: "Heini",
     passwordHash: "3KWad8H",
     email: "eholtom4@hatena.ne.jp",
-    projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
   },
   {
     id: "e8a3f9a4-e9ac-47ec-9eb6-f7f87975382a",
     userName: "Erika",
     passwordHash: "6xswZfRQe9X",
     email: "spankettman5@latimes.com",
-    projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
   },
   {
     id: "6285867e-7db8-4769-8730-26d18ef9aba9",
     userName: "scovil6",
     passwordHash: "O2dyiBYteo",
     email: "gwoollends6@163.com",
-    projectId: "9da1b35f-181a-4397-a5a5-47abced10a66",
   },
 ];
 
@@ -206,7 +188,37 @@ const columns = [
     id: "f6209adb-91ca-476b-8269-asda82d05drt",
   },
 ];
-
+/*
+const stories = [
+  {
+    title: "First story",
+    description: "this is the content",
+    size: 4,
+    columnId: "asd75646-4035-41f5-99d7-7d742f0e8ac5",
+    id: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
+    ownerId: "1fd5abe7-159e-4224-8a44-7ae3ee902a54",
+    boardId: "0f154e01-f8ba-49c8-b2dc-e884d28e7f83",
+  },
+  {
+    title: "Second story",
+    description: "this is the content",
+    size: 2,
+    columnId: "asd75646-4035-41f5-99d7-7d742f0e8ac5",
+    id: "asd75646-6666-41f5-99d7-7d742f0e8a77",
+    ownerId: "1fd5abe7-159e-4224-8a44-7ae3ee902a54",
+    boardId: "0f154e01-f8ba-49c8-b2dc-e884d28e7f83",
+  },
+  {
+    title: "Third story",
+    description: "this is the content",
+    size: 3.4,
+    columnId: "f6209adb-91ca-476b-8269-asda82d05drt",
+    id: "asd75646-6666-41f5-9879-7d742f0e8ac5",
+    ownerId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
+    boardId: "0f154e01-f8ba-49c8-b2dc-e884d28e7f83",
+  },
+];
+*/
 //DO WE NEED TO UPDATE THIS FROM MODELS -> TASK.TS??
 const tasks = [
   {
@@ -220,8 +232,6 @@ const tasks = [
     id: "f3f3c12d-cee0-46bf-9374-f19ba8894ad6",
     ownerId: "654df13f-51be-4b25-8f0e-7c2f40a3a81e",
     boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
-    description: "Add drag and drop function to cards",
-    difficulty: 2,
   },
   {
     prettyId: "KNBN-3",
@@ -234,8 +244,6 @@ const tasks = [
     id: "d29fc7da-93a1-40ec-8c56-7b619445465b",
     ownerId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
     boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
-    description: "add Cypress tests",
-    difficulty: 2,
   },
   {
     prettyId: "KNBN-5",
@@ -248,8 +256,6 @@ const tasks = [
     id: "f6209adb-91ca-476b-8269-328a82d05555",
     creatorId: "654df13f-51be-4b25-8f0e-7c2f40a3a81e",
     boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
-    description: "Make everything pretty",
-    difficulty: 2,
   },
   {
     prettyId: "KNBN-1",
@@ -262,8 +268,6 @@ const tasks = [
     id: "d39fc7da-93a1-40ec-8c56-7b619445465b",
     creatorId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
     boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
-    description: "Add some pink",
-    difficulty: 2,
   },
   {
     prettyId: "DEV-2",
@@ -275,8 +279,6 @@ const tasks = [
     id: "6e766c63-0684-4cf2-8a46-868cfaf84033",
     ownerId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
     boardId: "d3553f65-7ed4-4f43-9847-c14e4539eb5e",
-    description: "Create user model",
-    difficulty: 2,
   },
   {
     prettyId: "DEV-1",
@@ -288,8 +290,6 @@ const tasks = [
     id: "e12d6ed1-c275-4047-8f3c-b50050bada6d",
     ownerId: "8b251e01-0bec-41bf-b756-ba53c76d04e6",
     boardId: "d3553f65-7ed4-4f43-9847-c14e4539eb5e",
-    description: "Add subtasks to tasks",
-    difficulty: 2,
   },
   {
     prettyId: "KNBN-4",
@@ -301,8 +301,6 @@ const tasks = [
     id: "b8d2d626-d6a8-4c9a-89f3-a77796d2b2f3",
     ownerId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
     boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
-    description: "AAdd test for columns",
-    difficulty: 2,
   },
   {
     prettyId: "PO-1",
@@ -314,8 +312,6 @@ const tasks = [
     id: "7b29f130-fc89-4f16-b0ef-71a06e09110c",
     ownerId: "8b251e01-0bec-41bf-b756-ba53c76d04e6",
     boardId: "83fa4f89-8ea1-4d1c-9fee-321daa941485",
-    description: "Update user stories",
-    difficulty: 2,
   },
 ];
 
@@ -331,7 +327,6 @@ const subtasks = [
     columnId: "f6209adb-91ca-476b-8269-328a82d05d41",
     ownerId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
     content: "subtaskin kontentti 11",
-    size: 2.2,
   },
   {
     prettyId: "KNBN-9",
@@ -344,7 +339,6 @@ const subtasks = [
     columnId: "ce175646-4035-41f5-99d7-7d742f0e8ac5",
     ownerId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
     content: "subtaskin kontentti 222",
-    size: 2.3,
   },
   {
     prettyId: "KNBN-10",
@@ -357,7 +351,6 @@ const subtasks = [
     columnId: "ce175646-4035-41f5-99d7-7d742f0e8ac5",
     ownerId: "8b251e01-0bec-41bf-b756-ba53c76d04e6",
     content: "subtaskin kontentti 333",
-    size: 2.4,
   },
   {
     prettyId: "KNBN-6",
@@ -370,7 +363,6 @@ const subtasks = [
     taskId: "f6209adb-91ca-476b-8269-328a82d05555",
     boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
     ownerId: "6285867e-7db8-4769-8730-26d18ef9aba9",
-    size: 2.5,
   },
   {
     prettyId: "KNBN-7",
@@ -383,7 +375,6 @@ const subtasks = [
     taskId: "f6209adb-91ca-476b-8269-328a82d05555",
     boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
     ownerId: "6285867e-7db8-4769-8730-26d18ef9aba9",
-    size: 2.6,
   },
   {
     prettyId: "PO-2",
@@ -396,7 +387,6 @@ const subtasks = [
     taskId: "7b29f130-fc89-4f16-b0ef-71a06e09110c",
     boardId: "83fa4f89-8ea1-4d1c-9fee-321daa941485",
     ownerId: "8b251e01-0bec-41bf-b756-ba53c76d04e6",
-    size: 2.7,
   },
 ];
 
@@ -411,18 +401,18 @@ const colors = [
   { id: "9a965133-5817-42b3-8b3c-ce1c453e0b88", color: "gray" },
   { id: "99d0f5f1-6ff4-4e02-a564-fad8f3726c27", color: "lightgrey" },
 ];
-
-// const userStories = [
-//   {
-//     userId: "1fd5abe7-159e-4224-8a44-7ae3ee902a54",
-//     storyId: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
-//   },
-//   {
-//     userId: "8b251e01-0bec-41bf-b756-ba53c76d04e6",
-//     storyId: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
-//   },
-// ];
-
+/*
+const userStories = [
+  {
+    userId: "1fd5abe7-159e-4224-8a44-7ae3ee902a54",
+    storyId: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
+  },
+  {
+    userId: "8b251e01-0bec-41bf-b756-ba53c76d04e6",
+    storyId: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
+  },
+];
+*/
 const usertasks = [
   {
     userId: "6baba4dd-1ff4-4185-b8ff-1b735bc56576",
@@ -483,60 +473,18 @@ const userSubtasks = [
   },
 ];
 
-const projectUser = [
-  {
-    id: "bca123",
-    name: "User One",
-  },
-  {
-    id: "bca456",
-    name: "User Two",
-  },
-];
-
-const task1 = {
-  prettyId: "KNBN-2",
-  title: "Add drag and drop function to cards",
-  content: "Add drag and drop function to cards",
-  size: 1,
-  columnId: "28d0ce05-b1e1-4c21-9c8a-87ba1b2a0527",
-  columnOrderNumber: 0,
-  swimlaneOrderNumber: 1,
-  id: "f3f3c12d-cee0-46bf-9374-f19ba8894ad6",
-  ownerId: "654df13f-51be-4b25-8f0e-7c2f40a3a81e",
-  boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
-  description: "Add drag and drop function to cards",
-  difficulty: 2,
-};
-const testColumns = [
-  {
-    name: "Todo",
-    boardId: "83fa4f89-8ea1-4d1c-9fee-321daa949999",
-    orderNumber: 1,
-    id: "f6209adb-91ca-476b-8269-328a82d05d4a",
-  },
-  {
-    name: "In Progress",
-    boardId: "83fa4f89-8ea1-4d1c-9fee-321daa949999",
-    orderNumber: 2,
-    id: "28d0ce05-b1e1-4c21-9c8a-87ba1b2a0528",
-  },
-];
-
 module.exports = {
   projects,
   boards,
   columns,
+  //stories,
   tasks,
   subtasks,
   users,
+  //userStories,
   usertasks,
   userSubtasks,
   colors,
   colortasks,
   colorsubtasks,
-  projectUser,
-  board1,
-  testColumns,
-  task1,
 };
