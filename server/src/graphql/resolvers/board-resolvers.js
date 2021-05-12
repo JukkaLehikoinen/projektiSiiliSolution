@@ -43,10 +43,6 @@ const schema = {
   },
 
   Mutation: {
-    /* async deleteBoard(root, args) {
-      return dataSources.boardService.deleteBoard(args.id, args.name);
-    },
-*/
     async deleteBoard(root, { id, name, projectId, eventId }) {
       let deletedBoard;
       try {

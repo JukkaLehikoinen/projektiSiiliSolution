@@ -1,5 +1,4 @@
 import Project from "../src/models/Project";
-import { stories } from "./dummyData";
 
 import {
   findByProjectPk,
@@ -14,12 +13,12 @@ import {
   columnsOfBoardInTheDb,
   addColumnForBoard,
   columnsInTheDb,
-  storiesInTheDb,
   tasksOfColumnInTheDb,
   tasksInTheDb,
   getTaskOrderOfColumn,
   subtasksOfTaskInTheDb,
   subtasksInTheDb,
+  mapProjectBoardsByProjectId,
 } from "./sequelize-common";
 
 /**
@@ -47,22 +46,19 @@ describe("dummy project", () => {
     expect(name).toEqual("SiiliWall");
   });
 
-  //Result comes in array. Is test correct?
-  //test expect(id).toEqual(["9da1b35f-181a-4397-a5a5-47abced10a66"]);
   test("should return correct projectId", async () => {
     const id = await mapProjectById("9da1b35f-181a-4397-a5a5-47abced10a66");
     expect(id).toContain("9da1b35f-181a-4397-a5a5-47abced10a66");
   });
-
-  //afterAll(() => afterTests());
 });
 
 describe("dummy board", () => {
-  beforeAll(() => initializeDb());
+  //beforeAll(() => initializeDb());
+  beforeAll(async () => await initializeDb());
 
   test("should return allBoards in the db", async () => {
     const boards = await boardsInTheDb();
-    expect(boards).toHaveLength(boards.length);
+    expect(boards.length).toBe(4);
   });
 
   test("should add new board in the db", async () => {
@@ -112,61 +108,19 @@ describe("dummy board", () => {
 
   test("should return all the columns in the db", async () => {
     const columns = await columnsInTheDb();
-    expect(columns).toHaveLength(columns.length);
+    expect(columns.length).toBe(17);
   });
-
-  // RETURN TO THIS
-  // SequelizeDatabaseError: Unknown column 'Story.columnId' in 'where clause'
-  /*
-  test("should return stories when searching by columnId", async () => {
-    const id = await storiesOfColumnInTheDb([
-      "f6209adb-91ca-476b-8269-asda82d05drt",
-    ]);
-
-    expect(id).toHaveLength(2);
-  });
-*/
-  test("should return all stories in the db", async () => {
-    const stories = await storiesInTheDb();
-    expect(stories).toHaveLength(stories.length);
-  });
-
-  /**STORYBYID RETURNS FROM TEST
-   * {
-      +   "color": null,
-      +   "createdAt": 2021-03-17T14:14:23.000Z,
-      +   "deletedAt": null,
-      +   "description": "this is the content",
-          "id": "asd75646-6666-41f5-99d7-7d742f0e8ac5",
-      +   "size": 4,
-      +   "title": "First story",
-      +   "updatedAt": 2021-03-17T14:14:23.000Z,
-        }
-
-  test("should return story by id", async () => {
-    const story = await storyById("asd75646-6666-41f5-99d7-7d742f0e8ac5");
-    expect(story).toEqual({
-      title: "First story",
-      description: "this is the content",
-      size: 4,
-      columnId: "asd75646-4035-41f5-99d7-7d742f0e8ac5",
-      id: "asd75646-6666-41f5-99d7-7d742f0e8ac5",
-      ownerId: "1fd5abe7-159e-4224-8a44-7ae3ee902a54",
-      boardId: "0f154e01-f8ba-49c8-b2dc-e884d28e7f83",
-    });
-  });
- */
 
   test("should return all tasks in the column", async () => {
     const tasks = await tasksOfColumnInTheDb(
       "f6209adb-91ca-476b-8269-328a82d05d4a"
     );
-    expect(tasks).toHaveLength(2);
+    expect(tasks.length).toBe(2);
   });
 
   test("should return all tasks in the db", async () => {
     const tasks = await tasksInTheDb();
-    expect(tasks).toHaveLength(tasks.length);
+    expect(tasks.length).toBe(8);
   });
 
   //RETURNS TOO MUCH DATA..
@@ -176,7 +130,7 @@ describe("dummy board", () => {
   //"description": null,
   //"difficulty": null,
   //"updatedAt": 2021-03-17T13:12:46.000Z,
-  /*
+  
   test("should return task by id", async () => {
     const task = await taskById("f3f3c12d-cee0-46bf-9374-f19ba8894ad6");
     expect(task).toMatchObject({
@@ -192,9 +146,8 @@ describe("dummy board", () => {
       boardId: "0f154e01-f8ba-49c8-b2dc-e374d28f7f83",
     });
   });
-*/
 
-  //ASK ABOUT THIS TEST, DOES NOT FAIL, BUT DOES IT TEST CORRECTLY
+
   test("should return all tasks from column in the asc order", async () => {
     const arrayOfIds = await getTaskOrderOfColumn(
       "f6209adb-91ca-476b-8269-328a82d05d4a"
@@ -209,29 +162,27 @@ describe("dummy board", () => {
     const subtasks = await subtasksOfTaskInTheDb(
       "b8d2d626-d6a8-4c9a-89f3-a77796d2b2f3"
     );
-    expect(subtasks).toHaveLength(subtasks.length);
+    expect(subtasks.length).toBe(3);
   });
 
-  test("should return all subtasks from task", async () => {
+  test("should return all subtasks", async () => {
     const subtasks = await subtasksInTheDb();
-    expect(subtasks).toHaveLength(subtasks.length);
+    expect(subtasks.length).toBe(6);
   });
-
-  afterAll(() => afterTests());
 });
 
-//There are some issues in this test...
-//describe("dummy board", () => {
-//  beforeAll(() => initializeDb());
+describe("dummy board", () => {
+  //beforeAll(() => initializeDb());
+  beforeAll(async () => await initializeDb());
 
-// test("should relate to project", async () => {
-//   const {projectId} = await mapProjectBoardsByProjectId(
-//     "83fa4f89-8ea1-4d1c-9fee-321daa941485"
-//   );
-//   console.log(---------------------------)
-//   console.log(projectId);
-//   expect(projectId).toEqual(["9da1b35f-181a-4397-a5a5-47abced10a66"]);
-// });
+  test("should relate to project", async () => {
+    const projectId = await mapProjectBoardsByProjectId(
+      "83fa4f89-8ea1-4d1c-9fee-321daa941485"
+    );
+    console.log("---------------------------");
+    console.log(projectId);
+    expect(projectId).toEqual(["9da1b35f-181a-4397-a5a5-47abced10a66"]);
+  });
+});
 
-//afterAll(() => afterTests());
-//});
+afterAll(() => afterTests());
