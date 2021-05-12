@@ -19,7 +19,7 @@ import Subtask from './subtask/Subtask'
 //     })
 
 const TicketList = ({
-    ticketOrder, tasks, subtasks, columnId, boardId, epic, userStorage
+    ticketOrder, tasks, subtasks, columnId, boardId, epic, userStorage, column
 }) => {
     const ticketsInOrder = ticketOrder.map((obj) => {
         let foundTicket
@@ -32,7 +32,7 @@ const TicketList = ({
         }
         return foundTicket
     })
-
+    console.log(column)
     let filteredTasks = ticketsInOrder;
     let all = {}  //{users: userStorage, colors:epic}
 

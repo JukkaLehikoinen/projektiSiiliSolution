@@ -18,6 +18,7 @@ import useAllEpicColors from '../graphql/colorboards/hooks/useAllEpicColors'
 import bubbleSort from '../components/bubblesort'
 import useAllColors from '../graphql/task/hooks/useAllColors'
 //import useAllColors from '../../graphql/task/hooks/useAllColors'
+import TextField from '@material-ui/core/TextField';
 
 const BoardPage = ({ id, eventId }) => {
     useEffect(() => () => {
@@ -35,6 +36,7 @@ const BoardPage = ({ id, eventId }) => {
     const colorQuery = useAllColors()
     const [user, setUser] = useState("")
     const [color, setColor] = useState([])
+    const [searchTerm, setSearchTerm] = useState("")
 
 
 
@@ -66,7 +68,7 @@ const BoardPage = ({ id, eventId }) => {
             })
             window.localStorage.setItem("user", JSON.stringify(users))
         }
-       // console.log(event)
+        // console.log(event)
     }
     //console.log(user)
 
@@ -117,6 +119,14 @@ const BoardPage = ({ id, eventId }) => {
         const newObject = { value: user.id, label: user.userName }
         return newObject
     })
+
+    const editSearchTerm = (e) => {
+        setSearchTerm({ searchTerm: e.target.value })
+    }
+    console.log("column task", columns.tasks.title)
+    // const dynamicSearch = () => {
+    //     return tasks.name.filter(name => name.toLowerCase().includes(searchTerm.toLowerCase()))
+    // }
 
     return (
         <Grid
@@ -174,10 +184,13 @@ const BoardPage = ({ id, eventId }) => {
                         //styles={colourStyles}
                         />
                     </Grid>
+                    <Grid item xs={2}>
+                        <TextField type='text' value={searchTerm} onChange={editSearchTerm} placeholder='Search by task name!' />
+                    </Grid>
                 </Grid>
             </Grid>
             <Grid item>
-                {view === 'kanban' ? <Board board={board} color={color} user={user}/> : <SwimlaneView board={board} />}
+                {view === 'kanban' ? <Board board={board} color={color} user={user} /> : <SwimlaneView board={board} />}
             </Grid>
         </Grid>
     )

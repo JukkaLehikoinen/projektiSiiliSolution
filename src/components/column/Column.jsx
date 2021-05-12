@@ -69,6 +69,7 @@ const Column = ({ column, index, color, user }) => {
                                     userStorage={window.localStorage.getItem("user")}
                                     color={color}
                                     user={user}
+                                    column = {column}
                                 />
                                 {provided.placeholder}
                             </Grid>
