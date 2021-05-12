@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Grid } from '@material-ui/core'
 import Task from './task/Task'
 import Subtask from './subtask/Subtask'
@@ -19,7 +19,7 @@ import Subtask from './subtask/Subtask'
 //     })
 
 const TicketList = ({
-    ticketOrder, tasks, subtasks, columnId, boardId, epic, userStorage, column
+    ticketOrder, tasks, subtasks, columnId, boardId, epic, userStorage, column, searchTerm
 }) => {
     const ticketsInOrder = ticketOrder.map((obj) => {
         let foundTicket
@@ -32,12 +32,12 @@ const TicketList = ({
         }
         return foundTicket
     })
-    console.log(column)
+    console.log("column.tasks.title",column.tasks[0].title)
     let filteredTasks = ticketsInOrder;
     let all = {}  //{users: userStorage, colors:epic}
-
+    
     const userzz = () => {
-        console.log(userStorage)
+       // console.log(userStorage)
         let filterdUsers = []
         userStorage = JSON.parse(userStorage)
         all = { ...all, users: userStorage }
@@ -107,8 +107,20 @@ const TicketList = ({
     if (epic) {
        colors()
     }
-    console.log(filteredTasks)
-
+    console.log(searchTerm)
+    //console.log(ticketsInOrder)
+    // const taskNameArray = () =>{
+    //     console.log("all",all)
+    //     let tasksAndSubTasks = []
+    //     filteredTasks.map((ticket) =>{
+    //         const dynamicSearch = () => {
+    //         return tasks.name.filter(name => name.toLowerCase().includes(searchTerm.toLowerCase()))
+    // }
+    //     })
+        
+        
+    // }
+    // taskNameArray()
 
     return (
         <Grid container direction="column" alignItems='center' spacing={2}>

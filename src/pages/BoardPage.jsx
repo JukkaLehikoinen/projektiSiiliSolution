@@ -119,11 +119,11 @@ const BoardPage = ({ id, eventId }) => {
         const newObject = { value: user.id, label: user.userName }
         return newObject
     })
-
+    //console.log("searchterm",searchTerm)
     const editSearchTerm = (e) => {
-        setSearchTerm({ searchTerm: e.target.value })
+        setSearchTerm(e.target.value)
     }
-    console.log("column task", columns.tasks.title)
+    //console.log("column task", Column)
     // const dynamicSearch = () => {
     //     return tasks.name.filter(name => name.toLowerCase().includes(searchTerm.toLowerCase()))
     // }
@@ -190,7 +190,7 @@ const BoardPage = ({ id, eventId }) => {
                 </Grid>
             </Grid>
             <Grid item>
-                {view === 'kanban' ? <Board board={board} color={color} user={user} /> : <SwimlaneView board={board} />}
+                {view === 'kanban' ? <Board board={board} color={color} user={user} searchTerm={searchTerm} /> : <SwimlaneView board={board} />}
             </Grid>
         </Grid>
     )
