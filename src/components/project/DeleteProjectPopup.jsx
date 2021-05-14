@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -7,12 +7,14 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import useArchiveProject from "../../graphql/project/hooks/useArchiveProject";
 import useProjectById from '../../graphql/project/hooks/useProjectById'
 import { removeProjectFromCache } from '../../cacheService/cacheUpdates'
+import allBoardsByProject from "../../graphql/project/hooks/useBoardsByProjectId";
 
 export default function DeleteProjectPopup(props) {
   const { open, handleClose, project } = props;
   const [deleteProject] = useArchiveProject();
   const queryResult = useProjectById(project.id);
   const eventId = window.localStorage.getItem('eventId')
+  const allBoardById = allBoardsByProject(project.id);
   const handleSave = () => {
     deleteProject({
       variables: {
@@ -24,20 +26,30 @@ export default function DeleteProjectPopup(props) {
     handleClose();
   };
 
-  if (queryResult.loading) return null
-  let index = 0;
+  if (queryResult.loading || allBoardById.loading) return null
 
+  let index = 0;
   queryResult.data.projectById.boards.map(() => {
     index +=1
   })
+
+  const boards = allBoardById.data.boardsByProjectId;
+
+  let count = 0;
+  const boardTickets = () => {
+    boards.map((board) => {
+      count = count + board.ticketCount
+    })
+  } 
+  boardTickets()
 
   let message;
   if (queryResult.data.projectById === null) {
     message = "This project has 0 boards.";
   } else if (queryResult.data.projectById === 1) {
-    message = "This project has 1 board.";
+    message = `This project has 1 board, and the number of tickets is ${count}.`;
   } else {
-    message = `There are ${index} boards in this project.`;
+    message = `There are ${index} boards in this project, and the number of tickets is ${count}.`;
   }
 
   return (

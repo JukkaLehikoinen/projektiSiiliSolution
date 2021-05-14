@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Grid, Button } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { projectPageStyles } from '../styles/styles'
@@ -8,7 +8,6 @@ import NewProjectForm from '../components/project/NewProjectForm'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorPage from './ErrorPage'
 import ProjectForm from "../components/project/ProjectForm";
-// import useLandingSubs from '../graphql/subscriptions/useLandingSubs'
 
 const LandingPage = () => {
     const queryResult = useAllProjects()
@@ -22,8 +21,7 @@ const LandingPage = () => {
 
     const handleClickOpenProjectDialog = () => {
         setProjectDialogOpen(true);
-      };
-     // useLandingSubs(queryResult);        
+      };       
     if (queryResult.loading) {
         
 

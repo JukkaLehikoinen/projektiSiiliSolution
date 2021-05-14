@@ -13,7 +13,7 @@ export default function ErrorPage() {
             }}>
 
             <div>
-                <img src="https://cdn.pixabay.com/photo/2018/01/04/15/51/404-error-3060993_960_720.png" height="150" width="150" />
+                <img src="https://cdn.pixabay.com/photo/2018/01/04/15/51/404-error-3060993_960_720.png" height="150" width="150" alt="page error" />
 
                 <p>Something went wrong!</p>
                 <p>What caused this error:</p>
