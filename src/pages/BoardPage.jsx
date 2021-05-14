@@ -17,7 +17,6 @@ import useAllUsers from '../graphql/user/hooks/useAllUsers'
 import useAllEpicColors from '../graphql/colorboards/hooks/useAllEpicColors'
 import bubbleSort from '../components/bubblesort'
 import useAllColors from '../graphql/task/hooks/useAllColors'
-//import useAllColors from '../../graphql/task/hooks/useAllColors'
 import ErrorPage from './ErrorPage'
 import TextField from '@material-ui/core/TextField';
 
@@ -67,7 +66,6 @@ const BoardPage = ({ id, eventId }) => {
     const handleUserChange = (event) => {
         setUser(event)
     }
-    //console.log(user)
 
     const handleColorChange = (event) => {
         setColor(event)
@@ -78,6 +76,7 @@ const BoardPage = ({ id, eventId }) => {
         if (user.projectId === projectId) {
             userList.push(user)
         }
+        return userList
     });
 
     let length;
@@ -100,21 +99,16 @@ const BoardPage = ({ id, eventId }) => {
         const newColor = { value: valueOption, label: labelOption }
         return newColor
     })
-    //allEpicColors.push({value: 'ALL', label: 'ALL'})
 
     let alphabeticalOrder = bubbleSort(userList);
     const modifiedUserData = alphabeticalOrder.map((user) => {
         const newObject = { value: user.id, label: user.userName }
         return newObject
     })
-    //console.log("searchterm",searchTerm)
+    
     const editSearchTerm = (e) => {
         setSearchTerm(e.target.value)
     }
-    //console.log("column task", Column)
-    // const dynamicSearch = () => {
-    //     return tasks.name.filter(name => name.toLowerCase().includes(searchTerm.toLowerCase()))
-    // }
 
     return (
         <Grid
@@ -146,14 +140,10 @@ const BoardPage = ({ id, eventId }) => {
                             className="selectField"
                             closeMenuOnSelect={false}
                             placeholder="Select color"
-                            //defaultValue={allEpicColors[9]}
-                            //components={animatedComponents}
                             isMulti
                             onChange={handleColorChange}
-                            //id="taskSelectColor"
                             options={allEpicColors}
                             isClearable={true}
-                        //styles={colourStyles}
                         />
                     </Grid>
                     <Grid item xs={2}>
@@ -161,15 +151,11 @@ const BoardPage = ({ id, eventId }) => {
                             className="selectField"
                             closeMenuOnSelect={false}
                             placeholder="Select user"
-                            //defaultValue={null}
-                            //components={animatedComponents}
                             isMulti
                             onChange={handleUserChange}
                             id="taskSelectColor"
                             options={modifiedUserData}
                             isClearable={true}
-                        // handleUserChange={}
-                        //styles={colourStyles}
                         />
                     </Grid>
                     <Grid item xs={2}>

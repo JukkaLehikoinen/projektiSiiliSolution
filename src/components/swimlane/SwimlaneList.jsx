@@ -1,10 +1,8 @@
 import React from 'react'
 import { Grid } from '@material-ui/core'
 import Swimlane from './Swimlane'
-import { swimlaneStyles } from '../../styles/styles'
 
 const SwimlaneList = ({ tasksInOrder, showAll, boardId }) => {
-    const classes = swimlaneStyles()
 
     return (
         <Grid container direction="column">

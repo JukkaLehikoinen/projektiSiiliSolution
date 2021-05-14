@@ -33,6 +33,7 @@ const TicketList = ({
                                 if (task.id === ticket.id) {
                                     same = true
                                 }
+                                return null
                             })
                             if (!same) {
                                 filterdUsers.push(ticket)
@@ -47,14 +48,18 @@ const TicketList = ({
                                     if (task.id === ticket.id) {
                                         same = true
                                     }
+                                    return null
                                 })
                                 if (!same) {
                                     filterdUsers.push(ticket)
                                 }
                             }
+                            return null
                         })
                     }
+                    return null
                 })
+                return null
             })
             filteredTasks = filterdUsers
         }
@@ -74,6 +79,7 @@ const TicketList = ({
                             if (task.id === ticket.id) {
                                 same = true
                             }
+                            return null
                         })
                         if (!same) {
                             epix.push(ticket)
@@ -86,14 +92,18 @@ const TicketList = ({
                                     if (task.id === ticket.id) {
                                         same = true
                                     }
+                                    return null
                                 })
                                 if (!same) {
                                     epix.push(ticket)
                                 }
                             }
+                            return null
                         })
                     }
+                    return null
                 })
+                return null
             })
             filteredTasks = epix;
         }
@@ -104,7 +114,7 @@ const TicketList = ({
     let tasksAndSubTasks = [];
     if (searchTerm && searchTerm.length > 2) {
     for (let i = 0; i < filteredTasks.length; i++) {
-        if (filteredTasks[i].title && filteredTasks[i].title.toLowerCase().includes(searchTerm.toLowerCase()) || filteredTasks[i].name && filteredTasks[i].name.toLowerCase().includes(searchTerm.toLowerCase())) {
+        if ((filteredTasks[i].title && filteredTasks[i].title.toLowerCase().includes(searchTerm.toLowerCase())) || (filteredTasks[i].name && filteredTasks[i].name.toLowerCase().includes(searchTerm.toLowerCase()))) {
             tasksAndSubTasks.push(filteredTasks[i])
         }
     }
