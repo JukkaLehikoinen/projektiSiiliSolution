@@ -14,8 +14,7 @@ import { Mutation as SubTaskMutation } from "../src/graphql/resolvers/subtask-re
 import { Query as subTaskQuery } from "../src/graphql/resolvers/subtask-resolver";
 import { board1 } from "./dummyData";
 
-
- describe("With initial test data in the database, graphql queries", () => {
+describe("With initial test data in the database, graphql queries", () => {
   // Reinitialize the database before each test in this describe block
   beforeEach(async () => await initializeDb());
 
@@ -28,7 +27,7 @@ import { board1 } from "./dummyData";
     const response = await ProjectQuery.allProjects();
     expect(response.slice().length).toEqual(1);
   });
-}); 
+});
 
 describe("mutations", () => {
   // Reinitialize the database before each test in this describe block
@@ -126,24 +125,22 @@ describe("mutations", () => {
     expect(subtask.length).toEqual(7);
   });
 
-    test('should be able to move a task from column to another', async()=>{
-        const sourceColumn1 = await ColumnQuery.columnById(null, columns[9]);
-        const destColumn1 = await ColumnQuery.columnById(null, columns[10]);
-        expect(tasks[0].columnId).toEqual(columns[9].id)
-        
-        await ColumnMutation.Mutation.moveTicketFromColumn(null, {
-          type: "task",
-          ticketId: tasks[0].id,
-          sourceColumnId: sourceColumn1.dataValues.id,
-          destColumnId: destColumn1.dataValues.id,
-          sourceTicketOrder: [],
-          destTicketOrder: [{ ticketId: tasks[0].id, type: "task" }],
-          eventId: "",
-        });
-        const changedTasks = await TaskQuery.taskById(null, tasks[0])
-        expect(changedTasks.dataValues.columnId).toEqual(columns[10].id);
+  test("should be able to move a task from column to another", async () => {
+    const sourceColumn1 = await ColumnQuery.columnById(null, columns[9]);
+    const destColumn1 = await ColumnQuery.columnById(null, columns[10]);
+    expect(tasks[0].columnId).toEqual(columns[9].id);
 
-    })
-})
-afterAll(() => afterTests())
-
+    await ColumnMutation.moveTicketFromColumn(null, {
+      type: "task",
+      ticketId: tasks[0].id,
+      sourceColumnId: sourceColumn1.dataValues.id,
+      destColumnId: destColumn1.dataValues.id,
+      sourceTicketOrder: [],
+      destTicketOrder: [{ ticketId: tasks[0].id, type: "task" }],
+      eventId: "",
+    });
+    const changedTasks = await TaskQuery.taskById(null, tasks[0]);
+    expect(changedTasks.dataValues.columnId).toEqual(columns[10].id);
+  });
+});
+afterAll(() => afterTests());
