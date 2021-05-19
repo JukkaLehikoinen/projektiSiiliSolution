@@ -31,6 +31,7 @@ export default function DeleteProjectPopup(props) {
   let index = 0;
   queryResult.data.projectById.boards.map(() => {
     index +=1
+    return index
   })
 
   const boards = allBoardById.data.boardsByProjectId;
@@ -39,6 +40,7 @@ export default function DeleteProjectPopup(props) {
   const boardTickets = () => {
     boards.map((board) => {
       count = count + board.ticketCount
+      return count
     })
   } 
   boardTickets()

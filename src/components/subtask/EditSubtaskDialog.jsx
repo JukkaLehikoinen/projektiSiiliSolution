@@ -156,6 +156,7 @@ const EditSubtaskDialog = ({
         if (user.projectId === projectId) {
         userList.push(user)
         }
+        return userList
     });
     
     let alphabeticalOrder = bubbleSort(userList);
@@ -193,6 +194,7 @@ const EditSubtaskDialog = ({
     const addColorsToChangedColors = () => {
         colorQuery.data.allColors.map((color) => {
             changedColors.push({id: color.id, color: color.color, name: colorNamesToList(color)});
+            return changedColors
         })
     }
 
