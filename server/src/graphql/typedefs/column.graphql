@@ -26,20 +26,36 @@ type Column {
 
 type Query {
   columnById(id: ID!): Column!
+  allColumns: [Column!]!
 }
 
 type Mutation {
   addColumnForBoard(boardId: ID!, columnName: String!, eventId: ID!): Column
   editColumnById(id: ID!, name: String!, boardId: ID!, eventId: ID!): Column
   deleteColumnById(id: ID!, boardId: ID!, eventId: ID!): ID
-  moveTicketInColumn(newOrder: [TicketOrderInput!]!, columnId: ID!, boardId: ID!): Column
-  moveTicketFromColumn(type: String!, ticketId: ID!, sourceColumnId: ID!, destColumnId: ID!, sourceTicketOrder: [TicketOrderInput!]!, destTicketOrder: [TicketOrderInput!]!, eventId: ID!): [Column!]
+  moveTicketInColumn(
+    newOrder: [TicketOrderInput!]!
+    columnId: ID!
+    boardId: ID!
+  ): Column
+  moveTicketFromColumn(
+    type: String!
+    ticketId: ID!
+    sourceColumnId: ID!
+    destColumnId: ID!
+    sourceTicketOrder: [TicketOrderInput!]!
+    destTicketOrder: [TicketOrderInput!]!
+    eventId: ID!
+  ): [Column!]
   moveColumn(boardId: ID!, newColumnOrder: [ID!]!): ID!
 }
 
 type Subscription {
   ticketMovedInColumn(boardId: ID!): TicketMovedInColumnPayload!
-  ticketMovedFromColumn(boardId: ID!, eventId: ID!): TicketMovedFromColumnPayload!
+  ticketMovedFromColumn(
+    boardId: ID!
+    eventId: ID!
+  ): TicketMovedFromColumnPayload!
   columnDeleted(boardId: ID!, eventId: ID!): ColumnRemovePayload!
   columnMutated(boardId: ID!, eventId: ID!): ColumnMutatedPayload!
 }
@@ -81,4 +97,3 @@ type TicketMovedFromColumnPayload {
   sourceTicketOrder: [TicketOrderObject!]!
   destTicketOrder: [TicketOrderObject!]!
 }
-
