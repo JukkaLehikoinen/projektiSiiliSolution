@@ -191,7 +191,7 @@ const EditSubtaskDialog = ({
     })
 
     const addColorsToChangedColors = () => {
-        const modifiedColorData = colorQuery.data.allColors.map((color) => {
+        colorQuery.data.allColors.map((color) => {
             changedColors.push({id: color.id, color: color.color, name: colorNamesToList(color)});
         })
     }
