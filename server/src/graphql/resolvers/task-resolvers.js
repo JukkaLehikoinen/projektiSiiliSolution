@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
-import { pubsub } from '../subs'
-import { withFilter } from 'graphql-subscriptions'
-import { dataSources } from '../../datasources'
+const { pubsub } = require('../subs')
+const { withFilter } = require('graphql-subscriptions')
+const { dataSources } = require('../../datasources')
 
 const TASK_MUTATED = 'TASK_MUTATED'
 const TASK_REMOVED = 'TASK_REMOVED'
@@ -14,6 +14,9 @@ const schema = {
         allColors() {
             return dataSources.boardService.getColors()
         },
+        allTasks(){
+            return dataSources.boardService.getTasks()
+        }
     },
 
     Subscription: {

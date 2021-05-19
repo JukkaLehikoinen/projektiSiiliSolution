@@ -22,11 +22,35 @@ type Subtask {
 
 type Query {
   allColors: [Color!]!
+  allSubtasks: [Subtask!]!
 }
 
 type Mutation {
-  addSubtaskForTask(taskId: ID!, columnId: ID!, boardId: ID!, name: String, content: String!, size: Float, ownerId: ID, memberIds: [ID!], colorIds: [ID!], ticketOrder: [TicketOrderInput!], eventId: ID!): Subtask
-  editSubtaskById(id: ID!, name: String, content: String!, size: Float, ownerId: ID, oldMemberIds: [ID!], newMemberIds: [ID!], oldColorIds: [ID!], newColorIds: [ID!], eventId: ID!): Subtask
+  addSubtaskForTask(
+    taskId: ID!
+    columnId: ID!
+    boardId: ID!
+    name: String
+    content: String!
+    size: Float
+    ownerId: ID
+    memberIds: [ID!]
+    colorIds: [ID!]
+    ticketOrder: [TicketOrderInput!]
+    eventId: ID!
+  ): Subtask
+  editSubtaskById(
+    id: ID!
+    name: String
+    content: String!
+    size: Float
+    ownerId: ID
+    oldMemberIds: [ID!]
+    newMemberIds: [ID!]
+    oldColorIds: [ID!]
+    newColorIds: [ID!]
+    eventId: ID!
+  ): Subtask
   addMemberForSubtask(id: ID!, userId: ID!): Task
   deleteSubtaskById(id: ID!, columnId: ID!, boardId: ID!, eventId: ID!): ID
   archiveSubtaskById(id: ID!, columnId: ID!, boardId: ID!, eventId: ID!): ID
@@ -47,7 +71,7 @@ type SubtaskRemovedPayload {
   removeInfo: RemoveInfo!
 }
 
-enum MutationType{
+enum MutationType {
   CREATED
   UPDATED
 }

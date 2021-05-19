@@ -1,6 +1,6 @@
-import { pubsub } from '../subs'
-import { withFilter } from 'graphql-subscriptions'
-import { dataSources } from '../../datasources'
+const { pubsub } = require('../subs')
+const { withFilter } = require('graphql-subscriptions')
+const { dataSources } = require('../../datasources')
 
 const SUBTASK_MUTATED = 'SUBTASK_MUTATED'
 const SUBTASK_REMOVED = 'SUBTASK_REMOVED'
@@ -11,6 +11,9 @@ const schema = {
         allColors() {
             return dataSources.boardService.getColors()
         },
+        allSubtasks(){
+            return dataSources.boardService.getSubtasks()
+        }
     },
 
     Subscription: {
