@@ -1,6 +1,6 @@
-import { pubsub } from "../subs";
-import { dataSources } from "../../datasources";
-import { withFilter } from "graphql-subscriptions";
+const { pubsub } = require("../subs");
+const { dataSources } = require("../../datasources");
+const { withFilter } = require("graphql-subscriptions");
 
 const SWIMLANE_MOVED = "SWIMLANE_MOVED";
 const BOARD_ADDED = "BOARD_ADDED";
@@ -43,10 +43,6 @@ const schema = {
   },
 
   Mutation: {
-    /* async deleteBoard(root, args) {
-      return dataSources.boardService.deleteBoard(args.id, args.name);
-    },
-*/
     async deleteBoard(root, { id, name, projectId, eventId }) {
       let deletedBoard;
       try {

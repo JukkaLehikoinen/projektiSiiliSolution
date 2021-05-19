@@ -103,6 +103,48 @@ export class BoardService {
     return boardFromDb;
   }
 
+  async deleteBoardById(id: string) {
+    try {
+      await Board.destroy({
+        where: { id: id },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+    return id;
+  }
+
+  //tehtiin funktio getColumns, joka palauttaa kaikki sarakkeet
+  async getColumns() {
+    let columnFromDb;
+    try {
+      columnFromDb = await Column.findAll();
+    } catch (e) {
+      console.error(e);
+    }
+    return columnFromDb;
+  }
+
+  async getTasks() {
+    let taskFromDb;
+    try {
+      taskFromDb = await Task.findAll();
+    } catch (e) {
+      console.error(e);
+    }
+    return taskFromDb;
+  }
+
+  async getSubtasks() {
+    let subtasksFromDb;
+    try {
+      subtasksFromDb = await Subtask.findAll();
+    } catch (e) {
+      console.error(e);
+    }
+    return subtasksFromDb;
+  }
+
   async getColumnsByBoardId(boardId: any) {
     let columnsByBoardIdFromDb;
     try {
@@ -1111,23 +1153,7 @@ export class BoardService {
     }
     return deletedUser;
   }
-  /*
-  async deleteBoard(id: string, name: string) {
-    let deleteBoard;
-    try {
-      deleteBoard = await Board.findByPk(id);
-      await Board.destroy({
-        where: {
-          id: id,
-          name: name,
-        },
-      });
-    } catch (e) {
-      console.error(e);
-    }
-    return deleteBoard;
-  }
-*/
+
   async deleteBoard(boardId: any) {
     try {
       await Board.destroy({

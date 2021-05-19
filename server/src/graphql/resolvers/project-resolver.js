@@ -1,6 +1,6 @@
-import { pubsub } from "../subs";
-import { dataSources } from "../../datasources";
-import { withFilter } from "graphql-subscriptions";
+const { dataSources } = require("../../datasources");
+const { withFilter } = require("graphql-subscriptions");
+const { pubsub } = require("../subs");
 
 const PROJECT_REMOVED = "PROJECT_REMOVED";
 

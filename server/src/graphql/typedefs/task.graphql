@@ -19,13 +19,35 @@ type Task {
 type Query {
   taskById(id: ID!): Task!
   allColors: [Color!]!
+  allTasks: [Task!]!
 }
 
 type Mutation {
-  addTaskForColumn(boardId: ID!, columnId: ID!, title: String!, size: Int, ownerId: ID, memberIds: [ID!], colorIds: [ID!], description: String, eventId: ID!): Task
-  editTaskById(id: ID!, title: String!, size: Int, ownerId: ID, oldMemberIds: [ID!], newMemberIds: [ID!], oldColorIds: [ID!], newColorIds: [ID!], description: String, eventId: ID!): Task
-  deleteTaskById(id: ID!, columnId: ID!, boardId:ID!, eventId: ID!): ID
-  archiveTaskById(id: ID!, columnId: ID!, boardId:ID!, eventId: ID!): ID
+  addTaskForColumn(
+    boardId: ID!
+    columnId: ID!
+    title: String!
+    size: Int
+    ownerId: ID
+    memberIds: [ID!]
+    colorIds: [ID!]
+    description: String
+    eventId: ID!
+  ): Task
+  editTaskById(
+    id: ID!
+    title: String!
+    size: Int
+    ownerId: ID
+    oldMemberIds: [ID!]
+    newMemberIds: [ID!]
+    oldColorIds: [ID!]
+    newColorIds: [ID!]
+    description: String
+    eventId: ID!
+  ): Task
+  deleteTaskById(id: ID!, columnId: ID!, boardId: ID!, eventId: ID!): ID
+  archiveTaskById(id: ID!, columnId: ID!, boardId: ID!, eventId: ID!): ID
   restoreTaskById(id: ID!): Task
   addMemberForTask(id: ID!, userId: ID!): Task
 }
@@ -51,7 +73,7 @@ type RemoveInfo {
   boardId: ID!
 }
 
-enum MutationType{
+enum MutationType {
   CREATED
   UPDATED
 }
@@ -60,5 +82,3 @@ enum RemoveType {
   DELETED
   ARCHIVED
 }
-
-
